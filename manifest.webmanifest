@@ -1,17 +1,12 @@
 {
-  "name": "TowBrüx Driver",
-  "short_name": "TowBrüx Driver",
-  "lang": "cs",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#080b10",
-  "theme_color": "#080b10",
-  "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+  "name":"TowBrüx Driver",
+  "short_name":"TowBrüx",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#080b10",
+  "theme_color":"#080b10",
+  "icons":[
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
   ]
 }
