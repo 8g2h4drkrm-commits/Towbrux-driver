@@ -1,13 +1,28 @@
 <!doctype html>
 <html lang="cs">
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#080b10">
-<link rel="manifest" href="manifest.webmanifest">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
+
+<meta
+  name="theme-color"
+  content="#080b10"
+>
+
+<link
+  rel="manifest"
+  href="manifest.webmanifest"
+>
+
 <title>TowBrüx Driver</title>
 
 <style>
+
 :root{
   --p:#111720;
   --p2:#18212c;
@@ -20,20 +35,31 @@
   --bad:#e5484d
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box
+}
 
 body{
   margin:0;
   background:#020408;
   color:var(--t);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif
 }
 
 .app{
   max-width:560px;
   margin:auto;
   min-height:100vh;
-  background:linear-gradient(#080b10,#0b1017)
+  background:
+    linear-gradient(
+      #080b10,
+      #0b1017
+    )
 }
 
 header{
@@ -64,7 +90,8 @@ header{
   color:var(--g)
 }
 
-.sub,.small{
+.sub,
+.small{
   font-size:12px;
   color:var(--m)
 }
@@ -246,7 +273,10 @@ nav{
   width:min(560px,100%);
   background:#080b10f5;
   border-top:1px solid var(--l);
-  padding:7px 10px calc(7px + env(safe-area-inset-bottom));
+  padding:
+    7px
+    10px
+    calc(7px + env(safe-area-inset-bottom));
   display:grid;
   grid-template-columns:repeat(3,1fr);
   z-index:10
@@ -422,12 +452,15 @@ input{
 .doc-progress.bad{
   color:#ff7777
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="app">
+
 
 <header>
 
@@ -441,7 +474,9 @@ input{
 
     <div>
 
-      <b>Tow<span>Brüx</span> Driver</b>
+      <b>
+        Tow<span>Brüx</span> Driver
+      </b>
 
       <div class="sub">
         Aplikace pro řidiče
@@ -453,15 +488,28 @@ input{
 
 </header>
 
+
 <main>
 
-<section id="login" class="view active login">
+
+<!-- =========================
+     LOGIN
+========================= -->
+
+<section
+  id="login"
+  class="view active login"
+>
 
   <div class="card">
 
-    <div class="big">🚛</div>
+    <div class="big">
+      🚛
+    </div>
 
-    <h1>Přihlášení řidiče</h1>
+    <h1>
+      Přihlášení řidiče
+    </h1>
 
     <p>
       Propoj aplikaci s TowBrüx a přijímej
@@ -502,9 +550,17 @@ input{
 </section>
 
 
-<section id="home" class="view">
+<!-- =========================
+     HOME
+========================= -->
+
+<section
+  id="home"
+  class="view"
+>
 
   <div id="jobArea"></div>
+
 
   <div class="card">
 
@@ -522,11 +578,15 @@ input{
 
       </div>
 
-      <span id="shift" class="badge">
+      <span
+        id="shift"
+        class="badge"
+      >
         PŘIPRAVEN
       </span>
 
     </div>
+
 
     <div
       class="kpi"
@@ -535,7 +595,10 @@ input{
 
       <div class="box">
 
-        <div id="active" class="num">
+        <div
+          id="active"
+          class="num"
+        >
           0
         </div>
 
@@ -545,9 +608,13 @@ input{
 
       </div>
 
+
       <div class="box">
 
-        <div id="done" class="num">
+        <div
+          id="done"
+          class="num"
+        >
           0
         </div>
 
@@ -558,6 +625,7 @@ input{
       </div>
 
     </div>
+
 
     <div
       id="connection"
@@ -598,7 +666,14 @@ input{
 </section>
 
 
-<section id="history" class="view">
+<!-- =========================
+     HISTORY
+========================= -->
+
+<section
+  id="history"
+  class="view"
+>
 
   <div class="card">
 
@@ -613,7 +688,14 @@ input{
 </section>
 
 
-<section id="profile" class="view">
+<!-- =========================
+     PROFILE
+========================= -->
+
+<section
+  id="profile"
+  class="view"
+>
 
   <div class="card">
 
@@ -640,6 +722,8 @@ input{
 
   </div>
 
+
+  <!-- PUSH -->
 
   <div
     id="notifyCard"
@@ -673,6 +757,8 @@ input{
   </div>
 
 
+  <!-- CONNECTION -->
+
   <div class="card">
 
     <h2>
@@ -698,6 +784,8 @@ input{
   </div>
 
 
+  <!-- TEST -->
+
   <div class="card">
 
     <h2>
@@ -722,10 +810,18 @@ input{
 
 </section>
 
+
 </main>
 
 
-<nav id="nav" style="display:none">
+<!-- =========================
+     NAV
+========================= -->
+
+<nav
+  id="nav"
+  style="display:none"
+>
 
   <button
     class="active"
@@ -740,6 +836,7 @@ input{
 
   </button>
 
+
   <button
     onclick="show('history',this)"
   >
@@ -751,6 +848,7 @@ input{
     Historie
 
   </button>
+
 
   <button
     onclick="show('profile',this)"
@@ -767,46 +865,99 @@ input{
 </nav>
 
 
-<div id="toast" class="toast"></div>
+<div
+  id="toast"
+  class="toast"
+></div>
+
 
 </div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
 
-const PROJECT_URL=
+
+/* =========================
+   ZÁKLADNÍ NASTAVENÍ
+========================= */
+
+const PROJECT_URL =
 'https://qoqxmmmijnqrkhmdhibg.supabase.co';
 
-const STORAGE_BUCKET=
+
+const STORAGE_BUCKET =
 'zakazky-dokumentace';
 
-const K='tb_job',
-      H='tb_hist',
-      P='tb_profile',
-      C='tb_connection',
-      SUB='tb_push_v3';
+
+const K =
+'tb_job';
 
 
-const S=[
+const H =
+'tb_hist';
 
-  ['new','NOVÁ','📨 Čeká na přijetí'],
 
-  ['accepted','PŘIJATA','🟢 Zakázka přijata'],
+const P =
+'tb_profile';
 
-  ['enroute','VYRAZIL','🚚 Řidič vyrazil'],
 
-  ['onsite','NA MÍSTĚ','📍 Řidič je na místě'],
+const C =
+'tb_connection';
 
-  ['service','V SERVISU','🔧 Vozidlo je v servisu'],
 
-  ['done','DOKONČENA','✅ Zakázka dokončena']
+const SUB =
+'tb_push_v3';
+
+
+/* =========================
+   STAVY
+========================= */
+
+const S = [
+
+  [
+    'new',
+    'NOVÁ',
+    '📨 Čeká na přijetí'
+  ],
+
+  [
+    'accepted',
+    'PŘIJATA',
+    '🟢 Zakázka přijata'
+  ],
+
+  [
+    'enroute',
+    'VYRAZIL',
+    '🚚 Řidič vyrazil'
+  ],
+
+  [
+    'onsite',
+    'NA MÍSTĚ',
+    '📍 Řidič je na místě'
+  ],
+
+  [
+    'service',
+    'V SERVISU',
+    '🔧 Vozidlo je v servisu'
+  ],
+
+  [
+    'done',
+    'DOKONČENA',
+    '✅ Zakázka dokončena'
+  ]
 
 ];
 
 
-const DB={
+const DB = {
 
   nova:'new',
   prijata:'accepted',
@@ -818,7 +969,7 @@ const DB={
 };
 
 
-const UI={
+const UI = {
 
   new:'nova',
   accepted:'prijata',
@@ -830,19 +981,33 @@ const UI={
 };
 
 
-let sb=null;
-let channel=null;
-let tbConnected=false;
+/* =========================
+   GLOBÁLNÍ PROMĚNNÉ
+========================= */
 
+let sb = null;
+
+let channel = null;
+
+let tbConnected = false;
+
+
+/* =========================
+   LOCAL STORAGE
+========================= */
 
 function job(){
 
   try{
+
     return JSON.parse(
       localStorage.getItem(K)||'null'
     );
+
   }catch(e){
+
     return null;
+
   }
 
 }
@@ -851,11 +1016,15 @@ function job(){
 function hist(){
 
   try{
+
     return JSON.parse(
       localStorage.getItem(H)||'[]'
     );
+
   }catch(e){
+
     return [];
+
   }
 
 }
@@ -864,170 +1033,274 @@ function hist(){
 function cfg(){
 
   try{
+
     return JSON.parse(
       localStorage.getItem(C)||'{}'
     );
+
   }catch(e){
+
     return {};
+
   }
 
 }
 
+
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function esc(x){
 
   return String(x??'')
-    .replace(/[&<>"']/g,c=>({
+    .replace(
+      /[&<>"']/g,
+      c=>({
 
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#39;'
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
 
-    }[c]));
+      }[c])
+    );
 
 }
 
 
+/* =========================
+   TOAST
+========================= */
+
 function toast(x){
 
-  const t=
-    document.getElementById('toast');
+  const t =
+    document.getElementById(
+      'toast'
+    );
 
   if(!t)
     return;
 
-  t.textContent=x;
+  t.textContent =
+    x;
 
-  t.classList.add('show');
+  t.classList.add(
+    'show'
+  );
 
-  clearTimeout(window.__tbToast);
+  clearTimeout(
+    window.__tbToast
+  );
 
-  window.__tbToast=
-    setTimeout(()=>{
+  window.__tbToast =
+    setTimeout(
+      ()=>{
 
-      t.classList.remove('show');
+        t.classList.remove(
+          'show'
+        );
 
-    },2400);
-
-}
-
-
-function connection(x,ok=false){
-
-  const e=
-    document.getElementById('connection');
-
-  if(e){
-
-    e.textContent=x;
-
-    e.className=
-      'statusline'+
-      (ok?' ok':'');
-
-  }
+      },
+      2400
+    );
 
 }
 
 
-function setLoginStatus(x,ok=false){
+/* =========================
+   CONNECTION STATUS
+========================= */
 
-  const e=
-    document.getElementById('loginStatus');
+function connection(
+  x,
+  ok=false
+){
+
+  const e =
+    document.getElementById(
+      'connection'
+    );
 
   if(!e)
     return;
 
-  e.textContent=x;
+  e.textContent =
+    x;
 
-  e.className=
+  e.className =
     'statusline'+
-    (ok?' ok':'');
+    (
+      ok
+        ?' ok'
+        :''
+    );
 
 }
 
 
-function show(id,b){
+function setLoginStatus(
+  x,
+  ok=false
+){
+
+  const e =
+    document.getElementById(
+      'loginStatus'
+    );
+
+  if(!e)
+    return;
+
+  e.textContent =
+    x;
+
+  e.className =
+    'statusline'+
+    (
+      ok
+        ?' ok'
+        :''
+    );
+
+}
+
+
+/* =========================
+   NAVIGACE
+========================= */
+
+function show(
+  id,
+  b
+){
 
   document
-    .querySelectorAll('.view')
-    .forEach(x=>{
+    .querySelectorAll(
+      '.view'
+    )
+    .forEach(
+      x=>{
 
-      x.classList.remove('active');
-      x.style.display='none';
+        x.classList.remove(
+          'active'
+        );
 
-    });
+        x.style.display =
+          'none';
+
+      }
+    );
 
 
-  const target=
-    document.getElementById(id);
+  const target =
+    document.getElementById(
+      id
+    );
 
 
   if(target){
 
-    target.classList.add('active');
+    target.classList.add(
+      'active'
+    );
+
 
     if(id==='login'){
-      target.style.display='flex';
+
+      target.style.display =
+        'flex';
+
     }else{
-      target.style.display='block';
+
+      target.style.display =
+        'block';
+
     }
 
   }
 
 
   document
-    .querySelectorAll('nav button')
-    .forEach(x=>
-      x.classList.remove('active')
+    .querySelectorAll(
+      'nav button'
+    )
+    .forEach(
+      x=>
+        x.classList.remove(
+          'active'
+        )
     );
 
 
   if(b)
-    b.classList.add('active');
+    b.classList.add(
+      'active'
+    );
 
 
   if(id==='history')
     renderHist();
 
+
+  if(id==='profile')
+    updatePushUI();
+
 }
 
 
+/* =========================
+   PŘIHLÁŠENÍ / ODHLÁŠENÍ UI
+========================= */
+
 function setLoggedIn(){
 
-  const loginView=
-    document.getElementById('login');
+  const loginView =
+    document.getElementById(
+      'login'
+    );
 
-  const homeView=
-    document.getElementById('home');
+  const homeView =
+    document.getElementById(
+      'home'
+    );
 
-  const nav=
-    document.getElementById('nav');
+  const nav =
+    document.getElementById(
+      'nav'
+    );
 
 
   if(loginView){
 
-    loginView.classList.remove('active');
+    loginView.classList.remove(
+      'active'
+    );
 
-    loginView.style.display='none';
+    loginView.style.display =
+      'none';
 
   }
 
 
   if(homeView){
 
-    homeView.classList.add('active');
+    homeView.classList.add(
+      'active'
+    );
 
-    homeView.style.display='block';
+    homeView.style.display =
+      'block';
 
   }
 
 
   if(nav){
 
-    nav.style.display='grid';
+    nav.style.display =
+      'grid';
 
   }
 
@@ -1037,72 +1310,107 @@ function setLoggedIn(){
 function setLoggedOut(){
 
   document
-    .querySelectorAll('.view')
-    .forEach(x=>{
+    .querySelectorAll(
+      '.view'
+    )
+    .forEach(
+      x=>{
 
-      x.classList.remove('active');
+        x.classList.remove(
+          'active'
+        );
 
-      x.style.display='none';
+        x.style.display =
+          'none';
 
-    });
+      }
+    );
 
 
-  const loginView=
-    document.getElementById('login');
+  const loginView =
+    document.getElementById(
+      'login'
+    );
 
-  const nav=
-    document.getElementById('nav');
+  const nav =
+    document.getElementById(
+      'nav'
+    );
 
 
   if(loginView){
 
-    loginView.classList.add('active');
+    loginView.classList.add(
+      'active'
+    );
 
-    loginView.style.display='flex';
+    loginView.style.display =
+      'flex';
 
   }
 
 
   if(nav){
 
-    nav.style.display='none';
+    nav.style.display =
+      'none';
 
   }
 
 }
 
 
+/* =========================
+   PŘEVOD DB → JOB
+========================= */
+
 function dbToJob(r){
 
-  const old=job();
+  const old =
+    job();
 
 
-  return{
+  return {
 
-    dbId:r.id,
+    dbId:
+      r.id,
 
     id:
       r.cislo_zakazky||
-      ('TB-'+r.id),
+      (
+        'TB-'+
+        r.id
+      ),
 
-    client:r.klient||'',
+    client:
+      r.klient||
+      '',
 
-    impact:r.zasah||'',
+    impact:
+      r.zasah||
+      '',
 
-    service:r.servis||'',
+    service:
+      r.servis||
+      '',
 
-    note:r.poznamka||'',
+    note:
+      r.poznamka||
+      '',
 
     status:
-      DB[r.stav]||'new',
+      DB[r.stav]||
+      'new',
 
     times:
-      old&&old.dbId===r.id
+      old&&
+      old.dbId===r.id
         ?old.times||{}
         :{},
 
     docs:
-      old&&old.dbId===r.id
+      old&&
+      old.dbId===r.id
         ?old.docs||{}
         :{}
 
@@ -1111,6 +1419,10 @@ function dbToJob(r){
 }
 
 
+/* =========================
+   SERVICE WORKER
+========================= */
+
 async function registerSW(){
 
   if(
@@ -1118,13 +1430,16 @@ async function registerSW(){
   )
     return null;
 
+
   try{
 
     return await navigator
       .serviceWorker
       .register(
         './sw.js?v=20260827-push',
-        {scope:'./'}
+        {
+          scope:'./'
+        }
       );
 
   }catch(e){
@@ -1147,15 +1462,20 @@ async function registerSW(){
 
 async function login(){
 
-  const d=
+  const d =
     document
-      .getElementById('loginDriver')
+      .getElementById(
+        'loginDriver'
+      )
       .value
       .trim();
 
-  const k=
+
+  const k =
     document
-      .getElementById('loginKey')
+      .getElementById(
+        'loginKey'
+      )
       .value
       .trim();
 
@@ -1177,21 +1497,29 @@ async function login(){
 
     JSON.stringify({
 
-      url:PROJECT_URL,
-      key:k,
-      driver:d
+      url:
+        PROJECT_URL,
+
+      key:
+        k,
+
+      driver:
+        d
 
     })
 
   );
 
 
-  const driverId=
-    document.getElementById('driverId');
+  const driverId =
+    document.getElementById(
+      'driverId'
+    );
 
 
   if(driverId)
-    driverId.value=d;
+    driverId.value =
+      d;
 
 
   setLoginStatus(
@@ -1225,22 +1553,26 @@ async function login(){
   }
 
 
-  setTimeout(()=>{
+  setTimeout(
+    ()=>{
 
-    updatePushUI();
+      updatePushUI();
 
-  },500);
+    },
+    500
+  );
 
 }
 
 
 /* =========================
-   SUPABASE
+   SUPABASE CONNECT
 ========================= */
 
 async function connect(){
 
-  const c=cfg();
+  const c =
+    cfg();
 
 
   if(
@@ -1260,7 +1592,7 @@ async function connect(){
 
   try{
 
-    sb=
+    sb =
       window.supabase
         .createClient(
           c.url,
@@ -1284,7 +1616,7 @@ async function connect(){
     }
 
 
-    channel=
+    channel =
       sb.channel(
         'towbrux-driver-'+
         c.driver
@@ -1312,7 +1644,7 @@ async function connect(){
 
         payload=>{
 
-          const r=
+          const r =
             payload.new||
             payload.old||
             {};
@@ -1323,7 +1655,9 @@ async function connect(){
             'DELETE'
           ){
 
-            localStorage.removeItem(K);
+            localStorage.removeItem(
+              K
+            );
 
             render();
 
@@ -1345,14 +1679,20 @@ async function connect(){
             'dokoncena'
           ){
 
-            const old=job();
+            const old =
+              job();
 
 
             if(old){
 
-              let h=hist();
+              let h =
+                hist();
 
-              h.unshift(old);
+
+              h.unshift(
+                old
+              );
+
 
               localStorage.setItem(
                 H,
@@ -1362,13 +1702,18 @@ async function connect(){
             }
 
 
-            localStorage.removeItem(K);
+            localStorage.removeItem(
+              K
+            );
+
 
             render();
+
 
             toast(
               '✅ Zakázka dokončena'
             );
+
 
             return;
 
@@ -1404,56 +1749,72 @@ async function connect(){
 
       )
 
-      .subscribe(status=>{
 
-        if(
-          status===
-          'SUBSCRIBED'
-        ){
+      .subscribe(
+        status=>{
 
-          tbConnected=true;
+          if(
+            status===
+            'SUBSCRIBED'
+          ){
 
-          connection(
-            'Supabase: realtime aktivní',
-            true
-          );
+            tbConnected =
+              true;
+
+
+            connection(
+              'Supabase: realtime aktivní',
+              true
+            );
+
+          }
+
+
+          else if(
+
+            status===
+            'CHANNEL_ERROR'||
+            status===
+            'TIMED_OUT'
+
+          ){
+
+            tbConnected =
+              false;
+
+
+            connection(
+              'Supabase: chyba realtime'
+            );
+
+          }
 
         }
-
-
-        else if(
-
-          status===
-          'CHANNEL_ERROR'||
-          status===
-          'TIMED_OUT'
-
-        ){
-
-          tbConnected=false;
-
-          connection(
-            'Supabase: chyba realtime'
-          );
-
-        }
-
-      });
+      );
 
 
   }catch(e){
 
-    console.error(e);
+    console.error(
+      e
+    );
 
-    tbConnected=false;
+
+    tbConnected =
+      false;
+
 
     connection(
       'Supabase: chyba připojení'
     );
 
+
     setLoginStatus(
       'Připojení se nepodařilo: '+
-      (e.message||'chyba')
+      (
+        e.message||
+        'chyba'
+      )
     );
 
   }
@@ -1461,9 +1822,14 @@ async function connect(){
 }
 
 
+/* =========================
+   NAČTENÍ AKTIVNÍ ZAKÁZKY
+========================= */
+
 async function loadActive(){
 
-  const c=cfg();
+  const c =
+    cfg();
 
 
   if(!sb)
@@ -1473,12 +1839,16 @@ async function loadActive(){
   const {
     data,
     error
-  }=
+  } =
     await sb
 
-      .from('zakazky')
+      .from(
+        'zakazky'
+      )
 
-      .select('*')
+      .select(
+        '*'
+      )
 
       .eq(
         'ridic_id',
@@ -1492,26 +1862,35 @@ async function loadActive(){
 
       .order(
         'vytvoreno',
-        {ascending:false}
+        {
+          ascending:false
+        }
       )
 
-      .limit(1);
+      .limit(
+        1
+      );
 
 
   if(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     connection(
       'Supabase: chyba načtení'
     );
+
 
     return;
 
   }
 
 
-  tbConnected=true;
+  tbConnected =
+    true;
 
 
   connection(
@@ -1530,10 +1909,13 @@ async function loadActive(){
       K,
 
       JSON.stringify(
-        dbToJob(data[0])
+        dbToJob(
+          data[0]
+        )
       )
 
     );
+
 
     render();
 
@@ -1546,7 +1928,7 @@ async function loadActive(){
    DOKUMENTACE
 ========================= */
 
-const DOCS=[
+const DOCS = [
 
   {
     key:'foto1',
@@ -1589,13 +1971,16 @@ const DOCS=[
 
 function getDocs(){
 
-  const j=job();
+  const j =
+    job();
+
 
   if(
     !j||
     !j.dbId
   )
     return {};
+
 
   return j.docs||{};
 
@@ -1604,7 +1989,9 @@ function getDocs(){
 
 function docsCount(){
 
-  const d=getDocs();
+  const d =
+    getDocs();
+
 
   return DOCS.filter(
     x=>d[x.key]
@@ -1615,24 +2002,39 @@ function docsCount(){
 
 function docsComplete(){
 
-  return docsCount()===DOCS.length;
+  return (
+    docsCount()===
+    DOCS.length
+  );
 
 }
 
 
-function docFileId(key){
+function docFileId(
+  key
+){
 
-  return 'docfile-'+key;
+  return (
+    'docfile-'+
+    key
+  );
 
 }
 
 
-function openDocPicker(key){
+/* =========================
+   OTEVŘENÍ FOTO
+========================= */
 
-  const input=
+function openDocPicker(
+  key
+){
+
+  const input =
     document.getElementById(
       docFileId(key)
     );
+
 
   if(input)
     input.click();
@@ -1640,10 +2042,21 @@ function openDocPicker(key){
 }
 
 
-async function uploadDocument(key,file){
+/* =========================
+   UPLOAD FOTO
+========================= */
 
-  const j=job();
-  const c=cfg();
+async function uploadDocument(
+  key,
+  file
+){
+
+  const j =
+    job();
+
+
+  const c =
+    cfg();
 
 
   if(
@@ -1668,7 +2081,9 @@ async function uploadDocument(key,file){
 
   if(
     !file.type||
-    !file.type.startsWith('image/')
+    !file.type.startsWith(
+      'image/'
+    )
   ){
 
     toast(
@@ -1687,27 +2102,34 @@ async function uploadDocument(key,file){
     );
 
 
-    /*
-      Každá zakázka má vlastní složku.
-      Název obsahuje řidiče a ID zakázky.
-    */
-
-    const safeDriver=
-      String(c.driver)
-        .replace(/[^a-zA-Z0-9_-]/g,'');
-
-    const safeJob=
-      String(j.dbId)
-        .replace(/[^a-zA-Z0-9_-]/g,'');
+    const safeDriver =
+      String(
+        c.driver
+      )
+      .replace(
+        /[^a-zA-Z0-9_-]/g,
+        ''
+      );
 
 
-    const ext=
-      file.type==='image/png'
+    const safeJob =
+      String(
+        j.dbId
+      )
+      .replace(
+        /[^a-zA-Z0-9_-]/g,
+        ''
+      );
+
+
+    const ext =
+      file.type===
+      'image/png'
         ?'png'
         :'jpg';
 
 
-    const path=
+    const path =
       safeDriver+
       '/'+
       safeJob+
@@ -1717,26 +2139,26 @@ async function uploadDocument(key,file){
       ext;
 
 
-    /*
-      Při opakovaném focení přepíšeme
-      původní fotografii.
-    */
-
     const {
       error
-    }=
+    } =
       await sb.storage
 
-        .from(STORAGE_BUCKET)
+        .from(
+          STORAGE_BUCKET
+        )
 
         .upload(
           path,
           file,
           {
+
             contentType:
               file.type,
 
-            upsert:true
+            upsert:
+              true
+
           }
         );
 
@@ -1745,31 +2167,43 @@ async function uploadDocument(key,file){
       throw error;
 
 
-    /*
-      Pro první verzi si uložíme
-      cestu k souboru lokálně
-      ke konkrétní zakázce.
-    */
-
-    const current=job();
-
-    current.docs=
-      current.docs||{};
+    const current =
+      job();
 
 
-    current.docs[key]={
-      path,
-      name:file.name,
-      type:file.type,
+    current.docs =
+      current.docs||
+      {};
+
+
+    current.docs[key] = {
+
+      path:
+
+        path,
+
+      name:
+        file.name,
+
+      type:
+        file.type,
+
       uploadedAt:
+
         new Date()
           .toISOString()
+
     };
 
 
     localStorage.setItem(
+
       K,
-      JSON.stringify(current)
+
+      JSON.stringify(
+        current
+      )
+
     );
 
 
@@ -1777,11 +2211,16 @@ async function uploadDocument(key,file){
 
 
     toast(
-      '✅ '+(
+      '✅ '+
+      (
         DOCS.find(
-          x=>x.key===key
-        )?.title||'Fotka'
-      )+' nahrána'
+          x=>
+            x.key===
+            key
+        )?.title||
+        'Fotka'
+      )+
+      ' nahrána'
     );
 
 
@@ -1795,7 +2234,10 @@ async function uploadDocument(key,file){
 
     toast(
       '❌ Fotku se nepodařilo nahrát: '+
-      (e.message||'chyba')
+      (
+        e.message||
+        'chyba'
+      )
     );
 
   }
@@ -1803,83 +2245,127 @@ async function uploadDocument(key,file){
 }
 
 
-function publicDocUrl(path){
+/* =========================
+   PUBLIC URL FOTO
+========================= */
 
-  if(!sb||!path)
+function publicDocUrl(
+  path
+){
+
+  if(
+    !sb||
+    !path
+  )
     return '';
 
 
   const {
     data
-  }=
+  } =
     sb.storage
 
-      .from(STORAGE_BUCKET)
+      .from(
+        STORAGE_BUCKET
+      )
 
-      .getPublicUrl(path);
+      .getPublicUrl(
+        path
+      );
 
 
-  return data?.publicUrl||'';
+  return (
+    data?.publicUrl||
+    ''
+  );
 
 }
 
 
-function documentationHtml(j){
+/* =========================
+   HTML DOKUMENTACE
+========================= */
+
+function documentationHtml(
+  j
+){
+
+  const ix =
+    S.findIndex(
+      x=>
+        x[0]===
+        j.status
+    );
+
+
+  const onsiteIx =
+    S.findIndex(
+      x=>
+        x[0]===
+        'onsite'
+    );
+
 
   /*
-    Dokumentace je požadována
-    od stavu NA MÍSTĚ.
+    Dokumentace se ukáže
+    až po NA MÍSTĚ.
   */
 
-  const ix=
-    S.findIndex(
-      x=>x[0]===j.status
-    );
+  if(
+    ix<
+    onsiteIx
+  ){
 
-  const onsiteIx=
-    S.findIndex(
-      x=>x[0]==='onsite'
-    );
-
-
-  if(ix<onsiteIx)
     return '';
 
+  }
 
-  const d=
+
+  const d =
     j.docs||{};
 
 
-  const count=
+  const count =
     DOCS.filter(
-      x=>d[x.key]
+      x=>
+        d[x.key]
     ).length;
 
 
-  const complete=
-    count===DOCS.length;
+  const complete =
+    count===
+    DOCS.length;
 
 
-  let html=
+  let html =
 
     '<div class="card">'+
 
       '<div class="label">'+
-      '📸 Dokumentace zásahu'+
+        '📸 Dokumentace zásahu'+
       '</div>'+
 
       '<div class="note">'+
-      'Před dokončením zakázky je potřeba nahrát 5 fotografií vozidla a fotografii zakázkového listu.'+
+        'Před dokončením zakázky je potřeba nahrát 5 fotografií vozidla a fotografii zakázkového listu.'+
       '</div>'+
 
       '<div class="doc-progress '+
-        (complete?'ok':'bad')+
+        (
+          complete
+            ?'ok'
+            :'bad'
+        )+
       '">'+
 
         (
           complete
-            ?'✅ Dokumentace kompletní'
-            :'📷 Nahráno '+count+' / '+DOCS.length
+            ?
+            '✅ Dokumentace kompletní'
+            :
+            '📷 Nahráno '+
+            count+
+            ' / '+
+            DOCS.length
         )+
 
       '</div>'+
@@ -1887,98 +2373,116 @@ function documentationHtml(j){
       '<div class="doc-grid">';
 
 
-  DOCS.forEach(item=>{
+  DOCS.forEach(
+    item=>{
 
-    const doc=
-      d[item.key];
-
-
-    const url=
-      doc&&doc.path
-        ?publicDocUrl(doc.path)
-        :'';
+      const doc =
+        d[item.key];
 
 
-    html+=
+      const url =
+        doc&&
+        doc.path
+          ?
+          publicDocUrl(
+            doc.path
+          )
+          :
+          '';
 
-      '<div class="doc-item">'+
 
-        (
-          url
+      html +=
 
-            ?
-
-            '<img class="doc-preview" src="'+
-            esc(url)+
-            '" alt="'+
-            esc(item.title)+
-            '">' 
-
-            :
-
-            '<div class="doc-empty">📷</div>'
-        )+
-
-        '<div class="doc-name">'+
-        esc(item.title)+
-        '</div>'+
-
-        '<div class="doc-state '+
-          (doc?'ok':'')+
-        '">'+
+        '<div class="doc-item">'+
 
           (
-            doc
-              ?'✅ Nahráno'
-              :esc(item.desc)
+
+            url
+
+              ?
+
+              '<img '+
+              'class="doc-preview" '+
+              'src="'+
+              esc(url)+
+              '" '+
+              'alt="'+
+              esc(item.title)+
+              '">' 
+
+              :
+
+              '<div class="doc-empty">'+
+                '📷'+
+              '</div>'
+
           )+
 
-        '</div>'+
+          '<div class="doc-name">'+
+            esc(
+              item.title
+            )+
+          '</div>'+
 
-        '<input'+
+          '<div class="doc-state '+
+            (
+              doc
+                ?'ok'
+                :''
+            )+
+          '">'+
 
-          ' id="'+
-          docFileId(item.key)+
-          '"'+
+            (
+              doc
+                ?
+                '✅ Nahráno'
+                :
+                esc(
+                  item.desc
+                )
+            )+
 
-          ' class="doc-file"'+
+          '</div>'+
 
-          ' type="file"'+
+          '<input '+
+            'id="'+
+            docFileId(
+              item.key
+            )+
+            '" '+
+            'class="doc-file" '+
+            'type="file" '+
+            'accept="image/*" '+
+            'capture="environment" '+
+            'onchange="uploadDocument(\''+
+            item.key+
+            '\',this.files[0])"'+
+          '>'+
 
-          ' accept="image/*"'+
+          '<button '+
+            'class="doc-button" '+
+            'onclick="openDocPicker(\''+
+            item.key+
+            '\')"'+
+          '>'+
 
-          ' capture="environment"'+
+            (
+              doc
+                ?
+                '📷 Vyfotit znovu'
+                :
+                '📷 Vyfotit'
+            )+
 
-          ' onchange="uploadDocument(\''+
-          item.key+
-          '\',this.files[0])"'+
+          '</button>'+
 
-        '>'+
+        '</div>';
 
-        '<button'+
-
-          ' class="doc-button"'+
-
-          ' onclick="openDocPicker(\''+
-          item.key+
-          '\')"'+
-
-        '>'+
-
-          (
-            doc
-              ?'📷 Vyfotit znovu'
-              :'📷 Vyfotit'
-          )+
-
-        '</button>'+
-
-      '</div>';
-
-  });
+    }
+  );
 
 
-  html+=
+  html +=
 
       '</div>'+
 
@@ -1991,13 +2495,19 @@ function documentationHtml(j){
 
 
 /* =========================
-   STATUS ZAKÁZKY
+   ZMĚNA STAVU ZAKÁZKY
 ========================= */
 
-async function setStatus(s){
+async function setStatus(
+  s
+){
 
-  const j=job();
-  const c=cfg();
+  const j =
+    job();
+
+
+  const c =
+    cfg();
 
 
   if(
@@ -2017,33 +2527,41 @@ async function setStatus(s){
 
   /*
     DOKONČENO:
-    Nejdřív zkontrolujeme dokumentaci.
+    dokumentace musí být kompletní.
   */
 
-  if(s==='done'){
+  if(
+    s===
+    'done'
+  ){
 
-    if(!docsComplete()){
+    if(
+      !docsComplete()
+    ){
 
-      const missing=
+      const missing =
         DOCS
+
           .filter(
-            x=>!(j.docs||{})[x.key]
+            x=>
+              !(j.docs||{})[
+                x.key
+              ]
           )
+
           .map(
-            x=>x.title
+            x=>
+              x.title
           );
 
 
       toast(
         '⚠️ Chybí: '+
-        missing.join(', ')
+        missing.join(
+          ', '
+        )
       );
 
-
-      /*
-        Přesuneme řidiče do části
-        s dokumentací.
-      */
 
       render();
 
@@ -2055,33 +2573,43 @@ async function setStatus(s){
   }
 
 
-  const now=
+  const now =
     S.findIndex(
-      x=>x[0]===s
+      x=>
+        x[0]===
+        s
     );
 
 
-  const cur=
+  const cur =
     S.findIndex(
-      x=>x[0]===j.status
+      x=>
+        x[0]===
+        j.status
     );
 
 
-  if(now<cur)
+  if(
+    now<
+    cur
+  )
     return;
 
 
   const {
     data,
     error
-  }=
+  } =
     await sb
 
-      .from('zakazky')
+      .from(
+        'zakazky'
+      )
 
       .update({
 
-        stav:UI[s]
+        stav:
+          UI[s]
 
       })
 
@@ -2096,31 +2624,39 @@ async function setStatus(s){
       )
 
       .select()
+
       .single();
 
 
   if(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     toast(
       '❌ Stav se nepodařilo uložit'
     );
+
 
     return;
 
   }
 
 
-  const u=
-    dbToJob(data);
+  const u =
+    dbToJob(
+      data
+    );
 
 
-  u.times=
-    j.times||{};
+  u.times =
+    j.times||
+    {};
 
 
-  u.times[s]=
+  u.times[s] =
     new Date()
       .toLocaleString(
         'cs-CZ'
@@ -2128,26 +2664,39 @@ async function setStatus(s){
 
 
   /*
-    Dokumentace zůstává zachována
-    i po změně stavu.
+    Dokumentace zůstává
+    zachována.
   */
 
-  u.docs=
-    j.docs||{};
+  u.docs =
+    j.docs||
+    {};
 
 
-  if(s==='done'){
+  if(
+    s===
+    'done'
+  ){
 
-    let h=hist();
+    let h =
+      hist();
 
-    h.unshift(u);
+
+    h.unshift(
+      u
+    );
+
 
     localStorage.setItem(
       H,
       JSON.stringify(h)
     );
 
-    localStorage.removeItem(K);
+
+    localStorage.removeItem(
+      K
+    );
+
 
     toast(
       '✅ Zakázka dokončena'
@@ -2159,9 +2708,12 @@ async function setStatus(s){
 
       K,
 
-      JSON.stringify(u)
+      JSON.stringify(
+        u
+      )
 
     );
+
 
     toast(
       S[now][1]
@@ -2176,34 +2728,43 @@ async function setStatus(s){
 
 
 /* =========================
-   JOB UI
+   JOB HTML
 ========================= */
 
-function jobHtml(j){
+function jobHtml(
+  j
+){
 
-  const ix=
+  const ix =
     S.findIndex(
-      x=>x[0]===j.status
+      x=>
+        x[0]===
+        j.status
     );
 
 
-  const st=
-    S[ix]||S[0];
+  const st =
+    S[ix]||
+    S[0];
 
 
-  const buttons=
+  const buttons =
 
-    j.status==='new'
+    j.status===
+    'new'
 
       ?
 
-      '<button class="gold" onclick="setStatus(\'accepted\')">'+
-      '✅ PŘIJMOUT ZAKÁZKU'+
+      '<button '+
+      'class="gold" '+
+      'onclick="setStatus(\'accepted\')">'+
+        '✅ PŘIJMOUT ZAKÁZKU'+
       '</button>'
 
       :
 
-      j.status==='done'
+      j.status===
+      'done'
 
       ?
 
@@ -2213,26 +2774,40 @@ function jobHtml(j){
 
       '<div class="grid">'+
 
-        '<button class="dark" onclick="setStatus(\'enroute\')">'+
-        '🚚 VYRAZIL JSEM'+
+        '<button '+
+        'class="dark" '+
+        'onclick="setStatus(\'enroute\')">'+
+          '🚚 VYRAZIL JSEM'+
         '</button>'+
 
-        '<button class="blue" onclick="setStatus(\'onsite\')">'+
-        '📍 JSEM NA MÍSTĚ'+
+        '<button '+
+        'class="blue" '+
+        'onclick="setStatus(\'onsite\')">'+
+          '📍 JSEM NA MÍSTĚ'+
         '</button>'+
 
-        '<button class="dark" onclick="setStatus(\'service\')">'+
-        '🔧 V SERVISU'+
+        '<button '+
+        'class="dark" '+
+        'onclick="setStatus(\'service\')">'+
+          '🔧 V SERVISU'+
         '</button>'+
 
-        '<button class="green" onclick="setStatus(\'done\')">'+
-        '✅ DOKONČENO'+
+        '<button '+
+        'class="green" '+
+        'onclick="setStatus(\'done\')">'+
+          '✅ DOKONČENO'+
         '</button>'+
 
       '</div>';
 
 
-  return
+  /*
+    DŮLEŽITÉ:
+    return musí být v závorkách,
+    jinak JavaScript vrátí undefined.
+  */
+
+  return (
 
     '<div class="card">'+
 
@@ -2241,17 +2816,17 @@ function jobHtml(j){
         '<div>'+
 
           '<div class="ey">'+
-          'Zakázka'+
+            'Zakázka'+
           '</div>'+
 
           '<div class="job">'+
-          esc(j.id)+
+            esc(j.id)+
           '</div>'+
 
         '</div>'+
 
         '<span class="badge">'+
-        st[1]+
+          st[1]+
         '</span>'+
 
       '</div>'+
@@ -2262,15 +2837,18 @@ function jobHtml(j){
     '<div class="card">'+
 
       '<div class="label">'+
-      '📍 Zásah klienta'+
+        '📍 Zásah klienta'+
       '</div>'+
 
       '<div class="addr">'+
-      esc(j.impact)+
+        esc(j.impact)+
       '</div>'+
 
-      '<button class="dark" onclick="navTo('+JSON.stringify(j.impact)+')">'+
-      '🧭 Navigovat k zásahu'+
+      '<button '+
+        'class="dark" '+
+        'onclick="navTo('+JSON.stringify(j.impact)+')"'+
+      '>'+
+        '🧭 Navigovat k zásahu'+
       '</button>'+
 
     '</div>'+
@@ -2279,15 +2857,18 @@ function jobHtml(j){
     '<div class="card">'+
 
       '<div class="label">'+
-      '🔧 Servis klienta'+
+        '🔧 Servis klienta'+
       '</div>'+
 
       '<div class="addr">'+
-      esc(j.service)+
+        esc(j.service)+
       '</div>'+
 
-      '<button class="dark" onclick="navTo('+JSON.stringify(j.service)+')">'+
-      '🧭 Navigovat do servisu'+
+      '<button '+
+        'class="dark" '+
+        'onclick="navTo('+JSON.stringify(j.service)+')"'+
+      '>'+
+        '🧭 Navigovat do servisu'+
       '</button>'+
 
     '</div>'+
@@ -2296,68 +2877,80 @@ function jobHtml(j){
     '<div class="card">'+
 
       '<div class="label">'+
-      '📝 Poznámka dispečera'+
+        '📝 Poznámka dispečera'+
       '</div>'+
 
       '<div class="note">'+
-      esc(
-        j.note||
-        'Bez poznámky'
-      )+
+        esc(
+          j.note||
+          'Bez poznámky'
+        )+
       '</div>'+
 
       buttons+
 
     '</div>'+
 
+
     /*
-      NOVÁ DOKUMENTACE
+      DOKUMENTACE
     */
 
-    documentationHtml(j)+
+    documentationHtml(
+      j
+    )+
 
+
+    /*
+      PRŮBĚH
+    */
 
     '<div class="card">'+
 
       '<div class="label">'+
-      'Průběh zakázky'+
+        'Průběh zakázky'+
       '</div>'+
 
-      S.map((s,i)=>
+      S.map(
+        (s,i)=>
 
-        '<div class="step">'+
+          '<div class="step">'+
 
-          '<div class="dot '+
-            (
-              i<ix
-                ?'on'
-                :
-              i===ix
-                ?'cur'
-                :''
-            )+
-          '"></div>'+
+            '<div class="dot '+
+              (
+                i<ix
+                  ?'on'
+                  :
+                i===ix
+                  ?'cur'
+                  :''
+              )+
+            '"></div>'+
 
-          '<div>'+
+            '<div>'+
 
-            '<b>'+
-            s[1]+
-            '</b>'+
+              '<b>'+
+                s[1]+
+              '</b>'+
 
-            '<div class="small">'+
-            esc(
-              j.times?.[s[0]]||
-              s[2]
-            )+
+              '<div class="small">'+
+                esc(
+                  j.times?.[
+                    s[0]
+                  ]||
+                  s[2]
+                )+
+              '</div>'+
+
             '</div>'+
 
-          '</div>'+
-
-        '</div>'
+          '</div>'
 
       ).join('')+
 
-    '</div>';
+    '</div>'
+
+  );
 
 }
 
@@ -2368,10 +2961,11 @@ function jobHtml(j){
 
 function render(){
 
-  const j=job();
+  const j =
+    job();
 
 
-  const area=
+  const area =
     document.getElementById(
       'jobArea'
     );
@@ -2381,39 +2975,45 @@ function render(){
     return;
 
 
-  area.innerHTML=
+  area.innerHTML =
 
     j
 
       ?
 
-      jobHtml(j)
+      jobHtml(
+        j
+      )
 
       :
 
       '<div class="card empty">'+
 
-        '<div class="big">📭</div>'+
+        '<div class="big">'+
+          '📭'+
+        '</div>'+
 
         '<h2>'+
-        'Žádná aktivní zakázka'+
+          'Žádná aktivní zakázka'+
         '</h2>'+
 
         '<div>'+
-        'Jakmile dispečer odešle zakázku,'+
-        ' zobrazí se zde.'+
+          'Jakmile dispečer odešle zakázku,'+
+          ' zobrazí se zde.'+
         '</div>'+
 
       '</div>';
 
 
-  const active=
-    document.getElementById('active');
+  const active =
+    document.getElementById(
+      'active'
+    );
 
 
   if(active){
 
-    active.textContent=
+    active.textContent =
 
       j&&
       j.status!=='done'
@@ -2423,13 +3023,18 @@ function render(){
   }
 
 
-  const done=
-    document.getElementById('done');
+  const done =
+    document.getElementById(
+      'done'
+    );
 
 
-  if(done)
-    done.textContent=
+  if(done){
+
+    done.textContent =
       hist().length;
+
+  }
 
 }
 
@@ -2440,53 +3045,58 @@ function render(){
 
 function renderHist(){
 
-  const h=hist();
+  const h =
+    hist();
 
-  const el=
-    document.getElementById('hist');
+
+  const el =
+    document.getElementById(
+      'hist'
+    );
 
 
   if(!el)
     return;
 
 
-  el.innerHTML=
+  el.innerHTML =
 
     h.length
 
       ?
 
-      h.map(j=>
+      h.map(
+        j=>
 
-        '<div class="step">'+
+          '<div class="step">'+
 
-          '<div class="dot on"></div>'+
-
-          '<div>'+
-
-            '<b>'+
-            esc(j.id)+
-            '</b>'+
+            '<div class="dot on"></div>'+
 
             '<div>'+
-            esc(j.impact)+
+
+              '<b>'+
+                esc(j.id)+
+              '</b>'+
+
+              '<div>'+
+                esc(j.impact)+
+              '</div>'+
+
+              '<div class="small">'+
+                'Servis: '+
+                esc(j.service)+
+              '</div>'+
+
             '</div>'+
 
-            '<div class="small">'+
-            'Servis: '+
-            esc(j.service)+
-            '</div>'+
-
-          '</div>'+
-
-        '</div>'
+          '</div>'
 
       ).join('')
 
       :
 
       '<div class="empty">'+
-      'Zatím žádná dokončená zakázka.'+
+        'Zatím žádná dokončená zakázka.'+
       '</div>';
 
 }
@@ -2496,27 +3106,47 @@ function renderHist(){
    NAVIGACE
 ========================= */
 
-function navTo(a){
+function navTo(
+  a
+){
 
-  location.href=
+  location.href =
     'https://www.google.com/maps/dir/?api=1&destination='+
     encodeURIComponent(a);
 
 }
 
 
-function state(x){
+/* =========================
+   STAV ŘIDIČE
+========================= */
 
-  document.getElementById(
-    'shift'
-  ).textContent=x;
+function state(
+  x
+){
+
+  const shift =
+    document.getElementById(
+      'shift'
+    );
+
+
+  if(shift)
+    shift.textContent =
+      x;
+
 
   toast(
-    'Stav: '+x
+    'Stav: '+
+    x
   );
 
 }
 
+
+/* =========================
+   PROFIL
+========================= */
 
 function saveProfile(){
 
@@ -2528,17 +3158,22 @@ function saveProfile(){
 
       name:
         document
-          .getElementById('name')
+          .getElementById(
+            'name'
+          )
           .value,
 
       car:
         document
-          .getElementById('car')
+          .getElementById(
+            'car'
+          )
           .value
 
     })
 
   );
+
 
   toast(
     'Profil uložen'
@@ -2569,12 +3204,21 @@ function logout(){
   }
 
 
-  channel=null;
-  sb=null;
-  tbConnected=false;
+  channel =
+    null;
 
 
-  localStorage.removeItem(C);
+  sb =
+    null;
+
+
+  tbConnected =
+    false;
+
+
+  localStorage.removeItem(
+    C
+  );
 
 
   setLoggedOut();
@@ -2599,11 +3243,21 @@ function clearData(){
     )
   ){
 
-    localStorage.removeItem(K);
-    localStorage.removeItem(H);
-    localStorage.removeItem(P);
+    localStorage.removeItem(
+      K
+    );
+
+    localStorage.removeItem(
+      H
+    );
+
+    localStorage.removeItem(
+      P
+    );
+
 
     render();
+
 
     toast(
       'Data vymazána'
@@ -2626,7 +3280,8 @@ function demo(){
 
     JSON.stringify({
 
-      id:'TB-2026-001',
+      id:
+        'TB-2026-001',
 
       impact:
         'Most, ulice J. Palacha',
@@ -2637,11 +3292,14 @@ function demo(){
       note:
         'Zákazník čeká na místě. Po naložení pokračovat do servisu.',
 
-      status:'new',
+      status:
+        'new',
 
-      times:{},
+      times:
+        {},
 
-      docs:{}
+      docs:
+        {}
 
     })
 
@@ -2674,26 +3332,37 @@ function urlBase64ToUint8Array(
   base64String
 ){
 
-  const padding=
+  const padding =
     '='.repeat(
-      (4-base64String.length%4)%4
+      (
+        4-
+        base64String.length%4
+      )%4
     );
 
 
-  const base64=
+  const base64 =
     (
       base64String+
       padding
     )
-    .replace(/-/g,'+')
-    .replace(/_/g,'/');
+    .replace(
+      /-/g,
+      '+'
+    )
+    .replace(
+      /_/g,
+      '/'
+    );
 
 
-  const raw=
-    atob(base64);
+  const raw =
+    atob(
+      base64
+    );
 
 
-  const out=
+  const out =
     new Uint8Array(
       raw.length
     );
@@ -2705,7 +3374,7 @@ function urlBase64ToUint8Array(
     i++
   ){
 
-    out[i]=
+    out[i] =
       raw.charCodeAt(i);
 
   }
@@ -2718,10 +3387,11 @@ function urlBase64ToUint8Array(
 
 /*
   VAPID PUBLIC KEY
-  PRIVATE KEY NIKDY NEDÁVEJ DO TOHOTO SOUBORU.
+  PRIVATE KEY NIKDY NEDÁVEJ
+  DO TOHOTO SOUBORU.
 */
 
-const VAPID_PUBLIC_KEY=
+const VAPID_PUBLIC_KEY =
 'BCR_7DAzc2W3nmStr9FSUPRbjUvXlXOv_pz2yvOTXKowDweKlT10XOCEqJLQQoD2GHsizojwmOxIo72UDE5D5LY';
 
 
@@ -2731,18 +3401,22 @@ const VAPID_PUBLIC_KEY=
 
 async function updatePushUI(){
 
-  const card=
+  const card =
     document.getElementById(
       'notifyCard'
     );
 
-  const status=
+
+  const status =
     document.getElementById(
       'notifyStatus'
     );
 
 
-  if(!card||!status)
+  if(
+    !card||
+    !status
+  )
     return;
 
 
@@ -2752,94 +3426,136 @@ async function updatePushUI(){
     !('PushManager' in window)
   ){
 
-    card.style.display='block';
+    card.style.display =
+      'block';
 
-    status.textContent=
+
+    status.textContent =
       'Tento prohlížeč Web Push nepodporuje.';
 
-    status.className=
+
+    status.className =
       'statusline bad';
+
 
     return;
 
   }
 
 
-  const permission=
+  const permission =
     Notification.permission;
 
 
   try{
 
-    const reg=
+    const reg =
       await navigator
         .serviceWorker
         .getRegistration();
 
 
-    const sub=
+    const sub =
       reg
-        ?await reg.pushManager.getSubscription()
-        :null;
+        ?
+        await reg.pushManager
+          .getSubscription()
+        :
+        null;
 
+
+    /*
+      Všechno je OK:
+      kartu schováme.
+    */
 
     if(
-      permission==='granted'&&
+      permission===
+      'granted'&&
       sub
     ){
 
-      card.style.display='none';
+      card.style.display =
+        'none';
+
 
       return;
 
     }
 
 
+    /*
+      Povolení existuje,
+      ale subscription chybí.
+    */
+
     if(
-      permission==='granted'&&
+      permission===
+      'granted'&&
       !sub
     ){
 
-      card.style.display='block';
+      card.style.display =
+        'block';
 
-      status.textContent=
+
+      status.textContent =
         'Oznámení jsou povolena, ale je potřeba obnovit registraci.';
 
-      status.className=
+
+      status.className =
         'statusline bad';
 
+
       return;
 
     }
 
 
+    /*
+      Ještě nebylo rozhodnuto.
+    */
+
     if(
-      permission==='default'
+      permission===
+      'default'
     ){
 
-      card.style.display='block';
+      card.style.display =
+        'block';
 
-      status.textContent=
+
+      status.textContent =
         'Oznámení nejsou nastavená.';
 
-      status.className=
+
+      status.className =
         'statusline';
+
 
       return;
 
     }
 
 
+    /*
+      Uživatel oznámení zakázal.
+    */
+
     if(
-      permission==='denied'
+      permission===
+      'denied'
     ){
 
-      card.style.display='block';
+      card.style.display =
+        'block';
 
-      status.textContent=
+
+      status.textContent =
         '🔕 Oznámení jsou zablokovaná. Povol je v nastavení iPhonu.';
 
-      status.className=
+
+      status.className =
         'statusline bad';
 
     }
@@ -2852,7 +3568,9 @@ async function updatePushUI(){
       e
     );
 
-    card.style.display='block';
+
+    card.style.display =
+      'block';
 
   }
 
@@ -2895,7 +3613,8 @@ async function enablePush(){
   }
 
 
-  const c=cfg();
+  const c =
+    cfg();
 
 
   if(
@@ -2914,7 +3633,7 @@ async function enablePush(){
 
   try{
 
-    let permission=
+    let permission =
       Notification.permission;
 
 
@@ -2922,7 +3641,7 @@ async function enablePush(){
       permission!=='granted'
     ){
 
-      permission=
+      permission =
         await Notification
           .requestPermission();
 
@@ -2937,14 +3656,16 @@ async function enablePush(){
         'Oznámení nebyla povolena'
       );
 
+
       await updatePushUI();
+
 
       return;
 
     }
 
 
-    const reg=
+    const reg =
       await registerSW();
 
 
@@ -2954,11 +3675,17 @@ async function enablePush(){
       );
 
 
-    let sub=
+    let sub =
       await reg
         .pushManager
         .getSubscription();
 
+
+    /*
+      Pokud existuje stará
+      VAPID subscription,
+      vytvoříme novou.
+    */
 
     if(
       sub&&
@@ -2972,19 +3699,21 @@ async function enablePush(){
       }catch(e){}
 
 
-      sub=null;
+      sub =
+        null;
 
     }
 
 
     if(!sub){
 
-      sub=
+      sub =
         await reg
           .pushManager
           .subscribe({
 
-            userVisibleOnly:true,
+            userVisibleOnly:
+              true,
 
             applicationServerKey:
               urlBase64ToUint8Array(
@@ -2996,39 +3725,51 @@ async function enablePush(){
     }
 
 
-    const json=
+    const json =
       sub.toJSON();
 
 
     const {
       error
-    }=
+    } =
       await sb
 
-        .from('push_subscriptions')
+        .from(
+          'push_subscriptions'
+        )
 
-        .upsert({
+        .upsert(
 
-          driver_id:
-            c.driver,
+          {
 
-          endpoint:
-            json.endpoint,
+            driver_id:
+              c.driver,
 
-          p256dh:
-            json.keys?.p256dh||'',
+            endpoint:
+              json.endpoint,
 
-          auth:
-            json.keys?.auth||'',
+            p256dh:
+              json.keys?.p256dh||
+              '',
 
-          updated_at:
-            new Date()
-              .toISOString()
+            auth:
+              json.keys?.auth||
+              '',
 
-        },{
-          onConflict:
-            'endpoint'
-        });
+            updated_at:
+              new Date()
+                .toISOString()
+
+          },
+
+          {
+
+            onConflict:
+              'endpoint'
+
+          }
+
+        );
 
 
     if(error)
@@ -3041,7 +3782,7 @@ async function enablePush(){
     );
 
 
-    const status=
+    const status =
       document.getElementById(
         'notifyStatus'
       );
@@ -3049,23 +3790,25 @@ async function enablePush(){
 
     if(status){
 
-      status.textContent=
+      status.textContent =
         '🔔 Oznámení jsou povolena';
 
-      status.className=
+
+      status.className =
         'statusline ok';
 
     }
 
 
-    const card=
+    const card =
       document.getElementById(
         'notifyCard'
       );
 
 
     if(card)
-      card.style.display='none';
+      card.style.display =
+        'none';
 
 
     toast(
@@ -3080,10 +3823,15 @@ async function enablePush(){
       e
     );
 
+
     toast(
       'Oznámení se nepodařilo nastavit: '+
-      (e.message||'chyba')
+      (
+        e.message||
+        'chyba'
+      )
     );
+
 
     await updatePushUI();
 
@@ -3092,19 +3840,9 @@ async function enablePush(){
 }
 
 
-/*
-  Tato funkce není volána při INSERT
-  z Realtime.
-
-  Skutečné systémové Push oznámení
-  přichází přes:
-
-  send-push
-       ↓
-  Apple
-       ↓
-  Service Worker
-*/
+/* =========================
+   OPTIONAL SW NOTIFICATION
+========================= */
 
 async function notifyFromServiceWorker(
   title,
@@ -3114,7 +3852,7 @@ async function notifyFromServiceWorker(
 
   try{
 
-    const reg=
+    const reg =
       await registerSW();
 
 
@@ -3126,17 +3864,25 @@ async function notifyFromServiceWorker(
 
         {
 
-          body,
+          body:
 
-          icon:'icon.svg',
+            body,
 
-          badge:'icon.svg',
+          icon:
+            'icon.svg',
+
+          badge:
+            'icon.svg',
 
           tag:
-            'towbrux-job-'+id,
+            'towbrux-job-'+
+            id,
 
           data:{
-            url:'./'
+
+            url:
+              './'
+
           }
 
         }
@@ -3147,7 +3893,9 @@ async function notifyFromServiceWorker(
 
   }catch(e){
 
-    console.error(e);
+    console.error(
+      e
+    );
 
   }
 
@@ -3160,86 +3908,123 @@ async function notifyFromServiceWorker(
 
 (async function(){
 
+  /*
+    Service Worker nejdříve.
+  */
+
   await registerSW();
 
 
-  const p=
+  /*
+    Profil.
+  */
+
+  const p =
     JSON.parse(
       localStorage.getItem(P)||'{}'
     );
 
 
-  const name=
-    document.getElementById('name');
+  const name =
+    document.getElementById(
+      'name'
+    );
 
-  const car=
-    document.getElementById('car');
+
+  const car =
+    document.getElementById(
+      'car'
+    );
 
 
   if(name)
-    name.value=
-      p.name||'';
+    name.value =
+      p.name||
+      '';
 
 
   if(car)
-    car.value=
-      p.car||'';
+    car.value =
+      p.car||
+      '';
 
 
-  const c=cfg();
+  /*
+    Konfigurace.
+  */
+
+  const c =
+    cfg();
 
 
-  const driverId=
+  const driverId =
     document.getElementById(
       'driverId'
     );
 
-  const loginDriver=
+
+  const loginDriver =
     document.getElementById(
       'loginDriver'
     );
 
-  const loginKey=
+
+  const loginKey =
     document.getElementById(
       'loginKey'
     );
 
 
   if(driverId)
-    driverId.value=
-      c.driver||'driver1';
+    driverId.value =
+      c.driver||
+      'driver1';
 
 
   if(loginDriver)
-    loginDriver.value=
-      c.driver||'driver1';
+    loginDriver.value =
+      c.driver||
+      'driver1';
 
+
+  /*
+    První render.
+  */
 
   render();
 
 
+  /*
+    Automatické přihlášení,
+    pokud jsou údaje uložené.
+  */
+
   if(
-    c.url===PROJECT_URL&&
+    c.url===
+    PROJECT_URL&&
     c.key&&
     c.driver
   ){
 
     if(loginKey)
-      loginKey.value=
+      loginKey.value =
         c.key;
 
 
     setLoggedIn();
 
 
-    connect();
+    await connect();
 
 
-    setTimeout(()=>{
+    setTimeout(
+      ()=>{
 
-      updatePushUI();
+        updatePushUI();
 
-    },800);
+      },
+      800
+    );
 
   }else{
 
