@@ -335,6 +335,93 @@ input{
   text-align:center;
   width:100%
 }
+
+
+/* =========================
+   DOKUMENTACE
+========================= */
+
+.doc-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:12px
+}
+
+.doc-item{
+  position:relative;
+  background:var(--p2);
+  border:1px solid var(--l);
+  border-radius:14px;
+  overflow:hidden;
+  min-height:145px
+}
+
+.doc-preview{
+  width:100%;
+  height:95px;
+  object-fit:cover;
+  display:block;
+  background:#0b1017
+}
+
+.doc-empty{
+  height:95px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  background:#0b1017
+}
+
+.doc-name{
+  padding:8px;
+  font-size:11px;
+  font-weight:800;
+  color:#dce2e9
+}
+
+.doc-state{
+  padding:0 8px 8px;
+  font-size:10px;
+  color:var(--m)
+}
+
+.doc-state.ok{
+  color:#4bd88d
+}
+
+.doc-button{
+  display:block;
+  width:100%;
+  margin:0;
+  padding:10px 6px;
+  border-radius:0;
+  font-size:11px;
+  background:#202a36;
+  color:white
+}
+
+.doc-file{
+  display:none
+}
+
+.doc-progress{
+  background:var(--p2);
+  border-radius:12px;
+  padding:11px;
+  margin-top:12px;
+  font-size:12px;
+  font-weight:800
+}
+
+.doc-progress.ok{
+  color:#4bd88d
+}
+
+.doc-progress.bad{
+  color:#ff7777
+}
 </style>
 </head>
 
@@ -692,6 +779,9 @@ input{
 const PROJECT_URL=
 'https://qoqxmmmijnqrkhmdhibg.supabase.co';
 
+const STORAGE_BUCKET=
+'zakazky-dokumentace';
+
 const K='tb_job',
       H='tb_hist',
       P='tb_profile',
@@ -879,11 +969,6 @@ function show(id,b){
 
     target.classList.add('active');
 
-    /*
-      Login má flex layout.
-      Ostatní obrazovky zobrazujeme jako block.
-    */
-
     if(id==='login'){
       target.style.display='flex';
     }else{
@@ -921,12 +1006,6 @@ function setLoggedIn(){
   const nav=
     document.getElementById('nav');
 
-
-  /*
-    DŮLEŽITÁ OPRAVA:
-    Přihlašovací obrazovku nejen
-    odaktivujeme, ale skutečně skryjeme.
-  */
 
   if(loginView){
 
@@ -995,6 +1074,9 @@ function setLoggedOut(){
 
 function dbToJob(r){
 
+  const old=job();
+
+
   return{
 
     dbId:r.id,
@@ -1014,7 +1096,15 @@ function dbToJob(r){
     status:
       DB[r.stav]||'new',
 
-    times:{}
+    times:
+      old&&old.dbId===r.id
+        ?old.times||{}
+        :{},
+
+    docs:
+      old&&old.dbId===r.id
+        ?old.docs||{}
+        :{}
 
   };
 
@@ -1108,12 +1198,6 @@ async function login(){
     'Připojuji…'
   );
 
-
-  /*
-    Přihlášení se uloží.
-    Přihlašovací obrazovka se
-    okamžitě skryje.
-  */
 
   setLoggedIn();
 
@@ -1305,12 +1389,6 @@ async function connect(){
           render();
 
 
-          /*
-            Realtime pouze aktualizuje aplikaci.
-            Systémovou Push notifikaci neposílá
-            tento kód.
-          */
-
           if(
             payload.eventType===
             'INSERT'
@@ -1465,6 +1543,454 @@ async function loadActive(){
 
 
 /* =========================
+   DOKUMENTACE
+========================= */
+
+const DOCS=[
+
+  {
+    key:'foto1',
+    title:'Foto 1',
+    desc:'Celé vozidlo'
+  },
+
+  {
+    key:'foto2',
+    title:'Foto 2',
+    desc:'Přední část'
+  },
+
+  {
+    key:'foto3',
+    title:'Foto 3',
+    desc:'Zadní část'
+  },
+
+  {
+    key:'foto4',
+    title:'Foto 4',
+    desc:'Poškození'
+  },
+
+  {
+    key:'foto5',
+    title:'Foto 5',
+    desc:'Další detail'
+  },
+
+  {
+    key:'list',
+    title:'Zakázkový list',
+    desc:'Dokument'
+  }
+
+];
+
+
+function getDocs(){
+
+  const j=job();
+
+  if(
+    !j||
+    !j.dbId
+  )
+    return {};
+
+  return j.docs||{};
+
+}
+
+
+function docsCount(){
+
+  const d=getDocs();
+
+  return DOCS.filter(
+    x=>d[x.key]
+  ).length;
+
+}
+
+
+function docsComplete(){
+
+  return docsCount()===DOCS.length;
+
+}
+
+
+function docFileId(key){
+
+  return 'docfile-'+key;
+
+}
+
+
+function openDocPicker(key){
+
+  const input=
+    document.getElementById(
+      docFileId(key)
+    );
+
+  if(input)
+    input.click();
+
+}
+
+
+async function uploadDocument(key,file){
+
+  const j=job();
+  const c=cfg();
+
+
+  if(
+    !j||
+    !j.dbId||
+    !c.driver||
+    !sb
+  ){
+
+    toast(
+      '❌ Zakázka není připojena'
+    );
+
+    return;
+
+  }
+
+
+  if(!file)
+    return;
+
+
+  if(
+    !file.type||
+    !file.type.startsWith('image/')
+  ){
+
+    toast(
+      '❌ Vyber fotografii'
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    toast(
+      '📤 Nahrávám fotografii…'
+    );
+
+
+    /*
+      Každá zakázka má vlastní složku.
+      Název obsahuje řidiče a ID zakázky.
+    */
+
+    const safeDriver=
+      String(c.driver)
+        .replace(/[^a-zA-Z0-9_-]/g,'');
+
+    const safeJob=
+      String(j.dbId)
+        .replace(/[^a-zA-Z0-9_-]/g,'');
+
+
+    const ext=
+      file.type==='image/png'
+        ?'png'
+        :'jpg';
+
+
+    const path=
+      safeDriver+
+      '/'+
+      safeJob+
+      '/'+
+      key+
+      '.'+
+      ext;
+
+
+    /*
+      Při opakovaném focení přepíšeme
+      původní fotografii.
+    */
+
+    const {
+      error
+    }=
+      await sb.storage
+
+        .from(STORAGE_BUCKET)
+
+        .upload(
+          path,
+          file,
+          {
+            contentType:
+              file.type,
+
+            upsert:true
+          }
+        );
+
+
+    if(error)
+      throw error;
+
+
+    /*
+      Pro první verzi si uložíme
+      cestu k souboru lokálně
+      ke konkrétní zakázce.
+    */
+
+    const current=job();
+
+    current.docs=
+      current.docs||{};
+
+
+    current.docs[key]={
+      path,
+      name:file.name,
+      type:file.type,
+      uploadedAt:
+        new Date()
+          .toISOString()
+    };
+
+
+    localStorage.setItem(
+      K,
+      JSON.stringify(current)
+    );
+
+
+    render();
+
+
+    toast(
+      '✅ '+(
+        DOCS.find(
+          x=>x.key===key
+        )?.title||'Fotka'
+      )+' nahrána'
+    );
+
+
+  }catch(e){
+
+    console.error(
+      'Upload document:',
+      e
+    );
+
+
+    toast(
+      '❌ Fotku se nepodařilo nahrát: '+
+      (e.message||'chyba')
+    );
+
+  }
+
+}
+
+
+function publicDocUrl(path){
+
+  if(!sb||!path)
+    return '';
+
+
+  const {
+    data
+  }=
+    sb.storage
+
+      .from(STORAGE_BUCKET)
+
+      .getPublicUrl(path);
+
+
+  return data?.publicUrl||'';
+
+}
+
+
+function documentationHtml(j){
+
+  /*
+    Dokumentace je požadována
+    od stavu NA MÍSTĚ.
+  */
+
+  const ix=
+    S.findIndex(
+      x=>x[0]===j.status
+    );
+
+  const onsiteIx=
+    S.findIndex(
+      x=>x[0]==='onsite'
+    );
+
+
+  if(ix<onsiteIx)
+    return '';
+
+
+  const d=
+    j.docs||{};
+
+
+  const count=
+    DOCS.filter(
+      x=>d[x.key]
+    ).length;
+
+
+  const complete=
+    count===DOCS.length;
+
+
+  let html=
+
+    '<div class="card">'+
+
+      '<div class="label">'+
+      '📸 Dokumentace zásahu'+
+      '</div>'+
+
+      '<div class="note">'+
+      'Před dokončením zakázky je potřeba nahrát 5 fotografií vozidla a fotografii zakázkového listu.'+
+      '</div>'+
+
+      '<div class="doc-progress '+
+        (complete?'ok':'bad')+
+      '">'+
+
+        (
+          complete
+            ?'✅ Dokumentace kompletní'
+            :'📷 Nahráno '+count+' / '+DOCS.length
+        )+
+
+      '</div>'+
+
+      '<div class="doc-grid">';
+
+
+  DOCS.forEach(item=>{
+
+    const doc=
+      d[item.key];
+
+
+    const url=
+      doc&&doc.path
+        ?publicDocUrl(doc.path)
+        :'';
+
+
+    html+=
+
+      '<div class="doc-item">'+
+
+        (
+          url
+
+            ?
+
+            '<img class="doc-preview" src="'+
+            esc(url)+
+            '" alt="'+
+            esc(item.title)+
+            '">' 
+
+            :
+
+            '<div class="doc-empty">📷</div>'
+        )+
+
+        '<div class="doc-name">'+
+        esc(item.title)+
+        '</div>'+
+
+        '<div class="doc-state '+
+          (doc?'ok':'')+
+        '">'+
+
+          (
+            doc
+              ?'✅ Nahráno'
+              :esc(item.desc)
+          )+
+
+        '</div>'+
+
+        '<input'+
+
+          ' id="'+
+          docFileId(item.key)+
+          '"'+
+
+          ' class="doc-file"'+
+
+          ' type="file"'+
+
+          ' accept="image/*"'+
+
+          ' capture="environment"'+
+
+          ' onchange="uploadDocument(\''+
+          item.key+
+          '\',this.files[0])"'+
+
+        '>'+
+
+        '<button'+
+
+          ' class="doc-button"'+
+
+          ' onclick="openDocPicker(\''+
+          item.key+
+          '\')"'+
+
+        '>'+
+
+          (
+            doc
+              ?'📷 Vyfotit znovu'
+              :'📷 Vyfotit'
+          )+
+
+        '</button>'+
+
+      '</div>';
+
+  });
+
+
+  html+=
+
+      '</div>'+
+
+    '</div>';
+
+
+  return html;
+
+}
+
+
+/* =========================
    STATUS ZAKÁZKY
 ========================= */
 
@@ -1485,6 +2011,46 @@ async function setStatus(s){
     );
 
     return;
+
+  }
+
+
+  /*
+    DOKONČENO:
+    Nejdřív zkontrolujeme dokumentaci.
+  */
+
+  if(s==='done'){
+
+    if(!docsComplete()){
+
+      const missing=
+        DOCS
+          .filter(
+            x=>!(j.docs||{})[x.key]
+          )
+          .map(
+            x=>x.title
+          );
+
+
+      toast(
+        '⚠️ Chybí: '+
+        missing.join(', ')
+      );
+
+
+      /*
+        Přesuneme řidiče do části
+        s dokumentací.
+      */
+
+      render();
+
+
+      return;
+
+    }
 
   }
 
@@ -1559,6 +2125,15 @@ async function setStatus(s){
       .toLocaleString(
         'cs-CZ'
       );
+
+
+  /*
+    Dokumentace zůstává zachována
+    i po změně stavu.
+  */
+
+  u.docs=
+    j.docs||{};
 
 
   if(s==='done'){
@@ -1734,6 +2309,12 @@ function jobHtml(j){
       buttons+
 
     '</div>'+
+
+    /*
+      NOVÁ DOKUMENTACE
+    */
+
+    documentationHtml(j)+
 
 
     '<div class="card">'+
@@ -1993,11 +2574,6 @@ function logout(){
   tbConnected=false;
 
 
-  /*
-    Odhlášení je jediný okamžik,
-    kdy se uložené přihlášení smaže.
-  */
-
   localStorage.removeItem(C);
 
 
@@ -2063,7 +2639,9 @@ function demo(){
 
       status:'new',
 
-      times:{}
+      times:{},
+
+      docs:{}
 
     })
 
@@ -2640,11 +3218,6 @@ async function notifyFromServiceWorker(
   render();
 
 
-  /*
-    Pokud už existuje uložené přihlášení,
-    login obrazovku vůbec nezobrazujeme.
-  */
-
   if(
     c.url===PROJECT_URL&&
     c.key&&
@@ -2655,12 +3228,6 @@ async function notifyFromServiceWorker(
       loginKey.value=
         c.key;
 
-
-    /*
-      Uživatel je přihlášen.
-      Login obrazovka se zde skutečně
-      nastaví na display:none.
-    */
 
     setLoggedIn();
 
