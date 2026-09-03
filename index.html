@@ -863,15 +863,35 @@ function show(id,b){
 
   document
     .querySelectorAll('.view')
-    .forEach(x=>
-      x.classList.remove('active')
-    );
+    .forEach(x=>{
+
+      x.classList.remove('active');
+      x.style.display='none';
+
+    });
+
 
   const target=
     document.getElementById(id);
 
-  if(target)
+
+  if(target){
+
     target.classList.add('active');
+
+    /*
+      Login má flex layout.
+      Ostatní obrazovky zobrazujeme jako block.
+    */
+
+    if(id==='login'){
+      target.style.display='flex';
+    }else{
+      target.style.display='block';
+    }
+
+  }
+
 
   document
     .querySelectorAll('nav button')
@@ -879,8 +899,10 @@ function show(id,b){
       x.classList.remove('active')
     );
 
+
   if(b)
     b.classList.add('active');
+
 
   if(id==='history')
     renderHist();
@@ -899,14 +921,36 @@ function setLoggedIn(){
   const nav=
     document.getElementById('nav');
 
-  if(loginView)
+
+  /*
+    DŮLEŽITÁ OPRAVA:
+    Přihlašovací obrazovku nejen
+    odaktivujeme, ale skutečně skryjeme.
+  */
+
+  if(loginView){
+
     loginView.classList.remove('active');
 
-  if(homeView)
+    loginView.style.display='none';
+
+  }
+
+
+  if(homeView){
+
     homeView.classList.add('active');
 
-  if(nav)
+    homeView.style.display='block';
+
+  }
+
+
+  if(nav){
+
     nav.style.display='grid';
+
+  }
 
 }
 
@@ -915,9 +959,14 @@ function setLoggedOut(){
 
   document
     .querySelectorAll('.view')
-    .forEach(x=>
-      x.classList.remove('active')
-    );
+    .forEach(x=>{
+
+      x.classList.remove('active');
+
+      x.style.display='none';
+
+    });
+
 
   const loginView=
     document.getElementById('login');
@@ -925,11 +974,21 @@ function setLoggedOut(){
   const nav=
     document.getElementById('nav');
 
-  if(loginView)
+
+  if(loginView){
+
     loginView.classList.add('active');
 
-  if(nav)
+    loginView.style.display='flex';
+
+  }
+
+
+  if(nav){
+
     nav.style.display='none';
+
+  }
 
 }
 
@@ -1010,6 +1069,7 @@ async function login(){
       .value
       .trim();
 
+
   if(!d||!k){
 
     setLoginStatus(
@@ -1036,9 +1096,12 @@ async function login(){
   );
 
 
-  document
-    .getElementById('driverId')
-    .value=d;
+  const driverId=
+    document.getElementById('driverId');
+
+
+  if(driverId)
+    driverId.value=d;
 
 
   setLoginStatus(
@@ -1048,8 +1111,8 @@ async function login(){
 
   /*
     Přihlášení se uloží.
-    Při dalším spuštění aplikace
-    se login obrazovka už nezobrazí.
+    Přihlašovací obrazovka se
+    okamžitě skryje.
   */
 
   setLoggedIn();
@@ -2142,12 +2205,6 @@ async function updatePushUI(){
         :null;
 
 
-    /*
-      Povolení + aktivní subscription =
-      vše je hotové.
-      Karta se schová.
-    */
-
     if(
       permission==='granted'&&
       sub
@@ -2159,11 +2216,6 @@ async function updatePushUI(){
 
     }
 
-
-    /*
-      Povolení existuje,
-      ale Push subscription chybí.
-    */
 
     if(
       permission==='granted'&&
@@ -2183,10 +2235,6 @@ async function updatePushUI(){
     }
 
 
-    /*
-      Povolení ještě nebylo uděleno.
-    */
-
     if(
       permission==='default'
     ){
@@ -2203,10 +2251,6 @@ async function updatePushUI(){
 
     }
 
-
-    /*
-      Uživatel oznámení zablokoval.
-    */
 
     if(
       permission==='denied'
@@ -2296,11 +2340,6 @@ async function enablePush(){
       Notification.permission;
 
 
-    /*
-      O oprávnění požádáme pouze,
-      pokud ještě nebylo uděleno.
-    */
-
     if(
       permission!=='granted'
     ){
@@ -2342,11 +2381,6 @@ async function enablePush(){
         .pushManager
         .getSubscription();
 
-
-    /*
-      Pokud máme starou lokální Push verzi,
-      vytvoříme novou registraci.
-    */
 
     if(
       sub&&
@@ -2445,11 +2479,6 @@ async function enablePush(){
 
     }
 
-
-    /*
-      Po úspěšném nastavení
-      kartu okamžitě schováme.
-    */
 
     const card=
       document.getElementById(
@@ -2553,17 +2582,8 @@ async function notifyFromServiceWorker(
 
 (async function(){
 
-  /*
-    Nejdřív se pokusíme zaregistrovat
-    Service Worker.
-  */
-
   await registerSW();
 
-
-  /*
-    Načteme uložený profil.
-  */
 
   const p=
     JSON.parse(
@@ -2587,10 +2607,6 @@ async function notifyFromServiceWorker(
     car.value=
       p.car||'';
 
-
-  /*
-    Načteme uložené přihlášení.
-  */
 
   const c=cfg();
 
@@ -2621,10 +2637,6 @@ async function notifyFromServiceWorker(
       c.driver||'driver1';
 
 
-  /*
-    Vykreslení aplikace.
-  */
-
   render();
 
 
@@ -2646,22 +2658,15 @@ async function notifyFromServiceWorker(
 
     /*
       Uživatel je přihlášen.
+      Login obrazovka se zde skutečně
+      nastaví na display:none.
     */
 
     setLoggedIn();
 
 
-    /*
-      Připojení probíhá na pozadí.
-      Uživatel nemusí znovu zadávat údaje.
-    */
-
     connect();
 
-
-    /*
-      Kontrola Push po spuštění.
-    */
 
     setTimeout(()=>{
 
@@ -2670,10 +2675,6 @@ async function notifyFromServiceWorker(
     },800);
 
   }else{
-
-    /*
-      Nové zařízení / odhlášený uživatel.
-    */
 
     setLoggedOut();
 
