@@ -248,10 +248,6 @@ button:disabled{
   background:var(--ok)
 }
 
-.dot.cur{
-  background:var(--g)
-}
-
 .empty{
   text-align:center;
   padding:42px 18px;
@@ -485,18 +481,6 @@ input{
 
 .finish-button{
   margin-top:12px
-}
-
-
-/* =========================
-   UPLOAD INFO
-========================= */
-
-.upload-info{
-  font-size:10px;
-  color:var(--m);
-  text-align:center;
-  margin-top:8px
 }
 
 </style>
@@ -1115,7 +1099,7 @@ function toast(x){
 
 
 /* =========================
-   CONNECTION STATUS
+   CONNECTION
 ========================= */
 
 function connection(
@@ -1212,17 +1196,10 @@ function show(
     );
 
 
-    if(id==='login'){
-
-      target.style.display =
-        'flex';
-
-    }else{
-
-      target.style.display =
-        'block';
-
-    }
+    target.style.display =
+      id==='login'
+        ?'flex'
+        :'block';
 
   }
 
@@ -1256,7 +1233,7 @@ function show(
 
 
 /* =========================
-   PŘIHLÁŠENÍ / ODHLÁŠENÍ UI
+   LOGIN UI
 ========================= */
 
 function setLoggedIn(){
@@ -1365,7 +1342,7 @@ function setLoggedOut(){
 
 
 /* =========================
-   PŘEVOD DB → JOB
+   DB → JOB
 ========================= */
 
 function dbToJob(r){
@@ -1559,9 +1536,7 @@ async function login(){
 
   setTimeout(
     ()=>{
-
       updatePushUI();
-
     },
     500
   );
@@ -1628,6 +1603,7 @@ async function connect(){
 
 
     channel
+
       .on(
 
         'postgres_changes',
@@ -1679,8 +1655,9 @@ async function connect(){
 
 
           /*
-            DOKONČENÁ ZAKÁZKA
-            už nesmí zůstat aktivní.
+            Dokončená zakázka
+            se nikdy nesmí vrátit
+            do aktivních.
           */
 
           if(
@@ -1693,7 +1670,7 @@ async function connect(){
 
 
             if(
-              old &&
+              old&&
               old.dbId===
               r.id
             ){
@@ -1741,19 +1718,13 @@ async function connect(){
           }
 
 
-          /*
-            Pokud přišla změna jiné
-            zakázky než aktuální, načteme
-            znovu aktivní stav ze serveru.
-          */
-
           const current =
             job();
 
 
           if(
-            current &&
-            current.dbId &&
+            current&&
+            current.dbId&&
             current.dbId!==r.id
           ){
 
@@ -1866,7 +1837,7 @@ async function connect(){
 
 
 /* =========================
-   NAČTENÍ AKTIVNÍ ZAKÁZKY
+   AKTIVNÍ ZAKÁZKA
 ========================= */
 
 async function loadActive(){
@@ -1942,29 +1913,13 @@ async function loadActive(){
   );
 
 
-  /*
-    Supabase je zdroj pravdy.
-
-    Pokud není žádná aktivní zakázka,
-    odstraníme starou lokální zakázku.
-  */
-
   if(
     data&&
     data[0]
   ){
 
-    const r =
-      data[0];
-
-
-    /*
-      Dodatečná ochrana proti
-      dokončenému stavu.
-    */
-
     if(
-      r.stav===
+      data[0].stav===
       'dokoncena'
     ){
 
@@ -1979,7 +1934,9 @@ async function loadActive(){
         K,
 
         JSON.stringify(
-          dbToJob(r)
+          dbToJob(
+            data[0]
+          )
         )
 
       );
@@ -2100,7 +2057,7 @@ function docFileId(
 
 
 /* =========================
-   OTEVŘENÍ FOTO
+   FOTO PICKER
 ========================= */
 
 function openDocPicker(
@@ -2127,31 +2084,22 @@ async function compressImage(
   file
 ){
 
-  /*
-    Maximální rozměr delší strany.
-  */
-
   const MAX_SIZE =
     1800;
 
-
-  /*
-    JPEG kvalita.
-  */
 
   const QUALITY =
     0.78;
 
 
   /*
-    Pokud je JPEG už malý,
-    není potřeba ho znovu
-    překódovávat.
+    Malý JPEG už nemusíme
+    znovu komprimovat.
   */
 
   if(
     file.type===
-    'image/jpeg' &&
+    'image/jpeg'&&
     file.size<=
     900*1024
   ){
@@ -2168,7 +2116,7 @@ async function compressImage(
 
 
     /*
-      Moderní Safari / iPhone.
+      Moderní Safari.
     */
 
     if(
@@ -2197,7 +2145,9 @@ async function compressImage(
 
 
     /*
-      Záložní načtení přes Image.
+      Záloha pro Safari,
+      pokud createImageBitmap
+      není dostupné.
     */
 
     if(!bitmap){
@@ -2265,10 +2215,6 @@ async function compressImage(
       bitmap.height;
 
 
-    /*
-      Zachování poměru stran.
-    */
-
     const scale =
       Math.min(
         1,
@@ -2326,11 +2272,6 @@ async function compressImage(
     }
 
 
-    /*
-      Vykreslení fotografie
-      do menšího rozměru.
-    */
-
     ctx.drawImage(
       bitmap,
       0,
@@ -2339,10 +2280,6 @@ async function compressImage(
       newHeight
     );
 
-
-    /*
-      Převod na JPEG.
-    */
 
     const blob =
       await new Promise(
@@ -2392,8 +2329,7 @@ async function compressImage(
 
 
     /*
-      Bezpečná záloha:
-      pokud komprese selže,
+      Pokud komprese selže,
       použije se originál.
     */
 
@@ -2460,9 +2396,7 @@ async function uploadDocument(
   try{
 
     /*
-      =========================
-      1. KOMPRESSE
-      =========================
+      KOMPRESE
     */
 
     toast(
@@ -2500,9 +2434,7 @@ async function uploadDocument(
 
 
     /*
-      =========================
-      2. UPLOAD
-      =========================
+      UPLOAD
     */
 
     toast(
@@ -2529,11 +2461,6 @@ async function uploadDocument(
         ''
       );
 
-
-    /*
-      Všechny fotografie
-      ukládáme jako JPG.
-    */
 
     const path =
       safeDriver+
@@ -2577,9 +2504,7 @@ async function uploadDocument(
 
 
     /*
-      =========================
-      3. ULOŽENÍ METADAT
-      =========================
+      ULOŽENÍ DO LOKÁLNÍHO JOBU
     */
 
     const current =
@@ -2640,13 +2565,6 @@ async function uploadDocument(
     render();
 
 
-    const savedKb =
-      Math.round(
-        compressedSize/
-        1024
-      );
-
-
     toast(
       '✅ '+
       (
@@ -2683,7 +2601,7 @@ async function uploadDocument(
 
 
 /* =========================
-   PUBLIC URL FOTO
+   PUBLIC URL
 ========================= */
 
 function publicDocUrl(
@@ -2720,15 +2638,10 @@ function publicDocUrl(
 
 
 /* =========================
-   HTML DOKUMENTACE
+   DOKUMENTACE HTML
 ========================= */
 
 function documentationHtml(j){
-
-  /*
-    Dokumentace se zobrazí
-    po přijetí zakázky.
-  */
 
   if(
     j.status===
@@ -2922,8 +2835,8 @@ function documentationHtml(j){
 
 
   /*
-    DOKONČENÍ JE PŘÍMO
-    POD FOTOGRAFIEMI.
+    TLAČÍTKO DOKONČIT
+    JE PŘÍMO POD FOTKAMI.
   */
 
   html +=
@@ -2989,7 +2902,7 @@ function documentationHtml(j){
 
 
 /* =========================
-   DOKONČENÍ ZAKÁZKY
+   DOKONČIT ZAKÁZKU
 ========================= */
 
 async function finishJob(){
@@ -3077,7 +2990,7 @@ async function finishJob(){
 
 
 /* =========================
-   ZMĚNA STAVU ZAKÁZKY
+   ZMĚNA STAVU
 ========================= */
 
 async function setStatus(
@@ -3108,14 +3021,14 @@ async function setStatus(
 
 
   /*
-    Řidič může měnit pouze:
+    Povolené změny:
 
     NOVÁ → PŘIJATA
     PŘIJATA → DOKONČENA
   */
 
   if(
-    s!=='accepted' &&
+    s!=='accepted'&&
     s!=='done'
   ){
 
@@ -3124,13 +3037,8 @@ async function setStatus(
   }
 
 
-  /*
-    Dokončení vyžaduje
-    všech 6 souborů.
-  */
-
   if(
-    s==='done' &&
+    s==='done'&&
     !docsComplete()
   ){
 
@@ -3166,44 +3074,26 @@ async function setStatus(
   }
 
 
-  /*
-    Přijetí pouze z NOVÁ.
-  */
-
   if(
-    s==='accepted'
+    s==='accepted'&&
+    j.status!=='new'
   ){
 
-    if(
-      j.status!=='new'
-    ){
-
-      return;
-
-    }
+    return;
 
   }
 
 
-  /*
-    Dokončení pouze z PŘIJATA.
-  */
-
   if(
-    s==='done'
+    s==='done'&&
+    j.status!=='accepted'
   ){
 
-    if(
-      j.status!=='accepted'
-    ){
+    toast(
+      'Zakázku lze dokončit až po přijetí.'
+    );
 
-      toast(
-        'Zakázku lze dokončit až po přijetí.'
-      );
-
-      return;
-
-    }
+    return;
 
   }
 
@@ -3274,20 +3164,13 @@ async function setStatus(
       );
 
 
-  /*
-    Dokumentace zůstává
-    v historii telefonu.
-  */
-
   u.docs =
     j.docs||
     {};
 
 
   /*
-    =========================
     PŘIJATO
-    =========================
   */
 
   if(
@@ -3319,9 +3202,7 @@ async function setStatus(
 
 
   /*
-    =========================
     DOKONČENO
-    =========================
   */
 
   if(
@@ -3331,10 +3212,6 @@ async function setStatus(
     let h =
       hist();
 
-
-    /*
-      Ochrana proti duplicitě.
-    */
 
     h =
       h.filter(
@@ -3356,8 +3233,8 @@ async function setStatus(
 
 
     /*
-      AKTIVNÍ ZAKÁZKU
-      OKAMŽITĚ SMAŽEME.
+      AKTIVNÍ ZAKÁZKA
+      OKAMŽITĚ SMAZAT.
     */
 
     localStorage.removeItem(
@@ -3387,11 +3264,6 @@ function jobHtml(j){
     j.status===
     'new';
 
-
-  /*
-    Přijmout se zobrazí pouze
-    u nové zakázky.
-  */
 
   const actionButton =
 
@@ -3433,15 +3305,8 @@ function jobHtml(j){
 
           (
             isNew
-
-              ?
-
-              'NOVÁ'
-
-              :
-
-              'AKTIVNÍ'
-
+              ?'NOVÁ'
+              :'AKTIVNÍ'
           )+
 
         '</span>'+
@@ -3536,11 +3401,6 @@ function render(){
     return;
 
 
-  /*
-    Bez aktivní zakázky
-    zobrazíme prázdný stav.
-  */
-
   area.innerHTML =
 
     j
@@ -3612,7 +3472,7 @@ function render(){
 
 
 /* =========================
-   HISTORY
+   HISTORIE
 ========================= */
 
 function renderHist(){
@@ -3679,12 +3539,66 @@ function renderHist(){
 ========================= */
 
 function navTo(
-  a
+  address
 ){
 
-  location.href =
+  if(!address){
+
+    toast(
+      '❌ Adresa pro navigaci chybí'
+    );
+
+    return;
+
+  }
+
+
+  const destination =
+    encodeURIComponent(
+      address
+    );
+
+
+  /*
+    iPhone / iPad
+    → Apple Mapy
+  */
+
+  const isApple =
+    /iPhone|iPad|iPod/i.test(
+      navigator.userAgent
+    );
+
+
+  if(isApple){
+
+    const appleUrl =
+      'https://maps.apple.com/?daddr='+
+      destination+
+      '&dirflg=d';
+
+
+    window.location.href =
+      appleUrl;
+
+
+    return;
+
+  }
+
+
+  /*
+    Android / počítač
+    → Google Maps
+  */
+
+  const googleUrl =
     'https://www.google.com/maps/dir/?api=1&destination='+
-    encodeURIComponent(a);
+    destination;
+
+
+  window.location.href =
+    googleUrl;
 
 }
 
@@ -4043,13 +3957,8 @@ async function updatePushUI(){
         null;
 
 
-    /*
-      Všechno je OK.
-      Kartu schováme.
-    */
-
     if(
-      permission==='granted' &&
+      permission==='granted'&&
       sub
     ){
 
@@ -4063,7 +3972,7 @@ async function updatePushUI(){
 
 
     if(
-      permission==='granted' &&
+      permission==='granted'&&
       !sub
     ){
 
@@ -4160,21 +4069,6 @@ async function enablePush(){
   }
 
 
-  if(
-    VAPID_PUBLIC_KEY.includes(
-      'PASTE_'
-    )
-  ){
-
-    toast(
-      'Nejdřív nastav VAPID public key v index.html'
-    );
-
-    return;
-
-  }
-
-
   const c =
     cfg();
 
@@ -4243,11 +4137,6 @@ async function enablePush(){
         .getSubscription();
 
 
-    /*
-      Pokud máme starší verzi
-      registrace, obnovíme ji.
-    */
-
     if(
       sub&&
       localStorage.getItem(SUB)!=='v3'
@@ -4293,44 +4182,44 @@ async function enablePush(){
     const {
       error
     } =
-    await sb
+      await sb
 
-      .from(
-        'push_subscriptions'
-      )
+        .from(
+          'push_subscriptions'
+        )
 
-      .upsert(
+        .upsert(
 
-        {
+          {
 
-          driver_id:
-            c.driver,
+            driver_id:
+              c.driver,
 
-          endpoint:
-            json.endpoint,
+            endpoint:
+              json.endpoint,
 
-          p256dh:
-            json.keys?.p256dh||
-            '',
+            p256dh:
+              json.keys?.p256dh||
+              '',
 
-          auth:
-            json.keys?.auth||
-            '',
+            auth:
+              json.keys?.auth||
+              '',
 
-          updated_at:
-            new Date()
-              .toISOString()
+            updated_at:
+              new Date()
+                .toISOString()
 
-        },
+          },
 
-        {
+          {
 
-          onConflict:
-            'endpoint'
+            onConflict:
+              'endpoint'
 
-        }
+          }
 
-      );
+        );
 
 
     if(error)
@@ -4402,81 +4291,16 @@ async function enablePush(){
 
 
 /* =========================
-   OPTIONAL SW NOTIFICATION
-========================= */
-
-async function notifyFromServiceWorker(
-  title,
-  body,
-  id
-){
-
-  try{
-
-    const reg =
-      await registerSW();
-
-
-    if(reg){
-
-      await reg.showNotification(
-
-        title,
-
-        {
-
-          body:
-            body,
-
-          icon:
-            'icon.svg',
-
-          badge:
-            'icon.svg',
-
-          tag:
-            'towbrux-job-'+
-            id,
-
-          data:{
-
-            url:
-              './'
-
-          }
-
-        }
-
-      );
-
-    }
-
-  }catch(e){
-
-    console.error(
-      e
-    );
-
-  }
-
-}
-
-
-/* =========================
-   START APPLICATION
+   START
 ========================= */
 
 (async function(){
-
-  /*
-    Service Worker nejdříve.
-  */
 
   await registerSW();
 
 
   /*
-    Profil.
+    PROFIL
   */
 
   const p =
@@ -4510,7 +4334,7 @@ async function notifyFromServiceWorker(
 
 
   /*
-    Konfigurace.
+    KONFIGURACE
   */
 
   const c =
@@ -4548,17 +4372,14 @@ async function notifyFromServiceWorker(
 
 
   /*
-    První render.
+    PRVNÍ RENDER
   */
 
   render();
 
 
   /*
-    Automatické přihlášení.
-
-    Pokud je konfigurace uložená,
-    login obrazovku neukazujeme.
+    AUTOMATICKÉ PŘIHLÁŠENÍ
   */
 
   if(
@@ -4581,9 +4402,7 @@ async function notifyFromServiceWorker(
 
     setTimeout(
       ()=>{
-
         updatePushUI();
-
       },
       800
     );
