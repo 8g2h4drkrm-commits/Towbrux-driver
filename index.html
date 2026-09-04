@@ -21,6 +21,8 @@
 
 <title>TowBrüx Driver</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 
 :root{
@@ -918,7 +920,7 @@ input{
 
 
 <!-- =========================
-     NAV
+     SPODNÍ NAVIGACE
 ========================= -->
 
 <nav
@@ -1029,9 +1031,6 @@ input{
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
 <script>
 
 /* =========================
@@ -1041,26 +1040,20 @@ input{
 const PROJECT_URL =
 'https://qoqxmmmijnqrkhmdhibg.supabase.co';
 
-
 const STORAGE_BUCKET =
 'zakazky-dokumentace';
-
 
 const K =
 'tb_job';
 
-
 const H =
 'tb_hist';
-
 
 const P =
 'tb_profile';
 
-
 const C =
 'tb_connection';
-
 
 const SUB =
 'tb_push_v3';
@@ -1319,7 +1312,6 @@ function show(
     target.classList.add(
       'active'
     );
-
 
     target.style.display =
       id==='login'
@@ -1597,74 +1589,129 @@ async function login(){
   }
 
 
-  localStorage.setItem(
-
-    C,
-
-    JSON.stringify({
-
-      url:
-        PROJECT_URL,
-
-      key:
-        k,
-
-      driver:
-        d
-
-    })
-
-  );
-
-
-  const driverId =
-    document.getElementById(
-      'driverId'
-    );
-
-
-  if(driverId)
-    driverId.value =
-      d;
-
-
   setLoginStatus(
     'Připojuji…'
   );
 
 
-  setLoggedIn();
+  /*
+    Uložíme přihlašovací údaje
+    až po úspěšném připojení.
+  */
+
+  try{
+
+    const testClient =
+      window.supabase
+        .createClient(
+          PROJECT_URL,
+          k
+        );
 
 
-  await connect();
+    const {
+      error
+    } =
+      await testClient
+        .from('zakazky')
+        .select('id')
+        .limit(1);
 
 
-  if(tbConnected){
+    if(error)
+      throw error;
+
+
+    localStorage.setItem(
+
+      C,
+
+      JSON.stringify({
+
+        url:
+          PROJECT_URL,
+
+        key:
+          k,
+
+        driver:
+          d
+
+      })
+
+    );
+
+
+    const driverId =
+      document.getElementById(
+        'driverId'
+      );
+
+
+    if(driverId)
+      driverId.value =
+        d;
+
+
+    sb =
+      testClient;
+
+
+    setLoggedIn();
+
+
+    await connect();
+
+
+    if(tbConnected){
+
+      setLoginStatus(
+        'Připojeno',
+        true
+      );
+
+      toast(
+        'TowBrüx připojeno'
+      );
+
+    }else{
+
+      connection(
+        'Supabase: čekám na připojení'
+      );
+
+    }
+
+
+    setTimeout(
+      ()=>{
+        updatePushUI();
+      },
+      500
+    );
+
+
+  }catch(e){
+
+    console.error(
+      'Login:',
+      e
+    );
+
+
+    sb =
+      null;
+
 
     setLoginStatus(
-      'Připojeno',
-      true
-    );
-
-    toast(
-      'TowBrüx připojeno'
-    );
-
-  }else{
-
-    connection(
-      'Supabase: čekám na připojení'
+      'Připojení se nepodařilo: '+
+      (
+        e.message||
+        'chyba'
+      )
     );
 
   }
-
-
-  setTimeout(
-    ()=>{
-      updatePushUI();
-    },
-    500
-  );
 
 }
 
@@ -1696,12 +1743,16 @@ async function connect(){
 
   try{
 
-    sb =
-      window.supabase
-        .createClient(
-          c.url,
-          c.key
-        );
+    if(!sb){
+
+      sb =
+        window.supabase
+          .createClient(
+            c.url,
+            c.key
+          );
+
+    }
 
 
     await loadActive();
@@ -1723,7 +1774,9 @@ async function connect(){
     channel =
       sb.channel(
         'towbrux-driver-'+
-        c.driver
+        c.driver+
+        '-'+
+        Date.now()
       );
 
 
@@ -1891,6 +1944,12 @@ async function connect(){
 
       .subscribe(
         status=>{
+
+          console.log(
+            'TowBrüx realtime:',
+            status
+          );
+
 
           if(
             status===
@@ -2217,6 +2276,11 @@ async function compressImage(
     0.78;
 
 
+  /*
+    Malý JPEG už nemusíme
+    znovu komprimovat.
+  */
+
   if(
     file.type===
     'image/jpeg'&&
@@ -2234,6 +2298,10 @@ async function compressImage(
     let bitmap =
       null;
 
+
+    /*
+      Moderní Safari.
+    */
 
     if(
       'createImageBitmap' in window
@@ -2259,6 +2327,10 @@ async function compressImage(
 
     }
 
+
+    /*
+      Záloha pro Safari.
+    */
 
     if(!bitmap){
 
@@ -3225,7 +3297,11 @@ async function setStatus(
 
 
     toast(
-      '❌ Stav se nepodařilo uložit'
+      '❌ Stav se nepodařilo uložit: '+
+      (
+        error.message||
+        'chyba'
+      )
     );
 
 
@@ -3257,6 +3333,10 @@ async function setStatus(
     {};
 
 
+  /*
+    PŘIJATO
+  */
+
   if(
     s==='accepted'
   ){
@@ -3285,6 +3365,10 @@ async function setStatus(
   }
 
 
+  /*
+    DOKONČENO
+  */
+
   if(
     s==='done'
   ){
@@ -3311,6 +3395,11 @@ async function setStatus(
       JSON.stringify(h)
     );
 
+
+    /*
+      AKTIVNÍ ZAKÁZKA
+      OKAMŽITĚ SMAZAT.
+    */
 
     localStorage.removeItem(
       K
@@ -3401,7 +3490,54 @@ function jobHtml(j){
         esc(j.impact)+
       '</div>'+
 
-      <button_placeholder>'
+      '<button '+
+        'class="dark" '+
+        'onclick="navTo('+JSON.stringify(j.impact||'')+')"'+
+      '>'+
+        '🧭 Navigovat k zásahu'+
+      '</button>'+
+
+    '</div>'+
+
+
+    '<div class="card">'+
+
+      '<div class="label">'+
+        '🔧 Servis klienta'+
+      '</div>'+
+
+      '<div class="addr">'+
+        esc(j.service)+
+      '</div>'+
+
+      '<button '+
+        'class="dark" '+
+        'onclick="navTo('+JSON.stringify(j.service||'')+')"'+
+      '>'+
+        '🧭 Navigovat do servisu'+
+      '</button>'+
+
+    '</div>'+
+
+
+    '<div class="card">'+
+
+      '<div class="label">'+
+        '📝 Poznámka dispečera'+
+      '</div>'+
+
+      '<div class="note">'+
+        esc(
+          j.note||
+          'Bez poznámky'
+        )+
+      '</div>'+
+
+      actionButton+
+
+    '</div>'+
+
+    documentationHtml(j)
 
   );
 
@@ -3453,7 +3589,6 @@ function render(){
         '<div>'+
           'Jakmile dispečer odešle zakázku,'+
           ' zobrazí se zde.'+
-
         '</div>'+
 
       '</div>';
@@ -3595,10 +3730,6 @@ function navTo(
 
   /*
     APPLE MAPY
-
-    Aktuální poloha zařízení
-    → cílová adresa
-    → jízda autem
   */
 
   const appleUrl =
@@ -3610,9 +3741,6 @@ function navTo(
 
   /*
     GOOGLE MAPS
-
-    Bez origin = aktuální
-    poloha zařízení.
   */
 
   const googleUrl =
@@ -4429,34 +4557,45 @@ async function enablePush(){
     PROFIL
   */
 
-  const p =
-    JSON.parse(
-      localStorage.getItem(P)||'{}'
+  try{
+
+    const p =
+      JSON.parse(
+        localStorage.getItem(P)||'{}'
+      );
+
+
+    const name =
+      document.getElementById(
+        'name'
+      );
+
+
+    const car =
+      document.getElementById(
+        'car'
+      );
+
+
+    if(name)
+      name.value =
+        p.name||
+        '';
+
+
+    if(car)
+      car.value =
+        p.car||
+        '';
+
+  }catch(e){
+
+    console.error(
+      'Profil:',
+      e
     );
 
-
-  const name =
-    document.getElementById(
-      'name'
-    );
-
-
-  const car =
-    document.getElementById(
-      'car'
-    );
-
-
-  if(name)
-    name.value =
-      p.name||
-      '';
-
-
-  if(car)
-    car.value =
-      p.car||
-      '';
+  }
 
 
   /*
