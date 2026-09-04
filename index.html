@@ -1,3546 +1,1280 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="cs">
 <head>
-
-<meta charset="utf-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1,viewport-fit=cover"
->
-
-<meta
-  name="theme-color"
-  content="#080b10"
->
-
-<link
-  rel="manifest"
-  href="manifest.webmanifest"
->
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>TowBrüx Driver</title>
 
-<style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<style>
 :root{
-  --p:#111720;
-  --p2:#18212c;
-  --t:#f5f7fa;
-  --m:#9ba7b6;
-  --l:#29333f;
-  --g:#f5b900;
-  --b:#2f6df6;
-  --ok:#20b26b;
-  --bad:#e5484d
+  --bg:#090b0f;
+  --card:#12161d;
+  --card2:#171c24;
+  --border:#252c36;
+  --text:#f3f5f7;
+  --muted:#9da6b2;
+  --gold:#f5c542;
+  --green:#35d07f;
+  --red:#ff5d5d;
+  --blue:#4da3ff;
 }
 
 *{
-  box-sizing:border-box
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 
 body{
-  margin:0;
-  background:#020408;
-  color:var(--t);
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Arial,
-    sans-serif
-}
-
-.app{
-  max-width:560px;
-  margin:auto;
   min-height:100vh;
-  background:
-    linear-gradient(
-      #080b10,
-      #0b1017
-    )
+  padding-bottom:30px;
 }
 
-header{
-  position:sticky;
-  top:0;
-  z-index:5;
-  background:#080b10ee;
-  border-bottom:1px solid var(--l);
-  padding:14px 15px
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px
-}
-
-.logo{
-  width:46px;
-  height:46px
-}
-
-.brand b{
-  font-size:20px
-}
-
-.brand b span{
-  color:var(--g)
-}
-
-.sub,
-.small{
-  font-size:12px;
-  color:var(--m)
-}
-
-main{
-  padding:14px 14px 100px
-}
-
-.card{
-  background:var(--p);
-  border:1px solid var(--l);
-  border-radius:18px;
-  padding:15px;
-  margin-bottom:12px
-}
-
-.row{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:center
-}
-
-.ey{
-  font-size:11px;
-  color:var(--m);
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.08em
-}
-
-.job{
-  font-size:20px;
-  font-weight:900
-}
-
-.badge{
-  padding:7px 10px;
-  border-radius:99px;
-  background:#302608;
-  color:#ffd84d;
-  font-size:11px;
-  font-weight:900
-}
-
-.label{
-  font-size:12px;
-  color:var(--m);
-  font-weight:800;
-  margin-bottom:5px
-}
-
-.addr{
-  font-size:18px;
-  font-weight:850;
-  line-height:1.3
-}
-
-.note{
-  line-height:1.45;
-  color:#dce2e9
+button,
+input{
+  font:inherit;
 }
 
 button{
-  width:100%;
   border:0;
-  border-radius:14px;
-  padding:14px 12px;
-  margin-top:9px;
-  font-weight:900;
-  font-size:15px
+  cursor:pointer;
 }
 
-button:disabled{
-  opacity:.55;
-  pointer-events:none
+.wrap{
+  max-width:760px;
+  margin:0 auto;
+  padding:16px;
 }
 
-.gold{
-  background:var(--g);
-  color:#111
-}
-
-.dark{
-  background:#202a36;
-  color:#fff;
-  border:1px solid #34404d
-}
-
-.blue{
-  background:var(--b);
-  color:#fff
-}
-
-.green{
-  background:var(--ok);
-  color:#fff
-}
-
-.red{
-  background:var(--bad);
-  color:#fff
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px
-}
-
-.grid button{
-  margin:0
-}
-
-.kpi{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px
-}
-
-.box{
-  background:var(--p2);
-  border:1px solid var(--l);
-  border-radius:14px;
-  padding:12px
-}
-
-.num{
-  font-size:24px;
-  font-weight:900
-}
-
-.step{
+.header{
   display:flex;
-  gap:10px;
-  padding:10px 0;
-  border-bottom:1px solid var(--l)
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
 }
 
-.step:last-child{
-  border:0
-}
-
-.dot{
-  width:12px;
-  height:12px;
-  border-radius:50%;
-  background:#3a4552;
-  margin-top:4px;
-  flex:none
-}
-
-.dot.on{
-  background:var(--ok)
-}
-
-.empty{
-  text-align:center;
-  padding:42px 18px;
-  color:var(--m)
-}
-
-.big{
-  font-size:45px
-}
-
-.view{
-  display:none
-}
-
-.view.active{
-  display:block
-}
-
-nav{
-  position:fixed;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(560px,100%);
-  background:#080b10f5;
-  border-top:1px solid var(--l);
-  padding:
-    7px
-    10px
-    calc(7px + env(safe-area-inset-bottom));
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  z-index:10
-}
-
-nav button{
-  background:transparent;
-  color:var(--m);
-  margin:0;
-  font-size:11px;
-  padding:7px
-}
-
-nav button.active{
-  color:var(--g)
-}
-
-.ico{
-  display:block;
-  font-size:20px
-}
-
-.toast{
-  position:fixed;
-  z-index:20;
-  left:50%;
-  bottom:85px;
-  transform:translate(-50%,10px);
-  opacity:0;
-  background:#f5f7fa;
-  color:#10151c;
-  padding:11px 15px;
-  border-radius:99px;
-  font-size:13px;
+.brand{
+  font-size:22px;
   font-weight:800;
-  transition:.2s;
-  max-width:90%;
-  text-align:center
+  letter-spacing:.2px;
 }
 
-.toast.show{
-  opacity:1;
-  transform:translate(-50%,0)
+.brand span{
+  color:var(--gold);
+}
+
+.small{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:0 8px 24px rgba(0,0,0,.18);
+}
+
+.card h2,
+.card h3{
+  margin:0 0 10px;
+}
+
+.sectionTitle{
+  font-size:17px;
+  font-weight:800;
+}
+
+label{
+  display:block;
+  margin:12px 0 6px;
+  color:var(--muted);
+  font-size:13px;
 }
 
 input{
   width:100%;
-  background:var(--p2);
-  border:1px solid var(--l);
+  border:1px solid var(--border);
+  background:#0d1117;
+  color:var(--text);
   border-radius:12px;
   padding:13px;
-  color:white;
-  margin-bottom:9px;
-  outline:none
+  outline:none;
 }
 
-.statusline{
-  font-size:12px;
-  margin-top:8px;
-  color:var(--m)
+input:focus{
+  border-color:var(--gold);
 }
 
-.statusline.ok{
-  color:#4bd88d
+button.primary,
+button.gold,
+button.green,
+button.red,
+button.secondary,
+.navChoice{
+  width:100%;
+  border-radius:13px;
+  padding:14px;
+  font-weight:800;
+  margin-top:10px;
 }
 
-.statusline.bad{
-  color:#ff7777
+button.primary{
+  background:#e8edf3;
+  color:#101318;
 }
 
-.hint{
-  font-size:12px;
-  line-height:1.45;
-  color:var(--m);
-  margin-top:8px
+button.gold{
+  background:var(--gold);
+  color:#111;
 }
 
-.login{
-  min-height:65vh;
+button.green{
+  background:var(--green);
+  color:#07130d;
+}
+
+button.red{
+  background:var(--red);
+  color:#170707;
+}
+
+button.secondary{
+  background:var(--card2);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+
+button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.status{
+  padding:10px 12px;
+  border-radius:11px;
+  background:#0d1117;
+  border:1px solid var(--border);
+  color:var(--muted);
+  font-size:13px;
+  margin-top:10px;
+}
+
+.status.ok{
+  color:var(--green);
+  border-color:rgba(53,208,127,.25);
+}
+
+.status.error{
+  color:var(--red);
+  border-color:rgba(255,93,93,.25);
+}
+
+.jobHead{
   display:flex;
   align-items:center;
-  justify-content:center
+  justify-content:space-between;
+  gap:10px;
 }
 
-.login .card{
+.jobNumber{
+  font-size:21px;
+  font-weight:900;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding:6px 9px;
+  border-radius:999px;
+  background:rgba(245,197,66,.12);
+  color:var(--gold);
+  font-size:11px;
+  font-weight:900;
+}
+
+.info{
+  margin-top:14px;
+  display:grid;
+  gap:10px;
+}
+
+.infoRow{
+  padding:11px 12px;
+  border-radius:12px;
+  background:#0d1117;
+  border:1px solid var(--border);
+}
+
+.infoLabel{
+  font-size:11px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+
+.infoValue{
+  font-size:15px;
+  line-height:1.35;
+  font-weight:650;
+}
+
+.note{
+  color:var(--muted);
+  line-height:1.45;
+  font-size:13px;
+}
+
+.empty{
   text-align:center;
-  width:100%
+  padding:30px 15px;
+  color:var(--muted);
 }
 
+.docs{
+  margin-top:16px;
+}
 
-/* =========================
-   DOKUMENTACE
-========================= */
+.docsHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
 
-.doc-grid{
+.docsCount{
+  color:var(--gold);
+  font-weight:900;
+}
+
+.docGrid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:9px;
-  margin-top:12px
-}
-
-.doc-item{
-  position:relative;
-  background:var(--p2);
-  border:1px solid var(--l);
-  border-radius:14px;
-  overflow:hidden;
-  min-height:145px
-}
-
-.doc-preview{
-  width:100%;
-  height:95px;
-  object-fit:cover;
-  display:block;
-  background:#0b1017
-}
-
-.doc-empty{
-  height:95px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:30px;
-  background:#0b1017
-}
-
-.doc-name{
-  padding:8px;
-  font-size:11px;
-  font-weight:800;
-  color:#dce2e9
-}
-
-.doc-state{
-  padding:0 8px 8px;
-  font-size:10px;
-  color:var(--m)
-}
-
-.doc-state.ok{
-  color:#4bd88d
-}
-
-.doc-button{
-  display:block;
-  width:100%;
-  margin:0;
-  padding:10px 6px;
-  border-radius:0;
-  font-size:11px;
-  background:#202a36;
-  color:white
-}
-
-.doc-file{
-  display:none
-}
-
-.doc-progress{
-  background:var(--p2);
-  border-radius:12px;
-  padding:11px;
+  gap:10px;
   margin-top:12px;
-  font-size:12px;
-  font-weight:800
 }
 
-.doc-progress.ok{
-  color:#4bd88d
-}
-
-.doc-progress.bad{
-  color:#ff7777
-}
-
-
-/* =========================
-   DOKONČENÍ
-========================= */
-
-.finish-box{
-  margin-top:14px;
+.docItem{
+  border:1px solid var(--border);
+  background:#0d1117;
+  border-radius:14px;
   padding:12px;
-  background:#18212c;
-  border:1px solid #34404d;
-  border-radius:14px
 }
 
-.finish-title{
-  font-size:13px;
-  font-weight:900;
-  margin-bottom:4px
+.docTitle{
+  font-weight:800;
+  font-size:14px;
 }
 
-.finish-note{
+.docDesc{
+  color:var(--muted);
   font-size:11px;
-  color:var(--m);
-  line-height:1.4
+  margin-top:3px;
+  min-height:28px;
 }
 
-.finish-button{
-  margin-top:12px
+.docState{
+  font-size:12px;
+  margin-top:8px;
+  color:var(--muted);
 }
 
+.docState.done{
+  color:var(--green);
+}
+
+.docButton{
+  width:100%;
+  padding:10px;
+  margin-top:9px;
+  border-radius:10px;
+  background:var(--card2);
+  color:var(--text);
+  border:1px solid var(--border);
+  font-size:12px;
+  font-weight:800;
+}
+
+.finishWrap{
+  margin-top:14px;
+}
+
+.finishHint{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:8px;
+  text-align:center;
+}
+
+.historyItem{
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#0d1117;
+  margin-top:9px;
+}
+
+.historyTop{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.historyTitle{
+  font-weight:800;
+}
+
+.historyDate{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.historyStatus{
+  color:var(--green);
+  font-size:12px;
+  margin-top:5px;
+}
+
+.toast{
+  position:fixed;
+  left:16px;
+  right:16px;
+  bottom:20px;
+  z-index:9999;
+  background:#f0f3f6;
+  color:#101318;
+  border-radius:14px;
+  padding:14px 16px;
+  font-weight:750;
+  box-shadow:0 15px 40px rgba(0,0,0,.4);
+  transform:translateY(140px);
+  opacity:0;
+  transition:.22s ease;
+  pointer-events:none;
+}
+
+.toast.show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+/* NAVIGATION MODAL */
+
+.navOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  z-index:10000;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  padding:16px;
+}
+
+.navOverlay.show{
+  display:flex;
+}
+
+.navSheet{
+  width:100%;
+  max-width:760px;
+  background:#12161d;
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 -10px 40px rgba(0,0,0,.45);
+}
+
+.navSheet h3{
+  margin:0 0 5px;
+  font-size:19px;
+}
+
+.navDestination{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.4;
+  margin-bottom:12px;
+}
+
+.navChoice{
+  display:block;
+  text-align:center;
+  text-decoration:none;
+  background:var(--card2);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+
+.navChoice.apple{
+  background:#f3f3f3;
+  color:#111;
+}
+
+.navChoice.google{
+  background:#fff;
+  color:#111;
+}
+
+.navCancel{
+  width:100%;
+  padding:13px;
+  border-radius:13px;
+  background:transparent;
+  color:var(--muted);
+  font-weight:800;
+  margin-top:7px;
+}
+
+/* login */
+
+#loginPanel{
+  display:block;
+}
+
+#appPanel{
+  display:none;
+}
+
+.hidden{
+  display:none!important;
+}
+
+@media(max-width:500px){
+  .docGrid{
+    grid-template-columns:1fr;
+  }
+}
 </style>
 </head>
 
-
 <body>
 
-<div class="app">
+<div class="wrap">
 
-
-<header>
-
-  <div class="brand">
-
-    <img
-      src="icon.svg"
-      class="logo"
-      onerror="this.style.display='none'"
-    >
-
-    <div>
-
-      <b>
-        Tow<span>Brüx</span> Driver
-      </b>
-
-      <div class="sub">
-        Aplikace pro řidiče
-      </div>
-
-    </div>
-
+  <div class="header">
+    <div class="brand">Tow<span>Brüx</span> Driver</div>
+    <div class="small" id="driverLabel">Nepřihlášen</div>
   </div>
 
-</header>
+  <!-- LOGIN -->
+  <div id="loginPanel">
 
+    <div class="card">
+      <h2 class="sectionTitle">Přihlášení řidiče</h2>
+      <p class="note">
+        Přihlášení se uloží v tomto zařízení. Při dalším otevření aplikace
+        se nebudeš muset znovu přihlašovat.
+      </p>
 
-<main>
+      <label>ID řidiče</label>
+      <input id="driverId" value="driver1" placeholder="např. driver1">
 
-
-<!-- =========================
-     LOGIN
-========================= -->
-
-<section
-  id="login"
-  class="view active login"
->
-
-  <div class="card">
-
-    <div class="big">
-      🚛
-    </div>
-
-    <h1>
-      Přihlášení řidiče
-    </h1>
-
-    <p>
-      Propoj aplikaci s TowBrüx a přijímej
-      zakázky přímo od dispečera.
-    </p>
-
-    <input
-      id="loginDriver"
-      placeholder="ID řidiče"
-      value="driver1"
-    >
-
-    <input
-      id="loginKey"
-      type="password"
-      placeholder="Supabase Publishable key"
-    >
-
-    <button
-      class="gold"
-      onclick="login()"
-    >
-      🔗 Připojit TowBrüx
-    </button>
-
-    <div class="hint">
-      Project URL je přednastavený.
-      Používej pouze Publishable key.
-    </div>
-
-    <div
-      id="loginStatus"
-      class="statusline"
-    ></div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================
-     HOME
-========================= -->
-
-<section
-  id="home"
-  class="view"
->
-
-  <div id="jobArea"></div>
-
-
-  <div class="card">
-
-    <div class="row">
-
-      <div>
-
-        <div class="ey">
-          Dnešní přehled
-        </div>
-
-        <div class="job">
-          Moje směna
-        </div>
-
-      </div>
-
-      <span
-        id="shift"
-        class="badge"
+      <label>Supabase Publishable key</label>
+      <input
+        id="supabaseKey"
+        type="password"
+        placeholder="sb_publishable_..."
+        autocomplete="off"
       >
-        PŘIPRAVEN
-      </span>
 
-    </div>
-
-
-    <div
-      class="kpi"
-      style="margin-top:12px"
-    >
-
-      <div class="box">
-
-        <div
-          id="active"
-          class="num"
-        >
-          0
-        </div>
-
-        <div class="small">
-          Aktivní zakázky
-        </div>
-
-      </div>
-
-
-      <div class="box">
-
-        <div
-          id="done"
-          class="num"
-        >
-          0
-        </div>
-
-        <div class="small">
-          Dokončeno
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div
-      id="connection"
-      class="statusline"
-    >
-      Supabase: odpojeno
-    </div>
-
-  </div>
-
-
-  <div class="card">
-
-    <div class="label">
-      🔔 Stav řidiče
-    </div>
-
-    <div class="grid">
-
-      <button
-        class="dark"
-        onclick="state('DOSTUPNÝ')"
-      >
-        🟢 Dostupný
+      <button class="primary" onclick="login()">
+        🔐 PŘIHLÁSIT
       </button>
 
-      <button
-        class="dark"
-        onclick="state('ZANEPRÁZDNĚN')"
-      >
-        🟠 Zaneprázdněn
+      <div id="loginStatus" class="status">
+        Zadej ID řidiče a Supabase Publishable key.
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- APP -->
+  <div id="appPanel">
+
+    <div class="card">
+      <div class="jobHead">
+        <div>
+          <div class="small">ŘIDIČ</div>
+          <div class="jobNumber" id="driverName">driver1</div>
+        </div>
+
+        <div class="badge" id="connectionBadge">
+          OFFLINE
+        </div>
+      </div>
+
+      <div class="status" id="connectionStatus">
+        Připravuji připojení…
+      </div>
+
+      <button class="secondary" onclick="enablePush()" id="pushButton">
+        🔔 POVOLIT NOTIFIKACE
       </button>
 
+      <div class="status" id="pushStatus">
+        Kontroluji stav notifikací…
+      </div>
+
+      <button class="secondary" onclick="logout()">
+        Odhlásit zařízení
+      </button>
+    </div>
+
+
+    <!-- ACTIVE JOB -->
+    <div id="activeJob"></div>
+
+
+    <!-- DAILY -->
+    <div class="card">
+      <h2 class="sectionTitle">Denní přehled</h2>
+
+      <div class="info">
+        <div class="infoRow">
+          <div class="infoLabel">Aktivní zakázky</div>
+          <div class="infoValue" id="activeCount">0</div>
+        </div>
+
+        <div class="infoRow">
+          <div class="infoLabel">Dokončené dnes</div>
+          <div class="infoValue" id="doneToday">0</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- HISTORY -->
+    <div class="card">
+      <h2 class="sectionTitle">Historie</h2>
+      <div id="history"></div>
     </div>
 
   </div>
-
-</section>
-
-
-<!-- =========================
-     HISTORY
-========================= -->
-
-<section
-  id="history"
-  class="view"
->
-
-  <div class="card">
-
-    <h2>
-      📋 Historie zakázek
-    </h2>
-
-    <div id="hist"></div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================
-     PROFILE
-========================= -->
-
-<section
-  id="profile"
-  class="view"
->
-
-  <div class="card">
-
-    <h2>
-      👤 Profil řidiče
-    </h2>
-
-    <input
-      id="name"
-      placeholder="Jméno řidiče"
-    >
-
-    <input
-      id="car"
-      placeholder="Vozidlo / SPZ"
-    >
-
-    <button
-      class="gold"
-      onclick="saveProfile()"
-    >
-      Uložit profil
-    </button>
-
-  </div>
-
-
-  <!-- PUSH -->
-
-  <div
-    id="notifyCard"
-    class="card"
-  >
-
-    <h2>
-      🔔 Oznámení
-    </h2>
-
-    <div
-      id="notifyStatus"
-      class="statusline"
-    >
-      Oznámení nejsou nastavená.
-    </div>
-
-    <button
-      class="gold"
-      onclick="enablePush()"
-    >
-      🔔 Povolit oznámení
-    </button>
-
-    <div class="hint">
-      Na iPhonu musí být aplikace přidaná
-      na plochu jako webová aplikace,
-      aby Web Push fungoval i na pozadí.
-    </div>
-
-  </div>
-
-
-  <!-- CONNECTION -->
-
-  <div class="card">
-
-    <h2>
-      ⚙️ Připojení
-    </h2>
-
-    <div class="label">
-      ID řidiče
-    </div>
-
-    <input
-      id="driverId"
-      placeholder="driver1"
-    >
-
-    <button
-      class="dark"
-      onclick="logout()"
-    >
-      Odpojit TowBrüx
-    </button>
-
-  </div>
-
-
-  <!-- TEST -->
-
-  <div class="card">
-
-    <h2>
-      🧪 Test
-    </h2>
-
-    <button
-      class="dark"
-      onclick="demo()"
-    >
-      ➕ Načíst lokální testovací zakázku
-    </button>
-
-    <button
-      class="dark"
-      onclick="clearData()"
-    >
-      🗑️ Vymazat lokální data
-    </button>
-
-  </div>
-
-</section>
-
-
-</main>
-
-
-<!-- =========================
-     NAV
-========================= -->
-
-<nav
-  id="nav"
-  style="display:none"
->
-
-  <button
-    class="active"
-    onclick="show('home',this)"
-  >
-
-    <span class="ico">
-      🏠
-    </span>
-
-    Zakázka
-
-  </button>
-
-
-  <button
-    onclick="show('history',this)"
-  >
-
-    <span class="ico">
-      📋
-    </span>
-
-    Historie
-
-  </button>
-
-
-  <button
-    onclick="show('profile',this)"
-  >
-
-    <span class="ico">
-      👤
-    </span>
-
-    Profil
-
-  </button>
-
-</nav>
-
-
-<div
-  id="toast"
-  class="toast"
-></div>
-
 
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- NAVIGATION SHEET -->
+<div class="navOverlay" id="navOverlay" onclick="closeNavigation(event)">
+  <div class="navSheet" onclick="event.stopPropagation()">
+
+    <h3>🧭 Navigace</h3>
+
+    <div class="navDestination" id="navDestination">
+      —
+    </div>
+
+    <a
+      id="appleNavLink"
+      class="navChoice apple"
+      href="#"
+    >
+      🍎 OTEVŘÍT V APPLE MAPÁCH
+    </a>
+
+    <a
+      id="googleNavLink"
+      class="navChoice google"
+      href="#"
+    >
+      🗺️ OTEVŘÍT V GOOGLE MAPS
+    </a>
+
+    <button class="navCancel" onclick="closeNavigation()">
+      Zrušit
+    </button>
+
+  </div>
+</div>
+
+
+<div id="toast" class="toast"></div>
 
 
 <script>
+/* =========================================================
+   CONFIG
+========================================================= */
 
-/* =========================
-   ZÁKLADNÍ NASTAVENÍ
-========================= */
-
-const PROJECT_URL =
-'https://qoqxmmmijnqrkhmdhibg.supabase.co';
-
+const TB_PROJECT_URL =
+  'https://qoqxmmmijnqrkhmdhibg.supabase.co';
 
 const STORAGE_BUCKET =
-'zakazky-dokumentace';
+  'zakazky-dokumentace';
 
+const DRIVER_KEY =
+  'tb_driver_config';
 
-const K =
-'tb_job';
+const JOB_KEY =
+  'tb_job';
 
+const HISTORY_KEY =
+  'tb_history';
 
-const H =
-'tb_hist';
+const PUSH_VERSION =
+  'v3';
 
-
-const P =
-'tb_profile';
-
-
-const C =
-'tb_connection';
-
-
-const SUB =
-'tb_push_v3';
-
-
-/* =========================
-   STAVY
-========================= */
-
-const DB = {
-
-  nova:'new',
-  prijata:'accepted',
-  vyrazil:'enroute',
-  na_miste:'onsite',
-  v_servisu:'service',
-  dokoncena:'done'
-
-};
-
-
-const UI = {
-
-  new:'nova',
-  accepted:'prijata',
-  enroute:'vyrazil',
-  onsite:'na_miste',
-  service:'v_servisu',
-  done:'dokoncena'
-
-};
-
-
-/* =========================
-   GLOBÁLNÍ PROMĚNNÉ
-========================= */
+const VAPID_PUBLIC_KEY =
+  'BCR_7DAzc2W3nmStr9FSUPRbjUvXlXOv_pz2yvOTXKowDweKlT10XOCEqJLQQoD2GHsizojwmOxIo72UDE5D5LY';
 
 let sb = null;
+let realtimeChannel = null;
+let toastTimer = null;
 
-let channel = null;
 
-let tbConnected = false;
-
-
-/* =========================
-   LOCAL STORAGE
-========================= */
-
-function job(){
-
-  try{
-
-    return JSON.parse(
-      localStorage.getItem(K)||'null'
-    );
-
-  }catch(e){
-
-    return null;
-
-  }
-
-}
-
-
-function hist(){
-
-  try{
-
-    return JSON.parse(
-      localStorage.getItem(H)||'[]'
-    );
-
-  }catch(e){
-
-    return [];
-
-  }
-
-}
-
-
-function cfg(){
-
-  try{
-
-    return JSON.parse(
-      localStorage.getItem(C)||'{}'
-    );
-
-  }catch(e){
-
-    return {};
-
-  }
-
-}
-
-
-/* =========================
-   ESCAPE HTML
-========================= */
-
-function esc(x){
-
-  return String(x??'')
-    .replace(
-      /[&<>"']/g,
-      c=>({
-
-        '&':'&amp;',
-        '<':'&lt;',
-        '>':'&gt;',
-        '"':'&quot;',
-        "'":'&#39;'
-
-      }[c])
-    );
-
-}
-
-
-/* =========================
-   TOAST
-========================= */
-
-function toast(x){
-
-  const t =
-    document.getElementById(
-      'toast'
-    );
-
-  if(!t)
-    return;
-
-  t.textContent =
-    x;
-
-  t.classList.add(
-    'show'
-  );
-
-  clearTimeout(
-    window.__tbToast
-  );
-
-  window.__tbToast =
-    setTimeout(
-      ()=>{
-
-        t.classList.remove(
-          'show'
-        );
-
-      },
-      2400
-    );
-
-}
-
-
-/* =========================
-   CONNECTION
-========================= */
-
-function connection(
-  x,
-  ok=false
-){
-
-  const e =
-    document.getElementById(
-      'connection'
-    );
-
-  if(!e)
-    return;
-
-  e.textContent =
-    x;
-
-  e.className =
-    'statusline'+
-    (
-      ok
-        ?' ok'
-        :''
-    );
-
-}
-
-
-function setLoginStatus(
-  x,
-  ok=false
-){
-
-  const e =
-    document.getElementById(
-      'loginStatus'
-    );
-
-  if(!e)
-    return;
-
-  e.textContent =
-    x;
-
-  e.className =
-    'statusline'+
-    (
-      ok
-        ?' ok'
-        :''
-    );
-
-}
-
-
-/* =========================
-   NAVIGACE
-========================= */
-
-function show(
-  id,
-  b
-){
-
-  document
-    .querySelectorAll(
-      '.view'
-    )
-    .forEach(
-      x=>{
-
-        x.classList.remove(
-          'active'
-        );
-
-        x.style.display =
-          'none';
-
-      }
-    );
-
-
-  const target =
-    document.getElementById(
-      id
-    );
-
-
-  if(target){
-
-    target.classList.add(
-      'active'
-    );
-
-
-    target.style.display =
-      id==='login'
-        ?'flex'
-        :'block';
-
-  }
-
-
-  document
-    .querySelectorAll(
-      'nav button'
-    )
-    .forEach(
-      x=>
-        x.classList.remove(
-          'active'
-        )
-    );
-
-
-  if(b)
-    b.classList.add(
-      'active'
-    );
-
-
-  if(id==='history')
-    renderHist();
-
-
-  if(id==='profile')
-    updatePushUI();
-
-}
-
-
-/* =========================
-   LOGIN UI
-========================= */
-
-function setLoggedIn(){
-
-  const loginView =
-    document.getElementById(
-      'login'
-    );
-
-  const homeView =
-    document.getElementById(
-      'home'
-    );
-
-  const nav =
-    document.getElementById(
-      'nav'
-    );
-
-
-  if(loginView){
-
-    loginView.classList.remove(
-      'active'
-    );
-
-    loginView.style.display =
-      'none';
-
-  }
-
-
-  if(homeView){
-
-    homeView.classList.add(
-      'active'
-    );
-
-    homeView.style.display =
-      'block';
-
-  }
-
-
-  if(nav){
-
-    nav.style.display =
-      'grid';
-
-  }
-
-}
-
-
-function setLoggedOut(){
-
-  document
-    .querySelectorAll(
-      '.view'
-    )
-    .forEach(
-      x=>{
-
-        x.classList.remove(
-          'active'
-        );
-
-        x.style.display =
-          'none';
-
-      }
-    );
-
-
-  const loginView =
-    document.getElementById(
-      'login'
-    );
-
-  const nav =
-    document.getElementById(
-      'nav'
-    );
-
-
-  if(loginView){
-
-    loginView.classList.add(
-      'active'
-    );
-
-    loginView.style.display =
-      'flex';
-
-  }
-
-
-  if(nav){
-
-    nav.style.display =
-      'none';
-
-  }
-
-}
-
-
-/* =========================
-   DB → JOB
-========================= */
-
-function dbToJob(r){
-
-  const old =
-    job();
-
-
-  return {
-
-    dbId:
-      r.id,
-
-    id:
-      r.cislo_zakazky||
-      (
-        'TB-'+
-        r.id
-      ),
-
-    client:
-      r.klient||
-      '',
-
-    impact:
-      r.zasah||
-      '',
-
-    service:
-      r.servis||
-      '',
-
-    note:
-      r.poznamka||
-      '',
-
-    status:
-      DB[r.stav]||
-      'new',
-
-    times:
-      old&&
-      old.dbId===r.id
-        ?old.times||{}
-        :{},
-
-    docs:
-      old&&
-      old.dbId===r.id
-        ?old.docs||{}
-        :{}
-
-  };
-
-}
-
-
-/* =========================
-   SERVICE WORKER
-========================= */
-
-async function registerSW(){
-
-  if(
-    !('serviceWorker' in navigator)
-  )
-    return null;
-
-
-  try{
-
-    return await navigator
-      .serviceWorker
-      .register(
-        './sw.js?v=20260827-push',
-        {
-          scope:'./'
-        }
-      );
-
-  }catch(e){
-
-    console.error(
-      'Service Worker:',
-      e
-    );
-
-    return null;
-
-  }
-
-}
-
-
-/* =========================
-   LOGIN
-========================= */
-
-async function login(){
-
-  const d =
-    document
-      .getElementById(
-        'loginDriver'
-      )
-      .value
-      .trim();
-
-
-  const k =
-    document
-      .getElementById(
-        'loginKey'
-      )
-      .value
-      .trim();
-
-
-  if(!d||!k){
-
-    setLoginStatus(
-      'Vyplň ID řidiče a Publishable key.'
-    );
-
-    return;
-
-  }
-
-
-  localStorage.setItem(
-
-    C,
-
-    JSON.stringify({
-
-      url:
-        PROJECT_URL,
-
-      key:
-        k,
-
-      driver:
-        d
-
-    })
-
-  );
-
-
-  const driverId =
-    document.getElementById(
-      'driverId'
-    );
-
-
-  if(driverId)
-    driverId.value =
-      d;
-
-
-  setLoginStatus(
-    'Připojuji…'
-  );
-
-
-  setLoggedIn();
-
-
-  await connect();
-
-
-  if(tbConnected){
-
-    setLoginStatus(
-      'Připojeno',
-      true
-    );
-
-    toast(
-      'TowBrüx připojeno'
-    );
-
-  }else{
-
-    connection(
-      'Supabase: čekám na připojení'
-    );
-
-  }
-
-
-  setTimeout(
-    ()=>{
-      updatePushUI();
-    },
-    500
-  );
-
-}
-
-
-/* =========================
-   SUPABASE CONNECT
-========================= */
-
-async function connect(){
-
-  const c =
-    cfg();
-
-
-  if(
-    !c.url||
-    !c.key||
-    !c.driver
-  ){
-
-    connection(
-      'Supabase: není nastaven'
-    );
-
-    return;
-
-  }
-
-
-  try{
-
-    sb =
-      window.supabase
-        .createClient(
-          c.url,
-          c.key
-        );
-
-
-    await loadActive();
-
-
-    if(channel){
-
-      try{
-
-        await sb.removeChannel(
-          channel
-        );
-
-      }catch(e){}
-
-    }
-
-
-    channel =
-      sb.channel(
-        'towbrux-driver-'+
-        c.driver
-      );
-
-
-    channel
-
-      .on(
-
-        'postgres_changes',
-
-        {
-
-          event:'*',
-
-          schema:'public',
-
-          table:'zakazky',
-
-          filter:
-            'ridic_id=eq.'+
-            c.driver
-
-        },
-
-        async payload=>{
-
-          const r =
-            payload.new||
-            payload.old||
-            {};
-
-
-          if(
-            payload.eventType===
-            'DELETE'
-          ){
-
-            localStorage.removeItem(
-              K
-            );
-
-            render();
-
-            toast(
-              'Zakázka odstraněna'
-            );
-
-            return;
-
-          }
-
-
-          if(!r)
-            return;
-
-
-          /*
-            Dokončená zakázka
-            se nikdy nesmí vrátit
-            do aktivních.
-          */
-
-          if(
-            r.stav===
-            'dokoncena'
-          ){
-
-            const old =
-              job();
-
-
-            if(
-              old&&
-              old.dbId===
-              r.id
-            ){
-
-              let h =
-                hist();
-
-
-              h =
-                h.filter(
-                  x=>
-                    x.dbId!==
-                    old.dbId
-                );
-
-
-              h.unshift(
-                old
-              );
-
-
-              localStorage.setItem(
-                H,
-                JSON.stringify(h)
-              );
-
-            }
-
-
-            localStorage.removeItem(
-              K
-            );
-
-
-            render();
-
-
-            toast(
-              '✅ Zakázka dokončena'
-            );
-
-
-            return;
-
-          }
-
-
-          const current =
-            job();
-
-
-          if(
-            current&&
-            current.dbId&&
-            current.dbId!==r.id
-          ){
-
-            await loadActive();
-
-          }else{
-
-            localStorage.setItem(
-
-              K,
-
-              JSON.stringify(
-                dbToJob(r)
-              )
-
-            );
-
-
-            render();
-
-          }
-
-
-          if(
-            payload.eventType===
-            'INSERT'
-          ){
-
-            toast(
-              '📨 Nová zakázka od dispečera'
-            );
-
-          }
-
-        }
-
-      )
-
-
-      .subscribe(
-        status=>{
-
-          if(
-            status===
-            'SUBSCRIBED'
-          ){
-
-            tbConnected =
-              true;
-
-
-            connection(
-              'Supabase: realtime aktivní',
-              true
-            );
-
-          }
-
-
-          else if(
-
-            status===
-            'CHANNEL_ERROR'||
-            status===
-            'TIMED_OUT'
-
-          ){
-
-            tbConnected =
-              false;
-
-
-            connection(
-              'Supabase: chyba realtime'
-            );
-
-          }
-
-        }
-      );
-
-
-  }catch(e){
-
-    console.error(
-      e
-    );
-
-
-    tbConnected =
-      false;
-
-
-    connection(
-      'Supabase: chyba připojení'
-    );
-
-
-    setLoginStatus(
-      'Připojení se nepodařilo: '+
-      (
-        e.message||
-        'chyba'
-      )
-    );
-
-  }
-
-}
-
-
-/* =========================
-   AKTIVNÍ ZAKÁZKA
-========================= */
-
-async function loadActive(){
-
-  const c =
-    cfg();
-
-
-  if(!sb)
-    return;
-
-
-  const {
-    data,
-    error
-  } =
-    await sb
-
-      .from(
-        'zakazky'
-      )
-
-      .select(
-        '*'
-      )
-
-      .eq(
-        'ridic_id',
-        c.driver
-      )
-
-      .neq(
-        'stav',
-        'dokoncena'
-      )
-
-      .order(
-        'vytvoreno',
-        {
-          ascending:false
-        }
-      )
-
-      .limit(
-        1
-      );
-
-
-  if(error){
-
-    console.error(
-      error
-    );
-
-
-    connection(
-      'Supabase: chyba načtení'
-    );
-
-
-    return;
-
-  }
-
-
-  tbConnected =
-    true;
-
-
-  connection(
-    'Supabase: připojeno',
-    true
-  );
-
-
-  if(
-    data&&
-    data[0]
-  ){
-
-    if(
-      data[0].stav===
-      'dokoncena'
-    ){
-
-      localStorage.removeItem(
-        K
-      );
-
-    }else{
-
-      localStorage.setItem(
-
-        K,
-
-        JSON.stringify(
-          dbToJob(
-            data[0]
-          )
-        )
-
-      );
-
-    }
-
-  }else{
-
-    localStorage.removeItem(
-      K
-    );
-
-  }
-
-
-  render();
-
-}
-
-
-/* =========================
-   DOKUMENTACE
-========================= */
+/* =========================================================
+   DOCUMENTATION
+========================================================= */
 
 const DOCS = [
-
   {
     key:'foto1',
     title:'Foto 1',
     desc:'Celé vozidlo'
   },
-
   {
     key:'foto2',
     title:'Foto 2',
     desc:'Přední část'
   },
-
   {
     key:'foto3',
     title:'Foto 3',
     desc:'Zadní část'
   },
-
   {
     key:'foto4',
     title:'Foto 4',
     desc:'Poškození'
   },
-
   {
     key:'foto5',
     title:'Foto 5',
     desc:'Další detail'
   },
-
   {
     key:'list',
     title:'Zakázkový list',
     desc:'Dokument'
   }
-
 ];
 
 
-function getDocs(){
+/* =========================================================
+   HELPERS
+========================================================= */
 
-  const j =
-    job();
-
-
-  if(
-    !j||
-    !j.dbId
-  )
-    return {};
-
-
-  return j.docs||{};
-
-}
-
-
-function docsCount(){
-
-  const d =
-    getDocs();
-
-
-  return DOCS.filter(
-    x=>
-      d[x.key]
-  ).length;
-
-}
-
-
-function docsComplete(){
-
-  return (
-    docsCount()===
-    DOCS.length
-  );
-
-}
-
-
-function docFileId(
-  key
-){
-
-  return (
-    'docfile-'+
-    key
-  );
-
-}
-
-
-/* =========================
-   FOTO PICKER
-========================= */
-
-function openDocPicker(
-  key
-){
-
-  const input =
-    document.getElementById(
-      docFileId(key)
-    );
-
-
-  if(input)
-    input.click();
-
-}
-
-
-/* =========================
-   KOMPRESSE FOTKY
-========================= */
-
-async function compressImage(
-  file
-){
-
-  const MAX_SIZE =
-    1800;
-
-
-  const QUALITY =
-    0.78;
-
-
-  /*
-    Malý JPEG už nemusíme
-    znovu komprimovat.
-  */
-
-  if(
-    file.type===
-    'image/jpeg'&&
-    file.size<=
-    900*1024
-  ){
-
-    return file;
-
-  }
-
-
+function cfg(){
   try{
-
-    let bitmap =
-      null;
-
-
-    /*
-      Moderní Safari.
-    */
-
-    if(
-      'createImageBitmap' in window
-    ){
-
-      try{
-
-        bitmap =
-          await createImageBitmap(
-            file,
-            {
-              imageOrientation:
-                'from-image'
-            }
-          );
-
-      }catch(e){
-
-        bitmap =
-          null;
-
-      }
-
-    }
-
-
-    /*
-      Záloha pro Safari,
-      pokud createImageBitmap
-      není dostupné.
-    */
-
-    if(!bitmap){
-
-      bitmap =
-        await new Promise(
-          (resolve,reject)=>{
-
-            const img =
-              new Image();
-
-
-            const url =
-              URL.createObjectURL(
-                file
-              );
-
-
-            img.onload =
-              ()=>{
-
-                URL.revokeObjectURL(
-                  url
-                );
-
-
-                resolve(
-                  img
-                );
-
-              };
-
-
-            img.onerror =
-              ()=>{
-
-                URL.revokeObjectURL(
-                  url
-                );
-
-
-                reject(
-                  new Error(
-                    'Fotografii se nepodařilo načíst'
-                  )
-                );
-
-              };
-
-
-            img.src =
-              url;
-
-          }
-        );
-
-    }
-
-
-    const width =
-      bitmap.width;
-
-
-    const height =
-      bitmap.height;
-
-
-    const scale =
-      Math.min(
-        1,
-        MAX_SIZE/
-        Math.max(
-          width,
-          height
-        )
-      );
-
-
-    const newWidth =
-      Math.round(
-        width*
-        scale
-      );
-
-
-    const newHeight =
-      Math.round(
-        height*
-        scale
-      );
-
-
-    const canvas =
-      document.createElement(
-        'canvas'
-      );
-
-
-    canvas.width =
-      newWidth;
-
-
-    canvas.height =
-      newHeight;
-
-
-    const ctx =
-      canvas.getContext(
-        '2d',
-        {
-          alpha:false
-        }
-      );
-
-
-    if(!ctx){
-
-      throw new Error(
-        'Canvas není dostupný'
-      );
-
-    }
-
-
-    ctx.drawImage(
-      bitmap,
-      0,
-      0,
-      newWidth,
-      newHeight
+    return JSON.parse(
+      localStorage.getItem(DRIVER_KEY) || '{}'
     );
-
-
-    const blob =
-      await new Promise(
-        resolve=>
-          canvas.toBlob(
-            resolve,
-            'image/jpeg',
-            QUALITY
-          )
-      );
-
-
-    if(!blob){
-
-      throw new Error(
-        'Komprese fotografie selhala'
-      );
-
-    }
-
-
-    return new File(
-
-      [blob],
-
-      'towbrux-foto.jpg',
-
-      {
-
-        type:
-          'image/jpeg',
-
-        lastModified:
-          Date.now()
-
-      }
-
-    );
-
-
   }catch(e){
-
-    console.error(
-      'Komprese fotografie:',
-      e
-    );
-
-
-    /*
-      Pokud komprese selže,
-      použije se originál.
-    */
-
-    return file;
-
+    return {};
   }
+}
 
+function currentDriver(){
+  return cfg().driver || 'driver1';
+}
+
+function job(){
+  try{
+    return JSON.parse(
+      localStorage.getItem(JOB_KEY) || 'null'
+    );
+  }catch(e){
+    return null;
+  }
+}
+
+function history(){
+  try{
+    return JSON.parse(
+      localStorage.getItem(HISTORY_KEY) || '[]'
+    );
+  }catch(e){
+    return [];
+  }
+}
+
+function escapeHtml(value){
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+}
+
+function toast(message){
+  const el=document.getElementById('toast');
+
+  el.textContent=message;
+  el.classList.add('show');
+
+  clearTimeout(toastTimer);
+
+  toastTimer=setTimeout(()=>{
+    el.classList.remove('show');
+  },3500);
 }
 
 
-/* =========================
-   UPLOAD FOTO
-========================= */
+/* =========================================================
+   LOGIN / LOGOUT
+========================================================= */
 
-async function uploadDocument(
-  key,
-  file
-){
+function setLoggedIn(){
+  document.getElementById('loginPanel').style.display='none';
+  document.getElementById('appPanel').style.display='block';
 
-  const j =
-    job();
+  document.getElementById('driverLabel').textContent =
+    currentDriver();
 
+  document.getElementById('driverName').textContent =
+    currentDriver();
+}
 
-  const c =
-    cfg();
+function setLoggedOut(){
+  document.getElementById('loginPanel').style.display='block';
+  document.getElementById('appPanel').style.display='none';
 
+  document.getElementById('driverLabel').textContent =
+    'Nepřihlášen';
+}
 
-  if(
-    !j||
-    !j.dbId||
-    !c.driver||
-    !sb
-  ){
+async function login(){
 
-    toast(
-      '❌ Zakázka není připojena'
-    );
+  const driver =
+    document.getElementById('driverId')
+      .value.trim() || 'driver1';
 
+  const key =
+    document.getElementById('supabaseKey')
+      .value.trim();
+
+  const status =
+    document.getElementById('loginStatus');
+
+  if(!key){
+    status.textContent =
+      '❌ Vlož Supabase Publishable key.';
+
+    status.className='status error';
     return;
-
   }
 
+  status.textContent =
+    'Připojuji Supabase…';
 
-  if(!file)
-    return;
-
-
-  if(
-    !file.type||
-    !file.type.startsWith(
-      'image/'
-    )
-  ){
-
-    toast(
-      '❌ Vyber fotografii'
-    );
-
-    return;
-
-  }
-
+  status.className='status';
 
   try{
 
-    /*
-      KOMPRESE
-    */
-
-    toast(
-      '⚙️ Připravuji fotografii…'
+    sb=window.supabase.createClient(
+      TB_PROJECT_URL,
+      key
     );
 
+    const {error}=await sb
+      .from('zakazky')
+      .select('id')
+      .limit(1);
 
-    const originalSize =
-      file.size;
-
-
-    const compressed =
-      await compressImage(
-        file
-      );
-
-
-    const compressedSize =
-      compressed.size;
-
-
-    console.log(
-      'TowBrüx foto:',
-      Math.round(
-        originalSize/
-        1024
-      )+
-      ' KB → '+
-      Math.round(
-        compressedSize/
-        1024
-      )+
-      ' KB'
-    );
-
-
-    /*
-      UPLOAD
-    */
-
-    toast(
-      '📤 Nahrávám fotografii…'
-    );
-
-
-    const safeDriver =
-      String(
-        c.driver
-      )
-      .replace(
-        /[^a-zA-Z0-9_-]/g,
-        ''
-      );
-
-
-    const safeJob =
-      String(
-        j.dbId
-      )
-      .replace(
-        /[^a-zA-Z0-9_-]/g,
-        ''
-      );
-
-
-    const path =
-      safeDriver+
-      '/'+
-      safeJob+
-      '/'+
-      key+
-      '.jpg';
-
-
-    const {
-      error
-    } =
-      await sb.storage
-
-        .from(
-          STORAGE_BUCKET
-        )
-
-        .upload(
-
-          path,
-
-          compressed,
-
-          {
-
-            contentType:
-              'image/jpeg',
-
-            upsert:
-              true
-
-          }
-
-        );
-
-
-    if(error)
-      throw error;
-
-
-    /*
-      ULOŽENÍ DO LOKÁLNÍHO JOBU
-    */
-
-    const current =
-      job();
-
-
-    if(!current){
-
-      toast(
-        '⚠️ Zakázka už není aktivní'
-      );
-
-      return;
-
-    }
-
-
-    current.docs =
-      current.docs||
-      {};
-
-
-    current.docs[key] = {
-
-      path:
-        path,
-
-      name:
-        file.name,
-
-      type:
-        'image/jpeg',
-
-      originalSize:
-        originalSize,
-
-      compressedSize:
-        compressedSize,
-
-      uploadedAt:
-        new Date()
-          .toISOString()
-
-    };
-
+    if(error) throw error;
 
     localStorage.setItem(
-
-      K,
-
-      JSON.stringify(
-        current
-      )
-
+      DRIVER_KEY,
+      JSON.stringify({
+        driver,
+        key
+      })
     );
 
+    setLoggedIn();
 
-    render();
+    await startApp();
 
-
-    toast(
-      '✅ '+
-      (
-        DOCS.find(
-          x=>
-            x.key===
-            key
-        )?.title||
-        'Fotka'
-      )+
-      ' nahrána'
-    );
-
+    toast('✅ Přihlášení proběhlo');
 
   }catch(e){
 
-    console.error(
-      'Upload document:',
-      e
-    );
+    console.error(e);
 
+    status.textContent =
+      '❌ Přihlášení se nepodařilo: ' +
+      (e.message || 'chyba');
 
-    toast(
-      '❌ Fotku se nepodařilo nahrát: '+
-      (
-        e.message||
-        'chyba'
-      )
-    );
+    status.className='status error';
 
+    sb=null;
   }
-
 }
 
 
-/* =========================
-   PUBLIC URL
-========================= */
+function logout(){
 
-function publicDocUrl(
-  path
-){
+  if(!confirm(
+    'Opravdu odhlásit tohoto řidiče z tohoto zařízení?'
+  )){
+    return;
+  }
 
-  if(
-    !sb||
-    !path
-  )
-    return '';
+  if(realtimeChannel && sb){
+    try{
+      sb.removeChannel(realtimeChannel);
+    }catch(e){}
+  }
+
+  realtimeChannel=null;
+  sb=null;
+
+  localStorage.removeItem(DRIVER_KEY);
+
+  setLoggedOut();
+
+  toast('Odhlášeno');
+}
 
 
-  const {
-    data
-  } =
-    sb.storage
+/* =========================================================
+   SUPABASE CONNECTION
+========================================================= */
 
-      .from(
-        STORAGE_BUCKET
+function setConnectionStatus(text,ok=false){
+
+  const el =
+    document.getElementById('connectionStatus');
+
+  const badge =
+    document.getElementById('connectionBadge');
+
+  el.textContent=text;
+
+  if(ok){
+    el.className='status ok';
+    badge.textContent='ONLINE';
+  }else{
+    el.className='status';
+    badge.textContent='OFFLINE';
+  }
+}
+
+
+async function startApp(){
+
+  if(!sb){
+    return;
+  }
+
+  setConnectionStatus(
+    'Supabase: připojuji realtime…'
+  );
+
+  await loadActive();
+
+  await loadHistory();
+
+  setupRealtime();
+
+  updatePushUI();
+
+  setConnectionStatus(
+    'Supabase: realtime aktivní',
+    true
+  );
+
+  render();
+}
+
+
+/* =========================================================
+   LOAD ACTIVE JOB
+========================================================= */
+
+function dbToJob(row){
+
+  const old=job();
+
+  const same =
+    old &&
+    old.dbId === row.id;
+
+  return {
+
+    dbId:row.id,
+
+    id:row.cislo_zakazky ||
+       row.id ||
+       'Zakázka',
+
+    client:row.klient || '',
+
+    impact:row.zasah || '',
+
+    service:row.servis || '',
+
+    note:row.poznamka || '',
+
+    status:
+      row.stav === 'nova'
+        ? 'new'
+        : row.stav === 'dokoncena'
+          ? 'done'
+          : 'accepted',
+
+    driverId:row.ridic_id,
+
+    docs:
+      same
+        ? (old.docs || {})
+        : {},
+
+    times:
+      same
+        ? (old.times || {})
+        : {}
+  };
+}
+
+
+async function loadActive(){
+
+  if(!sb){
+    return;
+  }
+
+  const driver=currentDriver();
+
+  const {data,error}=await sb
+    .from('zakazky')
+    .select('*')
+    .eq('ridic_id',driver)
+    .neq('stav','dokoncena')
+    .order('created_at',{ascending:false})
+    .limit(1);
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  if(data && data.length){
+
+    localStorage.setItem(
+      JOB_KEY,
+      JSON.stringify(
+        dbToJob(data[0])
       )
+    );
 
-      .getPublicUrl(
-        path
+  }else{
+
+    localStorage.removeItem(JOB_KEY);
+  }
+
+  render();
+}
+
+
+/* =========================================================
+   REALTIME
+========================================================= */
+
+function setupRealtime(){
+
+  if(!sb){
+    return;
+  }
+
+  if(realtimeChannel){
+
+    try{
+      sb.removeChannel(
+        realtimeChannel
       );
-
-
-  return (
-    data?.publicUrl||
-    ''
-  );
-
-}
-
-
-/* =========================
-   DOKUMENTACE HTML
-========================= */
-
-function documentationHtml(j){
-
-  if(
-    j.status===
-    'new'
-  ){
-
-    return '';
-
+    }catch(e){}
   }
 
-
-  const d =
-    j.docs||
-    {};
-
-
-  const count =
-    DOCS.filter(
-      x=>
-        d[x.key]
-    ).length;
-
-
-  const complete =
-    count===
-    DOCS.length;
-
-
-  let html =
-
-    '<div class="card">'+
-
-      '<div class="label">'+
-        '📸 Dokumentace zásahu'+
-      '</div>'+
-
-      '<div class="note">'+
-        'Nahraj 5 fotografií vozidla a fotografii zakázkového listu.'+
-      '</div>'+
-
-      '<div class="doc-progress '+
-        (
-          complete
-            ?'ok'
-            :'bad'
-        )+
-      '">'+
-
-        (
-          complete
-
-            ?
-
-            '✅ Dokumentace kompletní'
-
-            :
-
-            '📷 Nahráno '+
-            count+
-            ' / '+
-            DOCS.length
-
-        )+
-
-      '</div>'+
-
-      '<div class="doc-grid">';
-
-
-  DOCS.forEach(
-    item=>{
-
-      const doc =
-        d[item.key];
-
-
-      const url =
-        doc&&
-        doc.path
-
-          ?
-
-          publicDocUrl(
-            doc.path
-          )
-
-          :
-
-          '';
-
-
-      html +=
-
-        '<div class="doc-item">'+
-
-          (
-
-            url
-
-              ?
-
-              '<img '+
-                'class="doc-preview" '+
-                'src="'+
-                  esc(url)+
-                '" '+
-                'alt="'+
-                  esc(item.title)+
-                '">'
-
-              :
-
-              '<div class="doc-empty">'+
-                '📷'+
-              '</div>'
-
-          )+
-
-          '<div class="doc-name">'+
-            esc(
-              item.title
-            )+
-          '</div>'+
-
-          '<div class="doc-state '+
-            (
-              doc
-                ?'ok'
-                :''
-            )+
-          '">'+
-
-            (
-              doc
-
-                ?
-
-                '✅ Nahráno'
-
-                :
-
-                esc(
-                  item.desc
-                )
-
-            )+
-
-          '</div>'+
-
-          '<input '+
-            'id="'+
-              docFileId(
-                item.key
-              )+
-            '" '+
-            'class="doc-file" '+
-            'type="file" '+
-            'accept="image/*" '+
-            'capture="environment" '+
-            'onchange="uploadDocument(\''+
-              item.key+
-              '\',this.files[0])"'+
-          '>'+
-
-          '<button '+
-            'class="doc-button" '+
-            'onclick="openDocPicker(\''+
-              item.key+
-              '\')"'+
-          '>'+
-
-            (
-              doc
-
-                ?
-
-                '📷 Vyfotit znovu'
-
-                :
-
-                '📷 Vyfotit'
-
-            )+
-
-          '</button>'+
-
-        '</div>';
-
-    }
-  );
-
-
-  /*
-    TLAČÍTKO DOKONČIT
-    JE PŘÍMO POD FOTKAMI.
-  */
-
-  html +=
-
-      '</div>'+
-
-      '<div class="finish-box">'+
-
-        '<div class="finish-title">'+
-
-          (
-            complete
-
-              ?
-
-              '✅ Vše připraveno k dokončení'
-
-              :
-
-              '📸 Nejprve dokonči dokumentaci'
-
-          )+
-
-        '</div>'+
-
-        '<div class="finish-note">'+
-
-          (
-            complete
-
-              ?
-
-              'Dokumentace je kompletní. Zakázku můžeš dokončit.'
-
-              :
-
-              'Požadováno je všech 6 souborů.'
-
-          )+
-
-        '</div>'+
-
-        '<button '+
-          'class="green finish-button" '+
-          (
-            complete
-              ?''
-              :'disabled'
-          )+
-          ' onclick="finishJob()"'+
-        '>'+
-          '✅ DOKONČIT ZAKÁZKU'+
-        '</button>'+
-
-      '</div>'+
-
-    '</div>';
-
-
-  return html;
-
+  const driver=currentDriver();
+
+  realtimeChannel =
+    sb
+      .channel(
+        'driver-zakazky-' +
+        driver +
+        '-' +
+        Date.now()
+      )
+
+      .on(
+        'postgres_changes',
+        {
+          event:'INSERT',
+          schema:'public',
+          table:'zakazky',
+          filter:'ridic_id=eq.'+driver
+        },
+        async payload => {
+
+          console.log(
+            'Nová zakázka:',
+            payload.new
+          );
+
+          localStorage.setItem(
+            JOB_KEY,
+            JSON.stringify(
+              dbToJob(payload.new)
+            )
+          );
+
+          render();
+
+          toast(
+            '🚨 NOVÁ ZAKÁZKA ' +
+            (payload.new.cislo_zakazky || '')
+          );
+        }
+      )
+
+      .on(
+        'postgres_changes',
+        {
+          event:'UPDATE',
+          schema:'public',
+          table:'zakazky',
+          filter:'ridic_id=eq.'+driver
+        },
+        async payload => {
+
+          const row=payload.new;
+
+          if(row.stav === 'dokoncena'){
+
+            const current=job();
+
+            if(
+              current &&
+              String(current.dbId) === String(row.id)
+            ){
+
+              const u=dbToJob(row);
+
+              const h=history();
+
+              const exists=h.some(
+                x =>
+                  String(x.dbId) === String(row.id)
+              );
+
+              if(!exists){
+
+                h.unshift({
+                  ...u,
+                  status:'done',
+                  completedAt:
+                    new Date().toISOString()
+                });
+
+                localStorage.setItem(
+                  HISTORY_KEY,
+                  JSON.stringify(h)
+                );
+              }
+
+              localStorage.removeItem(
+                JOB_KEY
+              );
+
+              render();
+
+              toast('✅ Zakázka dokončena');
+            }
+
+            return;
+          }
+
+          localStorage.setItem(
+            JOB_KEY,
+            JSON.stringify(
+              dbToJob(row)
+            )
+          );
+
+          render();
+        }
+      )
+
+      .subscribe(status => {
+
+        console.log(
+          'Realtime:',
+          status
+        );
+
+        if(status === 'SUBSCRIBED'){
+
+          setConnectionStatus(
+            'Supabase: realtime aktivní',
+            true
+          );
+
+        }else if(status === 'CHANNEL_ERROR'){
+
+          setConnectionStatus(
+            'Supabase: chyba realtime'
+          );
+        }
+      });
 }
 
 
-/* =========================
-   DOKONČIT ZAKÁZKU
-========================= */
+/* =========================================================
+   JOB STATUS
+========================================================= */
 
-async function finishJob(){
+async function setStatus(newStatus){
 
-  const j =
-    job();
-
+  const j=job();
 
   if(!j){
-
-    toast(
-      '❌ Žádná aktivní zakázka'
-    );
-
+    toast('❌ Žádná aktivní zakázka');
     return;
-
   }
 
-
   if(
-    j.status===
-    'new'
+    newStatus !== 'accepted' &&
+    newStatus !== 'done'
   ){
-
-    toast(
-      'Nejdřív přijmi zakázku.'
-    );
-
     return;
-
   }
 
-
   if(
-    !docsComplete()
+    newStatus === 'accepted' &&
+    j.status !== 'new'
   ){
-
-    const missing =
-      DOCS
-
-        .filter(
-          x=>
-            !(j.docs||{})[
-              x.key
-            ]
-        )
-
-        .map(
-          x=>
-            x.title
-        );
-
-
-    toast(
-      '⚠️ Chybí: '+
-      missing.join(
-        ', '
-      )
-    );
-
-
-    render();
-
-
     return;
-
   }
 
-
-  const ok =
-    confirm(
-      'Dokumentace je kompletní 6/6.\n\nOpravdu dokončit zakázku '+j.id+'?'
-    );
-
-
-  if(!ok)
-    return;
-
-
-  await setStatus(
-    'done'
-  );
-
-}
-
-
-/* =========================
-   ZMĚNA STAVU
-========================= */
-
-async function setStatus(
-  s
-){
-
-  const j =
-    job();
-
-
-  const c =
-    cfg();
-
-
   if(
-    !sb||
-    !j||
-    !j.dbId
+    newStatus === 'done' &&
+    j.status !== 'accepted'
   ){
-
-    toast(
-      '❌ Zakázka není připojena'
-    );
-
-    return;
-
-  }
-
-
-  /*
-    Povolené změny:
-
-    NOVÁ → PŘIJATA
-    PŘIJATA → DOKONČENA
-  */
-
-  if(
-    s!=='accepted'&&
-    s!=='done'
-  ){
-
-    return;
-
-  }
-
-
-  if(
-    s==='done'&&
-    !docsComplete()
-  ){
-
-    const missing =
-      DOCS
-
-        .filter(
-          x=>
-            !(j.docs||{})[
-              x.key
-            ]
-        )
-
-        .map(
-          x=>
-            x.title
-        );
-
-
-    toast(
-      '⚠️ Chybí: '+
-      missing.join(
-        ', '
-      )
-    );
-
-
-    render();
-
-
-    return;
-
-  }
-
-
-  if(
-    s==='accepted'&&
-    j.status!=='new'
-  ){
-
-    return;
-
-  }
-
-
-  if(
-    s==='done'&&
-    j.status!=='accepted'
-  ){
-
     toast(
       'Zakázku lze dokončit až po přijetí.'
     );
-
     return;
-
   }
 
+  if(!sb){
+    toast('❌ Supabase není připojeno');
+    return;
+  }
 
-  const {
-    data,
-    error
-  } =
-    await sb
+  const now=
+    new Date().toISOString();
 
-      .from(
-        'zakazky'
-      )
+  const updates={
+    stav:
+      newStatus === 'done'
+        ? 'dokoncena'
+        : 'prijata'
+  };
 
-      .update({
+  try{
 
-        stav:
-          UI[s]
-
-      })
-
-      .eq(
-        'id',
-        j.dbId
-      )
-
-      .eq(
-        'ridic_id',
-        c.driver
-      )
-
+    const {data,error}=await sb
+      .from('zakazky')
+      .update(updates)
+      .eq('id',j.dbId)
       .select()
       .single();
 
+    if(error) throw error;
 
-  if(error){
+    j.status=newStatus;
 
-    console.error(
-      error
-    );
+    j.times=j.times || {};
 
+    if(newStatus === 'accepted'){
+      j.times.accepted=now;
+    }
 
-    toast(
-      '❌ Stav se nepodařilo uložit'
-    );
-
-
-    return;
-
-  }
-
-
-  const u =
-    dbToJob(
-      data
-    );
-
-
-  u.times =
-    j.times||
-    {};
-
-
-  u.times[s] =
-    new Date()
-      .toLocaleString(
-        'cs-CZ'
-      );
-
-
-  u.docs =
-    j.docs||
-    {};
-
-
-  /*
-    PŘIJATO
-  */
-
-  if(
-    s==='accepted'
-  ){
+    if(newStatus === 'done'){
+      j.times.done=now;
+    }
 
     localStorage.setItem(
-
-      K,
-
-      JSON.stringify(
-        u
-      )
-
+      JOB_KEY,
+      JSON.stringify(j)
     );
 
+    if(newStatus === 'done'){
 
-    toast(
-      '✅ Zakázka přijata'
-    );
+      const h=history();
 
+      h.unshift({
+        ...j,
+        status:'done',
+        completedAt:now
+      });
 
-    render();
-
-
-    return;
-
-  }
-
-
-  /*
-    DOKONČENO
-  */
-
-  if(
-    s==='done'
-  ){
-
-    let h =
-      hist();
-
-
-    h =
-      h.filter(
-        x=>
-          x.dbId!==
-          u.dbId
+      localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(h)
       );
 
+      localStorage.removeItem(
+        JOB_KEY
+      );
 
-    h.unshift(
-      u
-    );
+      render();
 
+      toast('✅ Zakázka dokončena');
 
-    localStorage.setItem(
-      H,
-      JSON.stringify(h)
-    );
+    }else{
 
+      render();
 
-    /*
-      AKTIVNÍ ZAKÁZKA
-      OKAMŽITĚ SMAZAT.
-    */
+      toast('✅ Zakázka přijata');
+    }
 
-    localStorage.removeItem(
-      K
-    );
+  }catch(e){
 
-
-    render();
-
+    console.error(e);
 
     toast(
-      '✅ Zakázka dokončena'
+      '❌ Stav se nepodařilo změnit: ' +
+      (e.message || 'chyba')
     );
-
   }
-
 }
 
 
-/* =========================
-   JOB HTML
-========================= */
-
-function jobHtml(j){
-
-  const isNew =
-    j.status===
-    'new';
-
-
-  const actionButton =
-
-    isNew
-
-      ?
-
-      '<button '+
-        'class="gold" '+
-        'onclick="setStatus(\'accepted\')"'+
-      '>'+
-        '✅ PŘIJMOUT ZAKÁZKU'+
-      '</button>'
-
-      :
-
-      '';
-
-
-  return (
-
-    '<div class="card">'+
-
-      '<div class="row">'+
-
-        '<div>'+
-
-          '<div class="ey">'+
-            'Zakázka'+
-          '</div>'+
-
-          '<div class="job">'+
-            esc(j.id)+
-          '</div>'+
-
-        '</div>'+
-
-        '<span class="badge">'+
-
-          (
-            isNew
-              ?'NOVÁ'
-              :'AKTIVNÍ'
-          )+
-
-        '</span>'+
-
-      '</div>'+
-
-    '</div>'+
-
-
-    '<div class="card">'+
-
-      '<div class="label">'+
-        '📍 Zásah klienta'+
-      '</div>'+
-
-      '<div class="addr">'+
-        esc(j.impact)+
-      '</div>'+
-
-      '<button '+
-        'class="dark" '+
-        'onclick="navTo('+JSON.stringify(j.impact)+')"'+
-      '>'+
-        '🧭 Navigovat k zásahu'+
-      '</button>'+
-
-    '</div>'+
-
-
-    '<div class="card">'+
-
-      '<div class="label">'+
-        '🔧 Servis klienta'+
-      '</div>'+
-
-      '<div class="addr">'+
-        esc(j.service)+
-      '</div>'+
-
-      '<button '+
-        'class="dark" '+
-        'onclick="navTo('+JSON.stringify(j.service)+')"'+
-      '>'+
-        '🧭 Navigovat do servisu'+
-      '</button>'+
-
-    '</div>'+
-
-
-    '<div class="card">'+
-
-      '<div class="label">'+
-        '📝 Poznámka dispečera'+
-      '</div>'+
-
-      '<div class="note">'+
-        esc(
-          j.note||
-          'Bez poznámky'
-        )+
-      '</div>'+
-
-      actionButton+
-
-    '</div>'+
-
-
-    documentationHtml(j)
-
-  );
-
-}
-
-
-/* =========================
-   RENDER
-========================= */
-
-function render(){
-
-  const j =
-    job();
-
-
-  const area =
-    document.getElementById(
-      'jobArea'
-    );
-
-
-  if(!area)
-    return;
-
-
-  area.innerHTML =
-
-    j
-
-      ?
-
-      jobHtml(
-        j
-      )
-
-      :
-
-      '<div class="card empty">'+
-
-        '<div class="big">'+
-          '📭'+
-        '</div>'+
-
-        '<h2>'+
-          'Žádná aktivní zakázka'+
-        '</h2>'+
-
-        '<div>'+
-          'Jakmile dispečer odešle zakázku,'+
-          ' zobrazí se zde.'+
-        '</div>'+
-
-      '</div>';
-
-
-  const active =
-    document.getElementById(
-      'active'
-    );
-
-
-  if(active){
-
-    active.textContent =
-
-      j&&
-      j.status!=='done'
-
-        ?
-
-        1
-
-        :
-
-        0;
-
-  }
-
-
-  const done =
-    document.getElementById(
-      'done'
-    );
-
-
-  if(done){
-
-    done.textContent =
-      hist().length;
-
-  }
-
-}
-
-
-/* =========================
-   HISTORIE
-========================= */
-
-function renderHist(){
-
-  const h =
-    hist();
-
-
-  const el =
-    document.getElementById(
-      'hist'
-    );
-
-
-  if(!el)
-    return;
-
-
-  el.innerHTML =
-
-    h.length
-
-      ?
-
-      h.map(
-        j =>
-
-          '<div class="step">'+
-
-            '<div class="dot on"></div>'+
-
-            '<div>'+
-
-              '<b>'+
-                esc(j.id)+
-              '</b>'+
-
-              '<div>'+
-                esc(j.impact)+
-              '</div>'+
-
-              '<div class="small">'+
-                'Servis: '+
-                esc(j.service)+
-              '</div>'+
-
-            '</div>'+
-
-          '</div>'
-
-      ).join('')
-
-      :
-
-      '<div class="empty">'+
-        'Zatím žádná dokončená zakázka.'+
-      '</div>';
-
-}
-
-
-/* =========================
-   NAVIGACE
-========================= */
-
-function navTo(
-  address
-){
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function openNavigation(address){
 
   if(!address){
 
@@ -3549,871 +1283,1324 @@ function navTo(
     );
 
     return;
-
   }
 
+  const cleanAddress =
+    String(address).trim();
 
-  const destination =
+  const encoded =
     encodeURIComponent(
-      address
+      cleanAddress
     );
 
+  /*
+   * Apple Maps
+   *
+   * iOS 18.4+ official unified Maps URL:
+   * /directions?destination=...&mode=driving
+   *
+   * Bez source = aktuální poloha řidiče.
+   */
+  const appleUrl =
+    'https://maps.apple.com/directions' +
+    '?destination=' +
+    encoded +
+    '&mode=driving';
 
   /*
-    iPhone / iPad
-    → Apple Mapy
-  */
-
-  const isApple =
-    /iPhone|iPad|iPod/i.test(
-      navigator.userAgent
-    );
-
-
-  if(isApple){
-
-    const appleUrl =
-      'https://maps.apple.com/?daddr='+
-      destination+
-      '&dirflg=d';
-
-
-    window.location.href =
-      appleUrl;
-
-
-    return;
-
-  }
-
-
-  /*
-    Android / počítač
-    → Google Maps
-  */
-
+   * Google Maps
+   *
+   * Bez origin = aktuální poloha zařízení.
+   */
   const googleUrl =
-    'https://www.google.com/maps/dir/?api=1&destination='+
-    destination;
+    'https://www.google.com/maps/dir/' +
+    '?api=1' +
+    '&destination=' +
+    encoded +
+    '&travelmode=driving' +
+    '&dir_action=navigate';
 
+  document.getElementById(
+    'navDestination'
+  ).textContent =
+    cleanAddress;
 
-  window.location.href =
-    googleUrl;
-
-}
-
-
-/* =========================
-   STAV ŘIDIČE
-========================= */
-
-function state(
-  x
-){
-
-  const shift =
+  const appleLink =
     document.getElementById(
-      'shift'
+      'appleNavLink'
     );
 
+  const googleLink =
+    document.getElementById(
+      'googleNavLink'
+    );
 
-  if(shift)
-    shift.textContent =
-      x;
+  /*
+   * DŮLEŽITÉ:
+   * Používáme skutečné <a href>.
+   * Ne window.location.
+   * Ne window.open.
+   *
+   * Na iPhonu je to pro PWA spolehlivější.
+   */
+  appleLink.href=appleUrl;
+  googleLink.href=googleUrl;
 
+  /*
+   * target="_blank" je nastaven přes JS,
+   * aby odkaz otevřel mapy mimo aktuální PWA.
+   */
+  appleLink.target='_blank';
+  appleLink.rel='noopener noreferrer';
 
-  toast(
-    'Stav: '+
-    x
-  );
+  googleLink.target='_blank';
+  googleLink.rel='noopener noreferrer';
 
+  document
+    .getElementById('navOverlay')
+    .classList.add('show');
 }
 
 
-/* =========================
-   PROFIL
-========================= */
-
-function saveProfile(){
-
-  localStorage.setItem(
-
-    P,
-
-    JSON.stringify({
-
-      name:
-        document
-          .getElementById(
-            'name'
-          )
-          .value,
-
-      car:
-        document
-          .getElementById(
-            'car'
-          )
-          .value
-
-    })
-
-  );
-
-
-  toast(
-    'Profil uložen'
-  );
-
-}
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-function logout(){
+function closeNavigation(event){
 
   if(
-    channel&&
-    sb
+    event &&
+    event.target !==
+      document.getElementById('navOverlay')
   ){
-
-    try{
-
-      sb.removeChannel(
-        channel
-      );
-
-    }catch(e){}
-
-  }
-
-
-  channel =
-    null;
-
-
-  sb =
-    null;
-
-
-  tbConnected =
-    false;
-
-
-  localStorage.removeItem(
-    C
-  );
-
-
-  setLoggedOut();
-
-
-  toast(
-    'Odpojeno'
-  );
-
-}
-
-
-/* =========================
-   CLEAR DATA
-========================= */
-
-function clearData(){
-
-  if(
-    confirm(
-      'Vymazat lokální data?'
-    )
-  ){
-
-    localStorage.removeItem(
-      K
-    );
-
-    localStorage.removeItem(
-      H
-    );
-
-    localStorage.removeItem(
-      P
-    );
-
-
-    render();
-
-
-    toast(
-      'Data vymazána'
-    );
-
-  }
-
-}
-
-
-/* =========================
-   DEMO
-========================= */
-
-function demo(){
-
-  localStorage.setItem(
-
-    K,
-
-    JSON.stringify({
-
-      dbId:
-        'DEMO-001',
-
-      id:
-        'TB-2026-001',
-
-      impact:
-        'Most, ulice J. Palacha',
-
-      service:
-        'Hlavní 88, Větrušice',
-
-      note:
-        'Zákazník čeká na místě. Po naložení pokračovat do servisu.',
-
-      status:
-        'new',
-
-      times:
-        {},
-
-      docs:
-        {}
-
-    })
-
-  );
-
-
-  toast(
-    'Lokální testovací zakázka'
-  );
-
-
-  render();
-
-
-  show(
-    'home',
-    document.querySelector(
-      'nav button'
-    )
-  );
-
-}
-
-
-/* =========================
-   PUSH
-========================= */
-
-function urlBase64ToUint8Array(
-  base64String
-){
-
-  const padding =
-    '='.repeat(
-      (
-        4-
-        base64String.length%4
-      )%4
-    );
-
-
-  const base64 =
-    (
-      base64String+
-      padding
-    )
-    .replace(
-      /-/g,
-      '+'
-    )
-    .replace(
-      /_/g,
-      '/'
-    );
-
-
-  const raw =
-    atob(
-      base64
-    );
-
-
-  const out =
-    new Uint8Array(
-      raw.length
-    );
-
-
-  for(
-    let i=0;
-    i<raw.length;
-    i++
-  ){
-
-    out[i] =
-      raw.charCodeAt(i);
-
-  }
-
-
-  return out;
-
-}
-
-
-/*
-  VAPID PUBLIC KEY
-  PRIVATE KEY NIKDY NEDÁVEJ
-  DO TOHOTO SOUBORU.
-*/
-
-const VAPID_PUBLIC_KEY =
-'BCR_7DAzc2W3nmStr9FSUPRbjUvXlXOv_pz2yvOTXKowDweKlT10XOCEqJLQQoD2GHsizojwmOxIo72UDE5D5LY';
-
-
-/* =========================
-   PUSH UI
-========================= */
-
-async function updatePushUI(){
-
-  const card =
-    document.getElementById(
-      'notifyCard'
-    );
-
-
-  const status =
-    document.getElementById(
-      'notifyStatus'
-    );
-
-
-  if(
-    !card||
-    !status
-  )
     return;
-
-
-  if(
-    !('Notification' in window)||
-    !('serviceWorker' in navigator)||
-    !('PushManager' in window)
-  ){
-
-    card.style.display =
-      'block';
-
-
-    status.textContent =
-      'Tento prohlížeč Web Push nepodporuje.';
-
-
-    status.className =
-      'statusline bad';
-
-
-    return;
-
   }
 
+  document
+    .getElementById('navOverlay')
+    .classList.remove('show');
+}
 
-  const permission =
-    Notification.permission;
 
+/* =========================================================
+   DOCUMENTATION
+========================================================= */
+
+function getDocs(){
+
+  const j=job();
+
+  return j
+    ? (j.docs || {})
+    : {};
+}
+
+
+function docsCount(){
+
+  const d=getDocs();
+
+  return DOCS.filter(
+    x => !!d[x.key]
+  ).length;
+}
+
+
+function docsComplete(){
+
+  return docsCount() === DOCS.length;
+}
+
+
+function docFileId(key){
+
+  const d=getDocs();
+
+  return d[key] || null;
+}
+
+
+function openDocPicker(key){
+
+  const input =
+    document.createElement('input');
+
+  input.type='file';
+
+  input.accept='image/*';
+
+  input.capture='environment';
+
+  input.onchange = () => {
+
+    const file =
+      input.files &&
+      input.files[0];
+
+    if(file){
+      uploadDocument(key,file);
+    }
+  };
+
+  input.click();
+}
+
+
+/* =========================================================
+   IMAGE COMPRESSION
+========================================================= */
+
+async function compressImage(file){
+
+  /*
+   * Necháváme menší soubory bez změny.
+   */
+  if(
+    file.type === 'image/jpeg' &&
+    file.size <= 900 * 1024
+  ){
+    return file;
+  }
+
+  const MAX_SIZE=1800;
+  const QUALITY=0.78;
 
   try{
 
-    const reg =
-      await navigator
-        .serviceWorker
-        .getRegistration();
-
-
-    const sub =
-      reg
-
-        ?
-
-        await reg.pushManager
-          .getSubscription()
-
-        :
-
-        null;
-
+    let bitmap=null;
 
     if(
-      permission==='granted'&&
-      sub
-    ){
-
-      card.style.display =
-        'none';
-
-
-      return;
-
-    }
-
-
-    if(
-      permission==='granted'&&
-      !sub
-    ){
-
-      card.style.display =
-        'block';
-
-
-      status.textContent =
-        'Oznámení jsou povolena, ale je potřeba obnovit registraci.';
-
-
-      status.className =
-        'statusline bad';
-
-
-      return;
-
-    }
-
-
-    if(
-      permission==='default'
-    ){
-
-      card.style.display =
-        'block';
-
-
-      status.textContent =
-        'Oznámení nejsou nastavená.';
-
-
-      status.className =
-        'statusline';
-
-
-      return;
-
-    }
-
-
-    if(
-      permission==='denied'
-    ){
-
-      card.style.display =
-        'block';
-
-
-      status.textContent =
-        '🔕 Oznámení jsou zablokovaná. Povol je v nastavení iPhonu.';
-
-
-      status.className =
-        'statusline bad';
-
-    }
-
-
-  }catch(e){
-
-    console.error(
-      'Push UI:',
-      e
-    );
-
-
-    card.style.display =
-      'block';
-
-  }
-
-}
-
-
-/* =========================
-   ENABLE PUSH
-========================= */
-
-async function enablePush(){
-
-  if(
-    !('serviceWorker' in navigator)||
-    !('PushManager' in window)||
-    !('Notification' in window)
-  ){
-
-    toast(
-      'Tento prohlížeč Web Push nepodporuje'
-    );
-
-    return;
-
-  }
-
-
-  const c =
-    cfg();
-
-
-  if(
-    !c.driver||
-    !sb
-  ){
-
-    toast(
-      'Nejdřív připoj TowBrüx'
-    );
-
-    return;
-
-  }
-
-
-  try{
-
-    let permission =
-      Notification.permission;
-
-
-    if(
-      permission!=='granted'
-    ){
-
-      permission =
-        await Notification
-          .requestPermission();
-
-    }
-
-
-    if(
-      permission!=='granted'
-    ){
-
-      toast(
-        'Oznámení nebyla povolena'
-      );
-
-
-      await updatePushUI();
-
-
-      return;
-
-    }
-
-
-    const reg =
-      await registerSW();
-
-
-    if(!reg)
-      throw new Error(
-        'Service Worker se nepodařilo registrovat'
-      );
-
-
-    let sub =
-      await reg
-        .pushManager
-        .getSubscription();
-
-
-    if(
-      sub&&
-      localStorage.getItem(SUB)!=='v3'
+      'createImageBitmap' in window
     ){
 
       try{
 
-        await sub.unsubscribe();
+        bitmap=
+          await createImageBitmap(
+            file,
+            {
+              imageOrientation:'from-image'
+            }
+          );
 
-      }catch(e){}
+      }catch(e){
 
-
-      sub =
-        null;
-
+        bitmap=null;
+      }
     }
 
+    if(bitmap){
 
-    if(!sub){
+      const scale =
+        Math.min(
+          1,
+          MAX_SIZE /
+          Math.max(
+            bitmap.width,
+            bitmap.height
+          )
+        );
 
-      sub =
-        await reg
-          .pushManager
-          .subscribe({
+      const width =
+        Math.round(
+          bitmap.width * scale
+        );
 
-            userVisibleOnly:
-              true,
+      const height =
+        Math.round(
+          bitmap.height * scale
+        );
 
+      const canvas =
+        document.createElement('canvas');
+
+      canvas.width=width;
+      canvas.height=height;
+
+      const ctx=
+        canvas.getContext('2d');
+
+      ctx.drawImage(
+        bitmap,
+        0,
+        0,
+        width,
+        height
+      );
+
+      bitmap.close();
+
+      const blob=
+        await new Promise(
+          resolve =>
+            canvas.toBlob(
+              resolve,
+              'image/jpeg',
+              QUALITY
+            )
+        );
+
+      if(blob){
+
+        return new File(
+          [blob],
+          file.name.replace(
+            /\.[^/.]+$/,
+            ''
+          )+'.jpg',
+          {
+            type:'image/jpeg',
+            lastModified:Date.now()
+          }
+        );
+      }
+    }
+
+    /*
+     * Fallback pro Safari.
+     */
+    const url=
+      URL.createObjectURL(file);
+
+    const img=
+      await new Promise(
+        (resolve,reject)=>{
+
+          const image=
+            new Image();
+
+          image.onload=()=>{
+            URL.revokeObjectURL(url);
+            resolve(image);
+          };
+
+          image.onerror=()=>{
+            URL.revokeObjectURL(url);
+            reject(
+              new Error(
+                'Obrázek se nepodařilo načíst'
+              )
+            );
+          };
+
+          image.src=url;
+        }
+      );
+
+    const scale=
+      Math.min(
+        1,
+        MAX_SIZE /
+        Math.max(
+          img.naturalWidth,
+          img.naturalHeight
+        )
+      );
+
+    const width=
+      Math.round(
+        img.naturalWidth * scale
+      );
+
+    const height=
+      Math.round(
+        img.naturalHeight * scale
+      );
+
+    const canvas=
+      document.createElement('canvas');
+
+    canvas.width=width;
+    canvas.height=height;
+
+    const ctx=
+      canvas.getContext('2d');
+
+    ctx.drawImage(
+      img,
+      0,
+      0,
+      width,
+      height
+    );
+
+    const blob=
+      await new Promise(
+        resolve =>
+          canvas.toBlob(
+            resolve,
+            'image/jpeg',
+            QUALITY
+          )
+      );
+
+    if(!blob){
+      return file;
+    }
+
+    return new File(
+      [blob],
+      file.name.replace(
+        /\.[^/.]+$/,
+        ''
+      )+'.jpg',
+      {
+        type:'image/jpeg',
+        lastModified:Date.now()
+      }
+    );
+
+  }catch(e){
+
+    console.warn(
+      'Komprese obrázku selhala:',
+      e
+    );
+
+    return file;
+  }
+}
+
+
+/* =========================================================
+   UPLOAD DOCUMENT
+========================================================= */
+
+async function uploadDocument(key,file){
+
+  const j=job();
+
+  if(!j){
+    toast('❌ Žádná aktivní zakázka');
+    return;
+  }
+
+  if(!sb){
+    toast('❌ Supabase není připojeno');
+    return;
+  }
+
+  const originalSize=file.size;
+
+  toast('⏳ Připravuji fotku…');
+
+  try{
+
+    const compressed=
+      await compressImage(file);
+
+    console.log(
+      'Dokument:',
+      key,
+      'původně:',
+      originalSize,
+      'nově:',
+      compressed.size
+    );
+
+    const safeDriver=
+      currentDriver()
+        .replace(
+          /[^a-zA-Z0-9_-]/g,
+          '_'
+        );
+
+    const safeJob=
+      String(j.dbId || j.id)
+        .replace(
+          /[^a-zA-Z0-9_-]/g,
+          '_'
+        );
+
+    const path=
+      safeDriver +
+      '/' +
+      safeJob +
+      '/' +
+      key +
+      '.jpg';
+
+    const {error}=await sb
+      .storage
+      .from(STORAGE_BUCKET)
+      .upload(
+        path,
+        compressed,
+        {
+          contentType:'image/jpeg',
+          upsert:true
+        }
+      );
+
+    if(error) throw error;
+
+    j.docs=j.docs || {};
+
+    j.docs[key]={
+      path,
+      name:compressed.name,
+      type:'image/jpeg',
+      uploadedAt:
+        new Date().toISOString()
+    };
+
+    localStorage.setItem(
+      JOB_KEY,
+      JSON.stringify(j)
+    );
+
+    render();
+
+    toast(
+      '✅ ' +
+      DOCS.find(
+        x=>x.key===key
+      ).title +
+      ' nahráno'
+    );
+
+  }catch(e){
+
+    console.error(e);
+
+    toast(
+      '❌ Fotku se nepodařilo nahrát: ' +
+      (e.message || 'chyba')
+    );
+  }
+}
+
+
+/* =========================================================
+   PUBLIC DOCUMENT URL
+========================================================= */
+
+function publicDocUrl(path){
+
+  if(!sb || !path){
+    return '';
+  }
+
+  const result=
+    sb
+      .storage
+      .from(STORAGE_BUCKET)
+      .getPublicUrl(path);
+
+  return result?.data?.publicUrl || '';
+}
+
+
+/* =========================================================
+   DOCUMENTATION HTML
+========================================================= */
+
+function documentationHtml(j){
+
+  if(!j){
+    return '';
+  }
+
+  /*
+   * Dokumentace se zobrazí ihned po přijetí.
+   */
+  if(j.status === 'new'){
+    return '';
+  }
+
+  const d=j.docs || {};
+
+  let html=
+    '<div class="card docs">'+
+      '<div class="docsHeader">'+
+        '<h2 class="sectionTitle">📸 Dokumentace zásahu</h2>'+
+        '<div class="docsCount">'+
+          docsCount()+
+          ' / '+
+          DOCS.length+
+        '</div>'+
+      '</div>'+
+
+      '<p class="note">'+
+        'Před dokončením zakázky musí být nahráno všech 6 fotografií.'+
+      '</p>'+
+
+      '<div class="docGrid">';
+
+  DOCS.forEach(doc=>{
+
+    const exists=
+      !!d[doc.key];
+
+    html+=
+      '<div class="docItem">'+
+
+        '<div class="docTitle">'+
+          escapeHtml(doc.title)+
+        '</div>'+
+
+        '<div class="docDesc">'+
+          escapeHtml(doc.desc)+
+        '</div>'+
+
+        '<div class="docState '+
+          (exists?'done':'')+
+        '">' +
+          (
+            exists
+              ? '✅ Nahráno'
+              : '⏳ Čeká na fotku'
+          )+
+        '</div>'+
+
+        '<button class="docButton" '+
+          'onclick="openDocPicker(\''+
+            doc.key+
+          '\')">'+
+          (
+            exists
+              ? '📷 ZNOVU VYFOTIT'
+              : '📷 VYFOTIT'
+          )+
+        '</button>'+
+
+      '</div>';
+  });
+
+  html+=
+      '</div>'+
+
+      '<div class="finishWrap">'+
+
+        '<button '+
+          'class="green" '+
+          'onclick="finishJob()" '+
+          (
+            docsComplete()
+              ? ''
+              : 'disabled'
+          )+
+        '>'+
+          '✅ DOKONČIT ZAKÁZKU'+
+        '</button>'+
+
+        '<div class="finishHint">'+
+          (
+            docsComplete()
+              ? 'Dokumentace je kompletní.'
+              : 'Nejdříve nahraj všech 6 dokumentů.'
+          )+
+        '</div>'+
+
+      '</div>'+
+
+    '</div>';
+
+  return html;
+}
+
+
+/* =========================================================
+   FINISH JOB
+========================================================= */
+
+async function finishJob(){
+
+  const j=job();
+
+  if(!j){
+
+    toast(
+      '❌ Žádná aktivní zakázka'
+    );
+
+    return;
+  }
+
+  if(j.status === 'new'){
+
+    toast(
+      'Nejdřív přijmi zakázku.'
+    );
+
+    return;
+  }
+
+  if(!docsComplete()){
+
+    const missing=
+      DOCS
+        .filter(
+          x =>
+            !(j.docs || {})[x.key]
+        )
+        .map(
+          x => x.title
+        );
+
+    toast(
+      '⚠️ Chybí: ' +
+      missing.join(', ')
+    );
+
+    render();
+
+    return;
+  }
+
+  const ok=
+    confirm(
+      'Dokumentace je kompletní 6/6.\n\n' +
+      'Opravdu dokončit zakázku ' +
+      j.id +
+      '?'
+    );
+
+  if(!ok){
+    return;
+  }
+
+  await setStatus('done');
+}
+
+
+/* =========================================================
+   JOB HTML
+========================================================= */
+
+function jobHtml(j){
+
+  if(!j){
+    return '';
+  }
+
+  const isNew =
+    j.status === 'new';
+
+  const isAccepted =
+    j.status === 'accepted';
+
+  let actionButton='';
+
+  if(isNew){
+
+    actionButton=
+      '<button '+
+        'class="gold" '+
+        'onclick="setStatus(\'accepted\')">'+
+        '✅ PŘIJMOUT ZAKÁZKU'+
+      '</button>';
+
+  }else if(isAccepted){
+
+    /*
+     * Dokončení je schválně v dokumentaci,
+     * ne jako samostatné tlačítko nahoře.
+     */
+    actionButton='';
+  }
+
+  return (
+    '<div class="card">'+
+
+      '<div class="jobHead">'+
+        '<div>'+
+          '<div class="small">ZAKÁZKA</div>'+
+          '<div class="jobNumber">'+
+            escapeHtml(j.id)+
+          '</div>'+
+        '</div>'+
+
+        '<div class="badge">'+
+          (
+            isNew
+              ? 'NOVÁ'
+              : isAccepted
+                ? 'AKTIVNÍ'
+                : 'DOKONČENÁ'
+          )+
+        '</div>'+
+      '</div>'+
+
+      '<div class="info">'+
+
+        (
+          j.client
+            ?
+              '<div class="infoRow">'+
+                '<div class="infoLabel">Klient</div>'+
+                '<div class="infoValue">'+
+                  escapeHtml(j.client)+
+                '</div>'+
+              '</div>'
+            :
+              ''
+        )+
+
+        '<div class="infoRow">'+
+          '<div class="infoLabel">📍 Zásah</div>'+
+          '<div class="infoValue">'+
+            escapeHtml(j.impact || '—')+
+          '</div>'+
+        '</div>'+
+
+        '<button '+
+          'class="secondary" '+
+          'onclick="openNavigation('+
+            JSON.stringify(j.impact || '')+
+          ')">'+
+          '🧭 NAVIGACE K ZÁSAHU'+
+        '</button>'+
+
+        '<div class="infoRow">'+
+          '<div class="infoLabel">🔧 Servis klienta</div>'+
+          '<div class="infoValue">'+
+            escapeHtml(j.service || '—')+
+          '</div>'+
+        '</div>'+
+
+        '<button '+
+          'class="secondary" '+
+          'onclick="openNavigation('+
+            JSON.stringify(j.service || '')+
+          ')">'+
+          '🧭 NAVIGACE DO SERVISU'+
+        '</button>'+
+
+        (
+          j.note
+            ?
+              '<div class="infoRow">'+
+                '<div class="infoLabel">Poznámka</div>'+
+                '<div class="infoValue">'+
+                  escapeHtml(j.note)+
+                '</div>'+
+              '</div>'
+            :
+              ''
+        )+
+
+      '</div>'+
+
+      actionButton+
+
+    '</div>'
+  );
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render(){
+
+  const j=job();
+
+  const activeEl=
+    document.getElementById(
+      'activeJob'
+    );
+
+  if(j){
+
+    activeEl.innerHTML =
+      jobHtml(j) +
+      documentationHtml(j);
+
+    document.getElementById(
+      'activeCount'
+    ).textContent='1';
+
+  }else{
+
+    activeEl.innerHTML=
+      '<div class="card empty">'+
+        '<div style="font-size:34px">🚛</div>'+
+        '<div style="font-weight:800;margin-top:8px">'+
+          'Žádná aktivní zakázka'+
+        '</div>'+
+        '<div class="small" style="margin-top:5px">'+
+          'Jakmile Dispatch odešle novou zakázku, objeví se zde.'+
+        '</div>'+
+      '</div>';
+
+    document.getElementById(
+      'activeCount'
+    ).textContent='0';
+  }
+
+  renderHistory();
+  updatePushUI();
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+async function loadHistory(){
+  renderHistory();
+}
+
+
+function renderHistory(){
+
+  const el=
+    document.getElementById(
+      'history'
+    );
+
+  const h=history();
+
+  if(!h.length){
+
+    el.innerHTML=
+      '<div class="empty">'+
+        'Zatím žádné dokončené zakázky.'+
+      '</div>';
+
+    document.getElementById(
+      'doneToday'
+    ).textContent='0';
+
+    return;
+  }
+
+  const today=
+    new Date()
+      .toISOString()
+      .slice(0,10);
+
+  const doneToday=
+    h.filter(
+      x =>
+        String(
+          x.completedAt || ''
+        ).slice(0,10) === today
+    ).length;
+
+  document.getElementById(
+    'doneToday'
+  ).textContent=
+    doneToday;
+
+  el.innerHTML=
+    h.slice(0,20)
+      .map(x=>{
+
+        const date=
+          x.completedAt
+            ?
+              new Date(
+                x.completedAt
+              ).toLocaleString(
+                'cs-CZ'
+              )
+            :
+              '';
+
+        return(
+          '<div class="historyItem">'+
+
+            '<div class="historyTop">'+
+              '<div class="historyTitle">'+
+                escapeHtml(x.id)+
+              '</div>'+
+
+              '<div class="historyDate">'+
+                escapeHtml(date)+
+              '</div>'+
+            '</div>'+
+
+            '<div class="historyStatus">'+
+              '✅ Dokončeno'+
+            '</div>'+
+
+          '</div>'
+        );
+      })
+      .join('');
+}
+
+
+/* =========================================================
+   PUSH
+========================================================= */
+
+function urlBase64ToUint8Array(base64String){
+
+  const padding =
+    '='.repeat(
+      (4 - base64String.length % 4) % 4
+    );
+
+  const base64=
+    (base64String + padding)
+      .replace(/-/g,'+')
+      .replace(/_/g,'/');
+
+  const rawData=
+    atob(base64);
+
+  return Uint8Array.from(
+    [...rawData].map(
+      char => char.charCodeAt(0)
+    )
+  );
+}
+
+
+async function registerServiceWorker(){
+
+  if(!('serviceWorker' in navigator)){
+    throw new Error(
+      'Service Worker není podporován'
+    );
+  }
+
+  return await navigator.serviceWorker.register(
+    './sw.js?v=20260827-push',
+    {
+      scope:'./'
+    }
+  );
+}
+
+
+async function enablePush(){
+
+  if(!sb){
+
+    toast(
+      '❌ Nejprve se přihlas'
+    );
+
+    return;
+  }
+
+  if(
+    !('Notification' in window) ||
+    !('serviceWorker' in navigator) ||
+    !('PushManager' in window)
+  ){
+
+    toast(
+      '❌ Push notifikace nejsou na tomto zařízení dostupné'
+    );
+
+    return;
+  }
+
+  try{
+
+    const permission=
+      await Notification.requestPermission();
+
+    if(permission !== 'granted'){
+
+      toast(
+        '⚠️ Notifikace nejsou povolené'
+      );
+
+      updatePushUI();
+
+      return;
+    }
+
+    const registration=
+      await registerServiceWorker();
+
+    let subscription=
+      await registration.pushManager
+        .getSubscription();
+
+    if(!subscription){
+
+      subscription=
+        await registration.pushManager.subscribe(
+          {
+            userVisibleOnly:true,
             applicationServerKey:
               urlBase64ToUint8Array(
                 VAPID_PUBLIC_KEY
               )
-
-          });
-
+          }
+        );
     }
 
+    const json=
+      subscription.toJSON();
 
-    const json =
-      sub.toJSON();
+    const driver=
+      currentDriver();
 
+    const endpoint=
+      json.endpoint;
 
-    const {
-      error
-    } =
+    const p256dh=
+      json.keys?.p256dh;
+
+    const auth=
+      json.keys?.auth;
+
+    if(
+      !endpoint ||
+      !p256dh ||
+      !auth
+    ){
+
+      throw new Error(
+        'Push subscription nemá kompletní data'
+      );
+    }
+
+    /*
+     * Starší záznamy stejného endpointu
+     * odstraníme, aby nevznikaly duplicity.
+     */
+    await sb
+      .from('push_subscriptions')
+      .delete()
+      .eq('endpoint',endpoint)
+      .neq('driver_id',driver);
+
+    const {error}=
       await sb
-
-        .from(
-          'push_subscriptions'
-        )
-
+        .from('push_subscriptions')
         .upsert(
-
           {
-
-            driver_id:
-              c.driver,
-
-            endpoint:
-              json.endpoint,
-
-            p256dh:
-              json.keys?.p256dh||
-              '',
-
-            auth:
-              json.keys?.auth||
-              '',
-
+            driver_id:driver,
+            endpoint,
+            p256dh,
+            auth,
+            user_agent:navigator.userAgent,
             updated_at:
-              new Date()
-                .toISOString()
-
+              new Date().toISOString()
           },
-
           {
-
-            onConflict:
-              'endpoint'
-
+            onConflict:'endpoint'
           }
-
         );
 
-
-    if(error)
-      throw error;
-
+    if(error) throw error;
 
     localStorage.setItem(
-      SUB,
-      'v3'
+      'tb_push_version',
+      PUSH_VERSION
     );
 
-
-    const status =
-      document.getElementById(
-        'notifyStatus'
-      );
-
-
-    if(status){
-
-      status.textContent =
-        '🔔 Oznámení jsou povolena';
-
-
-      status.className =
-        'statusline ok';
-
-    }
-
-
-    const card =
-      document.getElementById(
-        'notifyCard'
-      );
-
-
-    if(card)
-      card.style.display =
-        'none';
-
+    updatePushUI();
 
     toast(
-      '🔔 Oznámení povolena'
+      '🔔 Notifikace jsou aktivní'
     );
 
+  }catch(e){
+
+    console.error(e);
+
+    toast(
+      '❌ Notifikace se nepodařilo nastavit: ' +
+      (e.message || 'chyba')
+    );
+
+    updatePushUI();
+  }
+}
+
+
+async function updatePushUI(){
+
+  const button=
+    document.getElementById(
+      'pushButton'
+    );
+
+  const status=
+    document.getElementById(
+      'pushStatus'
+    );
+
+  if(
+    !('Notification' in window)
+  ){
+
+    button.style.display='none';
+
+    status.textContent=
+      'Push notifikace nejsou podporované.';
+
+    return;
+  }
+
+  const permission=
+    Notification.permission;
+
+  if(permission === 'granted'){
+
+    /*
+     * Pokud je povolení udělené,
+     * schováme kartu.
+     *
+     * Pokud by subscription chyběla,
+     * zase ji ukážeme.
+     */
+    try{
+
+      const reg=
+        await navigator.serviceWorker.getRegistration();
+
+      const sub=
+        reg
+          ? await reg.pushManager.getSubscription()
+          : null;
+
+      if(sub){
+
+        button.style.display='none';
+        status.style.display='none';
+
+        return;
+      }
+
+    }catch(e){
+
+      console.warn(e);
+    }
+
+    button.style.display='block';
+    status.style.display='block';
+
+    status.textContent=
+      '⚠️ Povolení existuje, ale Push není připojen.';
+    status.className='status';
+
+    return;
+  }
+
+  if(permission === 'denied'){
+
+    button.style.display='block';
+    button.textContent=
+      '🔔 NOTIFIKACE JSOU ZAKÁZANÉ';
+
+    status.style.display='block';
+
+    status.textContent=
+      'Povol je v Nastavení iPhonu pro tuto aplikaci.';
+
+    status.className='status error';
+
+    return;
+  }
+
+  button.style.display='block';
+  button.textContent=
+    '🔔 POVOLIT NOTIFIKACE';
+
+  status.style.display='block';
+
+  status.textContent=
+    'Notifikace zatím nejsou povolené.';
+
+  status.className='status';
+}
+
+
+/* =========================================================
+   STARTUP
+========================================================= */
+
+async function startup(){
+
+  const c=cfg();
+
+  if(!c.key){
+
+    setLoggedOut();
+
+    return;
+  }
+
+  document.getElementById(
+    'driverId'
+  ).value=
+    c.driver || 'driver1';
+
+  document.getElementById(
+    'supabaseKey'
+  ).value=
+    c.key;
+
+  try{
+
+    sb=window.supabase.createClient(
+      TB_PROJECT_URL,
+      c.key
+    );
+
+    /*
+     * Ověření uloženého přihlášení.
+     */
+    const {error}=
+      await sb
+        .from('zakazky')
+        .select('id')
+        .limit(1);
+
+    if(error) throw error;
+
+    setLoggedIn();
+
+    await startApp();
 
   }catch(e){
 
     console.error(
-      'Enable Push:',
+      'Automatické přihlášení selhalo:',
       e
     );
 
-
-    toast(
-      'Oznámení se nepodařilo nastavit: '+
-      (
-        e.message||
-        'chyba'
-      )
-    );
-
-
-    await updatePushUI();
-
-  }
-
-}
-
-
-/* =========================
-   START
-========================= */
-
-(async function(){
-
-  await registerSW();
-
-
-  /*
-    PROFIL
-  */
-
-  const p =
-    JSON.parse(
-      localStorage.getItem(P)||'{}'
-    );
-
-
-  const name =
-    document.getElementById(
-      'name'
-    );
-
-
-  const car =
-    document.getElementById(
-      'car'
-    );
-
-
-  if(name)
-    name.value =
-      p.name||
-      '';
-
-
-  if(car)
-    car.value =
-      p.car||
-      '';
-
-
-  /*
-    KONFIGURACE
-  */
-
-  const c =
-    cfg();
-
-
-  const driverId =
-    document.getElementById(
-      'driverId'
-    );
-
-
-  const loginDriver =
-    document.getElementById(
-      'loginDriver'
-    );
-
-
-  const loginKey =
-    document.getElementById(
-      'loginKey'
-    );
-
-
-  if(driverId)
-    driverId.value =
-      c.driver||
-      'driver1';
-
-
-  if(loginDriver)
-    loginDriver.value =
-      c.driver||
-      'driver1';
-
-
-  /*
-    PRVNÍ RENDER
-  */
-
-  render();
-
-
-  /*
-    AUTOMATICKÉ PŘIHLÁŠENÍ
-  */
-
-  if(
-    c.url===
-    PROJECT_URL&&
-    c.key&&
-    c.driver
-  ){
-
-    if(loginKey)
-      loginKey.value =
-        c.key;
-
-
-    setLoggedIn();
-
-
-    await connect();
-
-
-    setTimeout(
-      ()=>{
-        updatePushUI();
-      },
-      800
-    );
-
-  }else{
+    sb=null;
 
     setLoggedOut();
 
-  }
+    const status=
+      document.getElementById(
+        'loginStatus'
+      );
 
-})();
+    status.textContent=
+      '⚠️ Uložené přihlášení už není platné. Přihlas se znovu.';
+
+    status.className='status error';
+  }
+}
+
+
+document.addEventListener(
+  'visibilitychange',
+  ()=>{
+    if(
+      document.visibilityState === 'visible' &&
+      sb
+    ){
+      loadActive();
+      updatePushUI();
+    }
+  }
+);
+
+
+window.addEventListener(
+  'pageshow',
+  ()=>{
+    if(sb){
+      loadActive();
+      updatePushUI();
+    }
+  }
+);
+
+
+startup();
 
 </script>
 
