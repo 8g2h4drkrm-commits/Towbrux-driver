@@ -487,6 +487,18 @@ input{
   margin-top:12px
 }
 
+
+/* =========================
+   UPLOAD INFO
+========================= */
+
+.upload-info{
+  font-size:10px;
+  color:var(--m);
+  text-align:center;
+  margin-top:8px
+}
+
 </style>
 </head>
 
@@ -1668,8 +1680,7 @@ async function connect(){
 
           /*
             DOKONČENÁ ZAKÁZKA
-            už nikdy nesmí zůstat
-            v aktivní části.
+            už nesmí zůstat aktivní.
           */
 
           if(
@@ -1731,22 +1742,39 @@ async function connect(){
 
 
           /*
-            Ověříme, že událost patří
-            opravdu aktuální zakázce.
+            Pokud přišla změna jiné
+            zakázky než aktuální, načteme
+            znovu aktivní stav ze serveru.
           */
 
-          localStorage.setItem(
-
-            K,
-
-            JSON.stringify(
-              dbToJob(r)
-            )
-
-          );
+          const current =
+            job();
 
 
-          render();
+          if(
+            current &&
+            current.dbId &&
+            current.dbId!==r.id
+          ){
+
+            await loadActive();
+
+          }else{
+
+            localStorage.setItem(
+
+              K,
+
+              JSON.stringify(
+                dbToJob(r)
+              )
+
+            );
+
+
+            render();
+
+          }
 
 
           if(
@@ -1915,8 +1943,10 @@ async function loadActive(){
 
 
   /*
-    Když Supabase nemá aktivní zakázku,
-    starou lokální zakázku smažeme.
+    Supabase je zdroj pravdy.
+
+    Pokud není žádná aktivní zakázka,
+    odstraníme starou lokální zakázku.
   */
 
   if(
@@ -1927,6 +1957,11 @@ async function loadActive(){
     const r =
       data[0];
 
+
+    /*
+      Dodatečná ochrana proti
+      dokončenému stavu.
+    */
 
     if(
       r.stav===
@@ -2035,7 +2070,8 @@ function docsCount(){
 
 
   return DOCS.filter(
-    x=>d[x.key]
+    x=>
+      d[x.key]
   ).length;
 
 }
@@ -2079,6 +2115,291 @@ function openDocPicker(
 
   if(input)
     input.click();
+
+}
+
+
+/* =========================
+   KOMPRESSE FOTKY
+========================= */
+
+async function compressImage(
+  file
+){
+
+  /*
+    Maximální rozměr delší strany.
+  */
+
+  const MAX_SIZE =
+    1800;
+
+
+  /*
+    JPEG kvalita.
+  */
+
+  const QUALITY =
+    0.78;
+
+
+  /*
+    Pokud je JPEG už malý,
+    není potřeba ho znovu
+    překódovávat.
+  */
+
+  if(
+    file.type===
+    'image/jpeg' &&
+    file.size<=
+    900*1024
+  ){
+
+    return file;
+
+  }
+
+
+  try{
+
+    let bitmap =
+      null;
+
+
+    /*
+      Moderní Safari / iPhone.
+    */
+
+    if(
+      'createImageBitmap' in window
+    ){
+
+      try{
+
+        bitmap =
+          await createImageBitmap(
+            file,
+            {
+              imageOrientation:
+                'from-image'
+            }
+          );
+
+      }catch(e){
+
+        bitmap =
+          null;
+
+      }
+
+    }
+
+
+    /*
+      Záložní načtení přes Image.
+    */
+
+    if(!bitmap){
+
+      bitmap =
+        await new Promise(
+          (resolve,reject)=>{
+
+            const img =
+              new Image();
+
+
+            const url =
+              URL.createObjectURL(
+                file
+              );
+
+
+            img.onload =
+              ()=>{
+
+                URL.revokeObjectURL(
+                  url
+                );
+
+
+                resolve(
+                  img
+                );
+
+              };
+
+
+            img.onerror =
+              ()=>{
+
+                URL.revokeObjectURL(
+                  url
+                );
+
+
+                reject(
+                  new Error(
+                    'Fotografii se nepodařilo načíst'
+                  )
+                );
+
+              };
+
+
+            img.src =
+              url;
+
+          }
+        );
+
+    }
+
+
+    const width =
+      bitmap.width;
+
+
+    const height =
+      bitmap.height;
+
+
+    /*
+      Zachování poměru stran.
+    */
+
+    const scale =
+      Math.min(
+        1,
+        MAX_SIZE/
+        Math.max(
+          width,
+          height
+        )
+      );
+
+
+    const newWidth =
+      Math.round(
+        width*
+        scale
+      );
+
+
+    const newHeight =
+      Math.round(
+        height*
+        scale
+      );
+
+
+    const canvas =
+      document.createElement(
+        'canvas'
+      );
+
+
+    canvas.width =
+      newWidth;
+
+
+    canvas.height =
+      newHeight;
+
+
+    const ctx =
+      canvas.getContext(
+        '2d',
+        {
+          alpha:false
+        }
+      );
+
+
+    if(!ctx){
+
+      throw new Error(
+        'Canvas není dostupný'
+      );
+
+    }
+
+
+    /*
+      Vykreslení fotografie
+      do menšího rozměru.
+    */
+
+    ctx.drawImage(
+      bitmap,
+      0,
+      0,
+      newWidth,
+      newHeight
+    );
+
+
+    /*
+      Převod na JPEG.
+    */
+
+    const blob =
+      await new Promise(
+        resolve=>
+          canvas.toBlob(
+            resolve,
+            'image/jpeg',
+            QUALITY
+          )
+      );
+
+
+    if(!blob){
+
+      throw new Error(
+        'Komprese fotografie selhala'
+      );
+
+    }
+
+
+    return new File(
+
+      [blob],
+
+      'towbrux-foto.jpg',
+
+      {
+
+        type:
+          'image/jpeg',
+
+        lastModified:
+          Date.now()
+
+      }
+
+    );
+
+
+  }catch(e){
+
+    console.error(
+      'Komprese fotografie:',
+      e
+    );
+
+
+    /*
+      Bezpečná záloha:
+      pokud komprese selže,
+      použije se originál.
+    */
+
+    return file;
+
+  }
 
 }
 
@@ -2138,6 +2459,52 @@ async function uploadDocument(
 
   try{
 
+    /*
+      =========================
+      1. KOMPRESSE
+      =========================
+    */
+
+    toast(
+      '⚙️ Připravuji fotografii…'
+    );
+
+
+    const originalSize =
+      file.size;
+
+
+    const compressed =
+      await compressImage(
+        file
+      );
+
+
+    const compressedSize =
+      compressed.size;
+
+
+    console.log(
+      'TowBrüx foto:',
+      Math.round(
+        originalSize/
+        1024
+      )+
+      ' KB → '+
+      Math.round(
+        compressedSize/
+        1024
+      )+
+      ' KB'
+    );
+
+
+    /*
+      =========================
+      2. UPLOAD
+      =========================
+    */
+
     toast(
       '📤 Nahrávám fotografii…'
     );
@@ -2163,12 +2530,10 @@ async function uploadDocument(
       );
 
 
-    const ext =
-      file.type===
-      'image/png'
-        ?'png'
-        :'jpg';
-
+    /*
+      Všechny fotografie
+      ukládáme jako JPG.
+    */
 
     const path =
       safeDriver+
@@ -2176,8 +2541,7 @@ async function uploadDocument(
       safeJob+
       '/'+
       key+
-      '.'+
-      ext;
+      '.jpg';
 
 
     const {
@@ -2190,23 +2554,33 @@ async function uploadDocument(
         )
 
         .upload(
+
           path,
-          file,
+
+          compressed,
+
           {
 
             contentType:
-              file.type,
+              'image/jpeg',
 
             upsert:
               true
 
           }
+
         );
 
 
     if(error)
       throw error;
 
+
+    /*
+      =========================
+      3. ULOŽENÍ METADAT
+      =========================
+    */
 
     const current =
       job();
@@ -2237,7 +2611,13 @@ async function uploadDocument(
         file.name,
 
       type:
-        file.type,
+        'image/jpeg',
+
+      originalSize:
+        originalSize,
+
+      compressedSize:
+        compressedSize,
 
       uploadedAt:
         new Date()
@@ -2258,6 +2638,13 @@ async function uploadDocument(
 
 
     render();
+
+
+    const savedKb =
+      Math.round(
+        compressedSize/
+        1024
+      );
 
 
     toast(
@@ -2392,13 +2779,18 @@ function documentationHtml(j){
 
         (
           complete
+
             ?
+
             '✅ Dokumentace kompletní'
+
             :
+
             '📷 Nahráno '+
             count+
             ' / '+
             DOCS.length
+
         )+
 
       '</div>'+
@@ -2416,11 +2808,15 @@ function documentationHtml(j){
       const url =
         doc&&
         doc.path
+
           ?
+
           publicDocUrl(
             doc.path
           )
+
           :
+
           '';
 
 
@@ -2467,10 +2863,17 @@ function documentationHtml(j){
 
             (
               doc
+
                 ?
+
                 '✅ Nahráno'
+
                 :
-                esc(item.desc)
+
+                esc(
+                  item.desc
+                )
+
             )+
 
           '</div>'+
@@ -2499,10 +2902,15 @@ function documentationHtml(j){
 
             (
               doc
+
                 ?
+
                 '📷 Vyfotit znovu'
+
                 :
+
                 '📷 Vyfotit'
+
             )+
 
           '</button>'+
@@ -2514,8 +2922,8 @@ function documentationHtml(j){
 
 
   /*
-    TLAČÍTKO DOKONČIT JE NYNÍ
-    PŘÍMO POD FOTKAMI.
+    DOKONČENÍ JE PŘÍMO
+    POD FOTOGRAFIEMI.
   */
 
   html +=
@@ -2525,23 +2933,37 @@ function documentationHtml(j){
       '<div class="finish-box">'+
 
         '<div class="finish-title">'+
+
           (
             complete
+
               ?
+
               '✅ Vše připraveno k dokončení'
+
               :
+
               '📸 Nejprve dokonči dokumentaci'
+
           )+
+
         '</div>'+
 
         '<div class="finish-note">'+
+
           (
             complete
+
               ?
+
               'Dokumentace je kompletní. Zakázku můžeš dokončit.'
+
               :
+
               'Požadováno je všech 6 souborů.'
+
           )+
+
         '</div>'+
 
         '<button '+
@@ -2686,7 +3108,7 @@ async function setStatus(
 
 
   /*
-    Pouze:
+    Řidič může měnit pouze:
 
     NOVÁ → PŘIJATA
     PŘIJATA → DOKONČENA
@@ -2701,6 +3123,11 @@ async function setStatus(
 
   }
 
+
+  /*
+    Dokončení vyžaduje
+    všech 6 souborů.
+  */
 
   if(
     s==='done' &&
@@ -2739,6 +3166,10 @@ async function setStatus(
   }
 
 
+  /*
+    Přijetí pouze z NOVÁ.
+  */
+
   if(
     s==='accepted'
   ){
@@ -2753,6 +3184,10 @@ async function setStatus(
 
   }
 
+
+  /*
+    Dokončení pouze z PŘIJATA.
+  */
 
   if(
     s==='done'
@@ -2839,13 +3274,20 @@ async function setStatus(
       );
 
 
+  /*
+    Dokumentace zůstává
+    v historii telefonu.
+  */
+
   u.docs =
     j.docs||
     {};
 
 
   /*
+    =========================
     PŘIJATO
+    =========================
   */
 
   if(
@@ -2877,7 +3319,9 @@ async function setStatus(
 
 
   /*
+    =========================
     DOKONČENO
+    =========================
   */
 
   if(
@@ -2887,6 +3331,10 @@ async function setStatus(
     let h =
       hist();
 
+
+    /*
+      Ochrana proti duplicitě.
+    */
 
     h =
       h.filter(
@@ -2940,10 +3388,10 @@ function jobHtml(j){
     'new';
 
 
-  const isAccepted =
-    j.status===
-    'accepted';
-
+  /*
+    Přijmout se zobrazí pouze
+    u nové zakázky.
+  */
 
   const actionButton =
 
@@ -2982,13 +3430,20 @@ function jobHtml(j){
         '</div>'+
 
         '<span class="badge">'+
+
           (
             isNew
+
               ?
+
               'NOVÁ'
+
               :
+
               'AKTIVNÍ'
+
           )+
+
         '</span>'+
 
       '</div>'+
@@ -3083,7 +3538,7 @@ function render(){
 
   /*
     Bez aktivní zakázky
-    vždy zobrazíme prázdný stav.
+    zobrazíme prázdný stav.
   */
 
   area.innerHTML =
@@ -3128,8 +3583,14 @@ function render(){
 
       j&&
       j.status!=='done'
-        ?1
-        :0;
+
+        ?
+
+        1
+
+        :
+
+        0;
 
   }
 
@@ -3571,12 +4032,21 @@ async function updatePushUI(){
 
     const sub =
       reg
+
         ?
+
         await reg.pushManager
           .getSubscription()
+
         :
+
         null;
 
+
+    /*
+      Všechno je OK.
+      Kartu schováme.
+    */
 
     if(
       permission==='granted' &&
@@ -3773,6 +4243,11 @@ async function enablePush(){
         .getSubscription();
 
 
+    /*
+      Pokud máme starší verzi
+      registrace, obnovíme ji.
+    */
+
     if(
       sub&&
       localStorage.getItem(SUB)!=='v3'
@@ -3818,44 +4293,44 @@ async function enablePush(){
     const {
       error
     } =
-      await sb
+    await sb
 
-        .from(
-          'push_subscriptions'
-        )
+      .from(
+        'push_subscriptions'
+      )
 
-        .upsert(
+      .upsert(
 
-          {
+        {
 
-            driver_id:
-              c.driver,
+          driver_id:
+            c.driver,
 
-            endpoint:
-              json.endpoint,
+          endpoint:
+            json.endpoint,
 
-            p256dh:
-              json.keys?.p256dh||
-              '',
+          p256dh:
+            json.keys?.p256dh||
+            '',
 
-            auth:
-              json.keys?.auth||
-              '',
+          auth:
+            json.keys?.auth||
+            '',
 
-            updated_at:
-              new Date()
-                .toISOString()
+          updated_at:
+            new Date()
+              .toISOString()
 
-          },
+        },
 
-          {
+        {
 
-            onConflict:
-              'endpoint'
+          onConflict:
+            'endpoint'
 
-          }
+        }
 
-        );
+      );
 
 
     if(error)
@@ -3993,8 +4468,16 @@ async function notifyFromServiceWorker(
 
 (async function(){
 
+  /*
+    Service Worker nejdříve.
+  */
+
   await registerSW();
 
+
+  /*
+    Profil.
+  */
 
   const p =
     JSON.parse(
@@ -4025,6 +4508,10 @@ async function notifyFromServiceWorker(
       p.car||
       '';
 
+
+  /*
+    Konfigurace.
+  */
 
   const c =
     cfg();
@@ -4060,14 +4547,18 @@ async function notifyFromServiceWorker(
       'driver1';
 
 
+  /*
+    První render.
+  */
+
   render();
 
 
   /*
-    AUTOMATICKÉ PŘIHLÁŠENÍ
+    Automatické přihlášení.
 
-    Pokud už je konfigurace uložená,
-    login obrazovku vůbec neukazujeme.
+    Pokud je konfigurace uložená,
+    login obrazovku neukazujeme.
   */
 
   if(
