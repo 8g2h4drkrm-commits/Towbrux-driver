@@ -165,6 +165,11 @@ button{
   font-size:15px
 }
 
+button:disabled{
+  opacity:.55;
+  pointer-events:none
+}
+
 .gold{
   background:var(--g);
   color:#111
@@ -451,6 +456,31 @@ input{
 
 .doc-progress.bad{
   color:#ff7777
+}
+
+
+/* =========================
+   DOKONČENÍ
+========================= */
+
+.finish-box{
+  margin-top:12px;
+  padding:12px;
+  background:#18212c;
+  border:1px solid #34404d;
+  border-radius:14px
+}
+
+.finish-title{
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:4px
+}
+
+.finish-note{
+  font-size:11px;
+  color:var(--m);
+  line-height:1.4
 }
 
 </style>
@@ -878,7 +908,6 @@ input{
 
 
 <script>
-
 
 /* =========================
    ZÁKLADNÍ NASTAVENÍ
@@ -1689,6 +1718,21 @@ async function connect(){
                 hist();
 
 
+              /*
+                Zabráníme duplicitě
+                v historii.
+              */
+
+              h =
+                h.filter(
+                  x=>
+                    !(
+                      x.dbId===
+                      old.dbId
+                    )
+                );
+
+
               h.unshift(
                 old
               );
@@ -1916,10 +1960,22 @@ async function loadActive(){
 
     );
 
+  }else{
 
-    render();
+    /*
+      DŮLEŽITÉ:
+      Pokud Supabase nemá žádnou aktivní
+      zakázku, odstraníme starou lokální.
+    */
+
+    localStorage.removeItem(
+      K
+    );
 
   }
+
+
+  render();
 
 }
 
@@ -2171,6 +2227,17 @@ async function uploadDocument(
       job();
 
 
+    if(!current){
+
+      toast(
+        '⚠️ Zakázka už není aktivní'
+      );
+
+      return;
+
+    }
+
+
     current.docs =
       current.docs||
       {};
@@ -2179,7 +2246,6 @@ async function uploadDocument(
     current.docs[key] = {
 
       path:
-
         path,
 
       name:
@@ -2189,7 +2255,6 @@ async function uploadDocument(
         file.type,
 
       uploadedAt:
-
         new Date()
           .toISOString()
 
@@ -2286,34 +2351,15 @@ function publicDocUrl(
    HTML DOKUMENTACE
 ========================= */
 
-function documentationHtml(
-  j
-){
-
-  const ix =
-    S.findIndex(
-      x=>
-        x[0]===
-        j.status
-    );
-
-
-  const onsiteIx =
-    S.findIndex(
-      x=>
-        x[0]===
-        'onsite'
-    );
-
+function documentationHtml(j){
 
   /*
-    Dokumentace se ukáže
-    až po NA MÍSTĚ.
+    Po přijetí se dokumentace zobrazí
+    okamžitě.
   */
 
   if(
-    ix<
-    onsiteIx
+    j.status === 'new'
   ){
 
     return '';
@@ -2322,19 +2368,18 @@ function documentationHtml(
 
 
   const d =
-    j.docs||{};
+    j.docs || {};
 
 
   const count =
     DOCS.filter(
-      x=>
+      x =>
         d[x.key]
     ).length;
 
 
   const complete =
-    count===
-    DOCS.length;
+    count === DOCS.length;
 
 
   let html =
@@ -2346,14 +2391,14 @@ function documentationHtml(
       '</div>'+
 
       '<div class="note">'+
-        'Před dokončením zakázky je potřeba nahrát 5 fotografií vozidla a fotografii zakázkového listu.'+
+        'Nahraj 5 fotografií vozidla a fotografii zakázkového listu.'+
       '</div>'+
 
       '<div class="doc-progress '+
         (
           complete
-            ?'ok'
-            :'bad'
+            ? 'ok'
+            : 'bad'
         )+
       '">'+
 
@@ -2381,7 +2426,7 @@ function documentationHtml(
 
 
       const url =
-        doc&&
+        doc &&
         doc.path
           ?
           publicDocUrl(
@@ -2402,13 +2447,13 @@ function documentationHtml(
               ?
 
               '<img '+
-              'class="doc-preview" '+
-              'src="'+
-              esc(url)+
-              '" '+
-              'alt="'+
-              esc(item.title)+
-              '">' 
+                'class="doc-preview" '+
+                'src="'+
+                  esc(url)+
+                '" '+
+                'alt="'+
+                  esc(item.title)+
+                '">'
 
               :
 
@@ -2427,8 +2472,8 @@ function documentationHtml(
           '<div class="doc-state '+
             (
               doc
-                ?'ok'
-                :''
+                ? 'ok'
+                : ''
             )+
           '">'+
 
@@ -2437,33 +2482,29 @@ function documentationHtml(
                 ?
                 '✅ Nahráno'
                 :
-                esc(
-                  item.desc
-                )
+                esc(item.desc)
             )+
 
           '</div>'+
 
           '<input '+
             'id="'+
-            docFileId(
-              item.key
-            )+
+              docFileId(item.key)+
             '" '+
             'class="doc-file" '+
             'type="file" '+
             'accept="image/*" '+
             'capture="environment" '+
             'onchange="uploadDocument(\''+
-            item.key+
-            '\',this.files[0])"'+
+              item.key+
+              '\',this.files[0])"'+
           '>'+
 
           '<button '+
             'class="doc-button" '+
             'onclick="openDocPicker(\''+
-            item.key+
-            '\')"'+
+              item.key+
+              '\')"'+
           '>'+
 
             (
@@ -2484,12 +2525,135 @@ function documentationHtml(
 
   html +=
 
-      '</div>'+
+      '</div>';
+
+
+  /*
+    Jediné tlačítko po přijetí.
+  */
+
+  html +=
+
+      '<div class="finish-box">'+
+
+        '<div class="finish-title">'+
+          (
+            complete
+              ? '✅ Vše připraveno k dokončení'
+              : '📸 Nejprve dokonči dokumentaci'
+          )+
+        '</div>'+
+
+        '<div class="finish-note">'+
+          (
+            complete
+              ?
+              'Dokumentace je kompletní. Zakázku můžeš dokončit.'
+              :
+              'Požadováno je všech 6 souborů.'
+          )+
+        '</div>'+
+
+      '</div>';
+
+
+  html +=
 
     '</div>';
 
 
   return html;
+
+}
+
+
+/* =========================
+   DOKONČENÍ ZAKÁZKY
+========================= */
+
+async function finishJob(){
+
+  const j =
+    job();
+
+
+  if(!j){
+
+    toast(
+      '❌ Žádná aktivní zakázka'
+    );
+
+    return;
+
+  }
+
+
+  if(
+    j.status === 'new'
+  ){
+
+    toast(
+      'Nejdřív přijmi zakázku.'
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Kontrola všech 6 dokumentů.
+  */
+
+  if(
+    !docsComplete()
+  ){
+
+    const missing =
+      DOCS
+
+        .filter(
+          x =>
+            !(j.docs || {})[
+              x.key
+            ]
+        )
+
+        .map(
+          x =>
+            x.title
+        );
+
+
+    toast(
+      '⚠️ Chybí: '+
+      missing.join(
+        ', '
+      )
+    );
+
+
+    render();
+
+
+    return;
+
+  }
+
+
+  const ok =
+    confirm(
+      'Dokumentace je kompletní 6/6.\n\nOpravdu dokončit zakázku '+j.id+'?'
+    );
+
+
+  if(!ok)
+    return;
+
+
+  await setStatus(
+    'done'
+  );
 
 }
 
@@ -2526,45 +2690,75 @@ async function setStatus(
 
 
   /*
+    Řidič může nyní měnit pouze:
+
+    NOVÁ → PŘIJATA
+    PŘIJATA → DOKONČENA
+  */
+
+  if(
+    s!=='accepted' &&
+    s!=='done'
+  ){
+
+    return;
+
+  }
+
+
+  /*
     DOKONČENO:
     dokumentace musí být kompletní.
   */
 
   if(
-    s===
-    'done'
+    s === 'done' &&
+    !docsComplete()
+  ){
+
+    const missing =
+      DOCS
+
+        .filter(
+          x =>
+            !(j.docs || {})[
+              x.key
+            ]
+        )
+
+        .map(
+          x =>
+            x.title
+        );
+
+
+    toast(
+      '⚠️ Chybí: '+
+      missing.join(
+        ', '
+      )
+    );
+
+
+    render();
+
+
+    return;
+
+  }
+
+
+  /*
+    PŘIJETÍ
+  */
+
+  if(
+    s === 'accepted'
   ){
 
     if(
-      !docsComplete()
+      j.status !== 'new'
     ){
-
-      const missing =
-        DOCS
-
-          .filter(
-            x=>
-              !(j.docs||{})[
-                x.key
-              ]
-          )
-
-          .map(
-            x=>
-              x.title
-          );
-
-
-      toast(
-        '⚠️ Chybí: '+
-        missing.join(
-          ', '
-        )
-      );
-
-
-      render();
-
 
       return;
 
@@ -2573,27 +2767,33 @@ async function setStatus(
   }
 
 
-  const now =
-    S.findIndex(
-      x=>
-        x[0]===
-        s
-    );
-
-
-  const cur =
-    S.findIndex(
-      x=>
-        x[0]===
-        j.status
-    );
-
+  /*
+    DOKONČENÍ
+  */
 
   if(
-    now<
-    cur
-  )
-    return;
+    s === 'done'
+  ){
+
+    if(
+      j.status !== 'accepted'
+    ){
+
+      /*
+        Staré zakázky, které by byly
+        v jiném stavu, už řidič ručně
+        neposouvá.
+      */
+
+      toast(
+        'Zakázku lze dokončit až po přijetí.'
+      );
+
+      return;
+
+    }
+
+  }
 
 
   const {
@@ -2624,7 +2824,6 @@ async function setStatus(
       )
 
       .select()
-
       .single();
 
 
@@ -2652,7 +2851,7 @@ async function setStatus(
 
 
   u.times =
-    j.times||
+    j.times ||
     {};
 
 
@@ -2664,45 +2863,22 @@ async function setStatus(
 
 
   /*
-    Dokumentace zůstává
-    zachována.
+    Dokumentace musí zůstat
+    zachována v lokální historii.
   */
 
   u.docs =
-    j.docs||
+    j.docs ||
     {};
 
 
+  /*
+    PŘIJATO
+  */
+
   if(
-    s===
-    'done'
+    s === 'accepted'
   ){
-
-    let h =
-      hist();
-
-
-    h.unshift(
-      u
-    );
-
-
-    localStorage.setItem(
-      H,
-      JSON.stringify(h)
-    );
-
-
-    localStorage.removeItem(
-      K
-    );
-
-
-    toast(
-      '✅ Zakázka dokončena'
-    );
-
-  }else{
 
     localStorage.setItem(
 
@@ -2716,13 +2892,75 @@ async function setStatus(
 
 
     toast(
-      S[now][1]
+      '✅ Zakázka přijata'
     );
+
+
+    render();
+
+
+    return;
 
   }
 
 
-  render();
+  /*
+    DOKONČENO
+  */
+
+  if(
+    s === 'done'
+  ){
+
+    let h =
+      hist();
+
+
+    /*
+      Zabráníme duplicitě
+      v historii.
+    */
+
+    h =
+      h.filter(
+        x =>
+          !(
+            x.dbId ===
+            u.dbId
+          )
+      );
+
+
+    h.unshift(
+      u
+    );
+
+
+    localStorage.setItem(
+      H,
+      JSON.stringify(h)
+    );
+
+
+    /*
+      NEJDŮLEŽITĚJŠÍ:
+      aktivní zakázku smažeme
+      z telefonu.
+    */
+
+    localStorage.removeItem(
+      K
+    );
+
+
+    render();
+
+
+    toast(
+      '✅ Zakázka dokončena'
+    );
+
+  }
 
 }
 
@@ -2731,81 +2969,47 @@ async function setStatus(
    JOB HTML
 ========================= */
 
-function jobHtml(
-  j
-){
+function jobHtml(j){
 
-  const ix =
-    S.findIndex(
-      x=>
-        x[0]===
-        j.status
-    );
+  const isNew =
+    j.status === 'new';
 
 
-  const st =
-    S[ix]||
-    S[0];
+  const isAccepted =
+    j.status === 'accepted';
 
 
-  const buttons =
+  /*
+    NOVÁ ZAKÁZKA
+  */
 
-    j.status===
-    'new'
+  const actionButton =
+    isNew
 
       ?
 
       '<button '+
-      'class="gold" '+
-      'onclick="setStatus(\'accepted\')">'+
+        'class="gold" '+
+        'onclick="setStatus(\'accepted\')">'+
         '✅ PŘIJMOUT ZAKÁZKU'+
       '</button>'
 
       :
 
-      j.status===
-      'done'
+      isAccepted
 
-      ?
-
-      ''
-
-      :
-
-      '<div class="grid">'+
+        ?
 
         '<button '+
-        'class="dark" '+
-        'onclick="setStatus(\'enroute\')">'+
-          '🚚 VYRAZIL JSEM'+
-        '</button>'+
+          'class="green" '+
+          'onclick="finishJob()">'+
+          '✅ DOKONČIT ZAKÁZKU'+
+        '</button>'
 
-        '<button '+
-        'class="blue" '+
-        'onclick="setStatus(\'onsite\')">'+
-          '📍 JSEM NA MÍSTĚ'+
-        '</button>'+
+        :
 
-        '<button '+
-        'class="dark" '+
-        'onclick="setStatus(\'service\')">'+
-          '🔧 V SERVISU'+
-        '</button>'+
+        '';
 
-        '<button '+
-        'class="green" '+
-        'onclick="setStatus(\'done\')">'+
-          '✅ DOKONČENO'+
-        '</button>'+
-
-      '</div>';
-
-
-  /*
-    DŮLEŽITÉ:
-    return musí být v závorkách,
-    jinak JavaScript vrátí undefined.
-  */
 
   return (
 
@@ -2826,7 +3030,11 @@ function jobHtml(
         '</div>'+
 
         '<span class="badge">'+
-          st[1]+
+          (
+            isNew
+              ? 'NOVÁ'
+              : 'AKTIVNÍ'
+          )+
         '</span>'+
 
       '</div>'+
@@ -2882,73 +3090,17 @@ function jobHtml(
 
       '<div class="note">'+
         esc(
-          j.note||
+          j.note ||
           'Bez poznámky'
         )+
       '</div>'+
 
-      buttons+
+      actionButton+
 
     '</div>'+
 
 
-    /*
-      DOKUMENTACE
-    */
-
-    documentationHtml(
-      j
-    )+
-
-
-    /*
-      PRŮBĚH
-    */
-
-    '<div class="card">'+
-
-      '<div class="label">'+
-        'Průběh zakázky'+
-      '</div>'+
-
-      S.map(
-        (s,i)=>
-
-          '<div class="step">'+
-
-            '<div class="dot '+
-              (
-                i<ix
-                  ?'on'
-                  :
-                i===ix
-                  ?'cur'
-                  :''
-              )+
-            '"></div>'+
-
-            '<div>'+
-
-              '<b>'+
-                s[1]+
-              '</b>'+
-
-              '<div class="small">'+
-                esc(
-                  j.times?.[
-                    s[0]
-                  ]||
-                  s[2]
-                )+
-              '</div>'+
-
-            '</div>'+
-
-          '</div>'
-
-      ).join('')+
-
-    '</div>'
+    documentationHtml(j)
 
   );
 
@@ -3066,7 +3218,7 @@ function renderHist(){
       ?
 
       h.map(
-        j=>
+        j =>
 
           '<div class="step">'+
 
@@ -3280,6 +3432,9 @@ function demo(){
 
     JSON.stringify({
 
+      dbId:
+        'DEMO-001',
+
       id:
         'TB-2026-001',
 
@@ -3470,8 +3625,7 @@ async function updatePushUI(){
     */
 
     if(
-      permission===
-      'granted'&&
+      permission === 'granted' &&
       sub
     ){
 
@@ -3484,14 +3638,8 @@ async function updatePushUI(){
     }
 
 
-    /*
-      Povolení existuje,
-      ale subscription chybí.
-    */
-
     if(
-      permission===
-      'granted'&&
+      permission === 'granted' &&
       !sub
     ){
 
@@ -3512,13 +3660,8 @@ async function updatePushUI(){
     }
 
 
-    /*
-      Ještě nebylo rozhodnuto.
-    */
-
     if(
-      permission===
-      'default'
+      permission === 'default'
     ){
 
       card.style.display =
@@ -3538,13 +3681,8 @@ async function updatePushUI(){
     }
 
 
-    /*
-      Uživatel oznámení zakázal.
-    */
-
     if(
-      permission===
-      'denied'
+      permission === 'denied'
     ){
 
       card.style.display =
@@ -3680,12 +3818,6 @@ async function enablePush(){
         .pushManager
         .getSubscription();
 
-
-    /*
-      Pokud existuje stará
-      VAPID subscription,
-      vytvoříme novou.
-    */
 
     if(
       sub&&
@@ -3865,7 +3997,6 @@ async function notifyFromServiceWorker(
         {
 
           body:
-
             body,
 
           icon:
@@ -3995,8 +4126,7 @@ async function notifyFromServiceWorker(
 
 
   /*
-    Automatické přihlášení,
-    pokud jsou údaje uložené.
+    Automatické přihlášení.
   */
 
   if(
