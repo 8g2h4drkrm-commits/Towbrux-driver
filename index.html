@@ -302,7 +302,7 @@ nav button.active{
 
 .toast{
   position:fixed;
-  z-index:50;
+  z-index:20;
   left:50%;
   bottom:85px;
   transform:translate(-50%,10px);
@@ -365,6 +365,48 @@ input{
 .login .card{
   text-align:center;
   width:100%
+}
+
+
+/* =========================
+   NAVIGAČNÍ ODKAZY
+========================= */
+
+.nav-links{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:10px
+}
+
+.nav-link{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:52px;
+  padding:12px 8px;
+  border-radius:14px;
+  border:1px solid #34404d;
+  background:#202a36;
+  color:#fff;
+  text-decoration:none;
+  font-weight:900;
+  font-size:14px;
+  text-align:center;
+  -webkit-tap-highlight-color:transparent
+}
+
+.nav-link:active{
+  transform:scale(.98)
+}
+
+.nav-link.apple{
+  background:#202a36;
+}
+
+.nav-link.google{
+  background:#202a36;
 }
 
 
@@ -481,106 +523,6 @@ input{
 
 .finish-button{
   margin-top:12px
-}
-
-
-/* =========================
-   NAVIGACE - VÝBĚR MAP
-========================= */
-
-.nav-overlay{
-  position:fixed;
-  inset:0;
-  z-index:100;
-  background:rgba(0,0,0,.68);
-  display:none;
-  align-items:flex-end;
-  justify-content:center;
-  padding:
-    14px
-    14px
-    calc(14px + env(safe-area-inset-bottom));
-  backdrop-filter:blur(5px);
-  -webkit-backdrop-filter:blur(5px)
-}
-
-.nav-overlay.show{
-  display:flex
-}
-
-.nav-sheet{
-  width:min(560px,100%);
-  background:#111720;
-  border:1px solid #34404d;
-  border-radius:22px;
-  padding:16px;
-  box-shadow:0 20px 60px rgba(0,0,0,.45)
-}
-
-.nav-sheet-title{
-  font-size:18px;
-  font-weight:900;
-  margin-bottom:5px
-}
-
-.nav-sheet-address{
-  color:var(--m);
-  font-size:13px;
-  line-height:1.4;
-  margin-bottom:13px;
-  word-break:break-word
-}
-
-.nav-map-link{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:9px;
-  width:100%;
-  min-height:54px;
-  margin-top:9px;
-  border-radius:14px;
-  text-decoration:none;
-  font-size:15px;
-  font-weight:900;
-  border:1px solid #34404d
-}
-
-.nav-apple{
-  background:#202a36;
-  color:#fff
-}
-
-.nav-google{
-  background:#2f6df6;
-  color:#fff;
-  border-color:#2f6df6
-}
-
-.nav-cancel{
-  width:100%;
-  margin-top:9px;
-  background:transparent;
-  color:var(--m);
-  border:1px solid #34404d
-}
-
-
-/* =========================
-   IOS SAFE AREA
-========================= */
-
-@supports(padding:max(0px)){
-  main{
-    padding-bottom:
-      max(
-        100px,
-        calc(
-          80px +
-          env(safe-area-inset-bottom)
-        )
-      )
-  }
 }
 
 </style>
@@ -941,9 +883,6 @@ input{
 </section>
 
 
-</main>
-
-
 <!-- =========================
      NAV
 ========================= -->
@@ -993,73 +932,6 @@ input{
   </button>
 
 </nav>
-
-
-<!-- =========================
-     VÝBĚR NAVIGACE
-========================= -->
-
-<div
-  id="navOverlay"
-  class="nav-overlay"
-  onclick="closeNav(event)"
->
-
-  <div
-    class="nav-sheet"
-    onclick="event.stopPropagation()"
-  >
-
-    <div class="nav-sheet-title">
-      🧭 Vyber navigaci
-    </div>
-
-    <div
-      id="navAddress"
-      class="nav-sheet-address"
-    ></div>
-
-
-    <!--
-      DŮLEŽITÉ:
-      Toto jsou normální odkazy.
-      iPhone je může otevřít jako
-      skutečnou aplikaci Mapy.
-    -->
-
-    <a
-      id="appleMapLink"
-      class="nav-map-link nav-apple"
-      href="#"
-      target="_blank"
-      rel="noopener"
-    >
-      🍎 Apple Mapy
-    </a>
-
-
-    <a
-      id="googleMapLink"
-      class="nav-map-link nav-google"
-      href="#"
-      target="_blank"
-      rel="noopener"
-    >
-      🗺️ Google Maps
-    </a>
-
-
-    <button
-      type="button"
-      class="nav-cancel"
-      onclick="closeNav()"
-    >
-      Zavřít
-    </button>
-
-  </div>
-
-</div>
 
 
 <div
@@ -1324,7 +1196,7 @@ function setLoginStatus(
 
 
 /* =========================
-   NAVIGACE V APLIKACI
+   NAVIGACE APLIKACE
 ========================= */
 
 function show(
@@ -1395,153 +1267,6 @@ function show(
 
   if(id==='profile')
     updatePushUI();
-
-}
-
-
-/* =========================
-   VÝBĚR MAP
-========================= */
-
-function navTo(address){
-
-  if(!address){
-
-    toast(
-      '❌ Adresa pro navigaci chybí'
-    );
-
-    return;
-
-  }
-
-
-  const cleanAddress =
-    String(address).trim();
-
-
-  const destination =
-    encodeURIComponent(
-      cleanAddress
-    );
-
-
-  /*
-    Apple Mapy
-
-    Používáme oficiální HTTPS
-    Maps URL.
-  */
-
-  const appleUrl =
-    'https://maps.apple.com/directions' +
-    '?destination=' +
-    destination +
-    '&mode=driving';
-
-
-  /*
-    Google Maps
-  */
-
-  const googleUrl =
-    'https://www.google.com/maps/dir/' +
-    '?api=1' +
-    '&destination=' +
-    destination +
-    '&travelmode=driving' +
-    '&dir_action=navigate';
-
-
-  const addressBox =
-    document.getElementById(
-      'navAddress'
-    );
-
-
-  const appleLink =
-    document.getElementById(
-      'appleMapLink'
-    );
-
-
-  const googleLink =
-    document.getElementById(
-      'googleMapLink'
-    );
-
-
-  const overlay =
-    document.getElementById(
-      'navOverlay'
-    );
-
-
-  if(addressBox){
-
-    addressBox.textContent =
-      cleanAddress;
-
-  }
-
-
-  if(appleLink){
-
-    appleLink.href =
-      appleUrl;
-
-  }
-
-
-  if(googleLink){
-
-    googleLink.href =
-      googleUrl;
-
-  }
-
-
-  if(overlay){
-
-    overlay.classList.add(
-      'show'
-    );
-
-  }
-
-}
-
-
-/* =========================
-   ZAVŘÍT VÝBĚR MAP
-========================= */
-
-function closeNav(event){
-
-  if(
-    event&&
-    event.target&&
-    event.target!==event.currentTarget
-  ){
-
-    return;
-
-  }
-
-
-  const overlay =
-    document.getElementById(
-      'navOverlay'
-    );
-
-
-  if(overlay){
-
-    overlay.classList.remove(
-      'show'
-    );
-
-  }
 
 }
 
@@ -1626,7 +1351,6 @@ function setLoggedOut(){
     document.getElementById(
       'login'
     );
-
 
   const nav =
     document.getElementById(
@@ -3447,6 +3171,10 @@ async function setStatus(
     {};
 
 
+  /*
+    PŘIJATO
+  */
+
   if(
     s==='accepted'
   ){
@@ -3474,6 +3202,10 @@ async function setStatus(
 
   }
 
+
+  /*
+    DOKONČENO
+  */
 
   if(
     s==='done'
@@ -3520,6 +3252,53 @@ async function setStatus(
 
 
 /* =========================
+   NAVIGAČNÍ URL
+========================= */
+
+/*
+  DŮLEŽITÉ:
+
+  Navigace už není spouštěná
+  přes window.location ani
+  window.open.
+
+  Vytváříme normální HTTPS
+  odkazy, na které řidič
+  přímo klepne.
+*/
+
+
+function appleMapsUrl(
+  address
+){
+
+  return (
+    'https://maps.apple.com/directions?destination='+
+    encodeURIComponent(
+      address
+    )+
+    '&mode=driving'
+  );
+
+}
+
+
+function googleMapsUrl(
+  address
+){
+
+  return (
+    'https://www.google.com/maps/dir/?api=1&destination='+
+    encodeURIComponent(
+      address
+    )+
+    '&travelmode=driving'
+  );
+
+}
+
+
+/* =========================
    JOB HTML
 ========================= */
 
@@ -3546,6 +3325,30 @@ function jobHtml(j){
       :
 
       '';
+
+
+  const impactApple =
+    appleMapsUrl(
+      j.impact
+    );
+
+
+  const impactGoogle =
+    googleMapsUrl(
+      j.impact
+    );
+
+
+  const serviceApple =
+    appleMapsUrl(
+      j.service
+    );
+
+
+  const serviceGoogle =
+    googleMapsUrl(
+      j.service
+    );
 
 
   return (
@@ -3591,13 +3394,31 @@ function jobHtml(j){
         esc(j.impact)+
       '</div>'+
 
-      '<button '+
-        'class="dark" '+
-        'type="button" '+
-        'onclick="navTo('+JSON.stringify(j.impact||'')+'); return false;"'+
-      '>'+
-        '🧭 Navigovat k zásahu'+
-      '</button>'+
+      '<div class="nav-links">'+
+
+        '<a '+
+          'class="nav-link apple" '+
+          'href="'+
+            esc(impactApple)+
+          '" '+
+          'target="_blank" '+
+          'rel="noopener noreferrer"'+
+        '>'+
+          '🍎 Apple Mapy'+
+        '</a>'+
+
+        '<a '+
+          'class="nav-link google" '+
+          'href="'+
+            esc(impactGoogle)+
+          '" '+
+          'target="_blank" '+
+          'rel="noopener noreferrer"'+
+        '>'+
+          '🗺️ Google Maps'+
+        '</a>'+
+
+      '</div>'+
 
     '</div>'+
 
@@ -3612,13 +3433,31 @@ function jobHtml(j){
         esc(j.service)+
       '</div>'+
 
-      '<button '+
-        'class="dark" '+
-        'type="button" '+
-        'onclick="navTo('+JSON.stringify(j.service||'')+'); return false;"'+
-      '>'+
-        '🧭 Navigovat do servisu'+
-      '</button>'+
+      '<div class="nav-links">'+
+
+        '<a '+
+          'class="nav-link apple" '+
+          'href="'+
+            esc(serviceApple)+
+          '" '+
+          'target="_blank" '+
+          'rel="noopener noreferrer"'+
+        '>'+
+          '🍎 Apple Mapy'+
+        '</a>'+
+
+        '<a '+
+          'class="nav-link google" '+
+          'href="'+
+            esc(serviceGoogle)+
+          '" '+
+          'target="_blank" '+
+          'rel="noopener noreferrer"'+
+        '>'+
+          '🗺️ Google Maps'+
+        '</a>'+
+
+      '</div>'+
 
     '</div>'+
 
@@ -4501,23 +4340,10 @@ async function enablePush(){
     PROFIL
   */
 
-  let p =
-    {};
-
-
-  try{
-
-    p =
-      JSON.parse(
-        localStorage.getItem(P)||'{}'
-      );
-
-  }catch(e){
-
-    p =
-      {};
-
-  }
+  const p =
+    JSON.parse(
+      localStorage.getItem(P)||'{}'
+    );
 
 
   const name =
