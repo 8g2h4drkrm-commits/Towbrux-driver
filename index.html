@@ -21,8 +21,6 @@
 
 <title>TowBrüx Driver</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 
 :root{
@@ -304,7 +302,7 @@ nav button.active{
 
 .toast{
   position:fixed;
-  z-index:20;
+  z-index:50;
   left:50%;
   bottom:85px;
   transform:translate(-50%,10px);
@@ -487,18 +485,23 @@ input{
 
 
 /* =========================
-   VÝBĚR NAVIGACE
+   NAVIGACE - VÝBĚR MAP
 ========================= */
 
 .nav-overlay{
   position:fixed;
   inset:0;
   z-index:100;
-  background:rgba(0,0,0,.72);
+  background:rgba(0,0,0,.68);
   display:none;
   align-items:flex-end;
   justify-content:center;
-  padding:14px
+  padding:
+    14px
+    14px
+    calc(14px + env(safe-area-inset-bottom));
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px)
 }
 
 .nav-overlay.show{
@@ -506,13 +509,12 @@ input{
 }
 
 .nav-sheet{
-  width:100%;
-  max-width:560px;
-  background:var(--p);
-  border:1px solid var(--l);
-  border-radius:18px;
-  padding:15px;
-  box-shadow:0 -10px 40px rgba(0,0,0,.45)
+  width:min(560px,100%);
+  background:#111720;
+  border:1px solid #34404d;
+  border-radius:22px;
+  padding:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,.45)
 }
 
 .nav-sheet-title{
@@ -525,37 +527,60 @@ input{
   color:var(--m);
   font-size:13px;
   line-height:1.4;
-  margin-bottom:12px
+  margin-bottom:13px;
+  word-break:break-word
 }
 
-.nav-link{
-  display:block;
+.nav-map-link{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
   width:100%;
-  text-align:center;
-  text-decoration:none;
-  border-radius:14px;
-  padding:14px 12px;
+  min-height:54px;
   margin-top:9px;
+  border-radius:14px;
+  text-decoration:none;
+  font-size:15px;
   font-weight:900;
-  font-size:15px
-}
-
-.nav-link.apple{
-  background:#f5f7fa;
-  color:#111
-}
-
-.nav-link.google{
-  background:#202a36;
-  color:#fff;
   border:1px solid #34404d
+}
+
+.nav-apple{
+  background:#202a36;
+  color:#fff
+}
+
+.nav-google{
+  background:#2f6df6;
+  color:#fff;
+  border-color:#2f6df6
 }
 
 .nav-cancel{
   width:100%;
+  margin-top:9px;
   background:transparent;
   color:var(--m);
-  margin-top:5px
+  border:1px solid #34404d
+}
+
+
+/* =========================
+   IOS SAFE AREA
+========================= */
+
+@supports(padding:max(0px)){
+  main{
+    padding-bottom:
+      max(
+        100px,
+        calc(
+          80px +
+          env(safe-area-inset-bottom)
+        )
+      )
+  }
 }
 
 </style>
@@ -920,7 +945,7 @@ input{
 
 
 <!-- =========================
-     SPODNÍ NAVIGACE
+     NAV
 ========================= -->
 
 <nav
@@ -994,27 +1019,42 @@ input{
       class="nav-sheet-address"
     ></div>
 
+
+    <!--
+      DŮLEŽITÉ:
+      Toto jsou normální odkazy.
+      iPhone je může otevřít jako
+      skutečnou aplikaci Mapy.
+    -->
+
     <a
       id="appleMapLink"
-      class="nav-link apple"
+      class="nav-map-link nav-apple"
       href="#"
+      target="_blank"
+      rel="noopener"
     >
       🍎 Apple Mapy
     </a>
 
+
     <a
       id="googleMapLink"
-      class="nav-link google"
+      class="nav-map-link nav-google"
       href="#"
+      target="_blank"
+      rel="noopener"
     >
       🗺️ Google Maps
     </a>
 
+
     <button
+      type="button"
       class="nav-cancel"
       onclick="closeNav()"
     >
-      Zrušit
+      Zavřít
     </button>
 
   </div>
@@ -1031,6 +1071,9 @@ input{
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
 
 /* =========================
@@ -1040,20 +1083,26 @@ input{
 const PROJECT_URL =
 'https://qoqxmmmijnqrkhmdhibg.supabase.co';
 
+
 const STORAGE_BUCKET =
 'zakazky-dokumentace';
+
 
 const K =
 'tb_job';
 
+
 const H =
 'tb_hist';
+
 
 const P =
 'tb_profile';
 
+
 const C =
 'tb_connection';
+
 
 const SUB =
 'tb_push_v3';
@@ -1313,6 +1362,7 @@ function show(
       'active'
     );
 
+
     target.style.display =
       id==='login'
         ?'flex'
@@ -1345,6 +1395,153 @@ function show(
 
   if(id==='profile')
     updatePushUI();
+
+}
+
+
+/* =========================
+   VÝBĚR MAP
+========================= */
+
+function navTo(address){
+
+  if(!address){
+
+    toast(
+      '❌ Adresa pro navigaci chybí'
+    );
+
+    return;
+
+  }
+
+
+  const cleanAddress =
+    String(address).trim();
+
+
+  const destination =
+    encodeURIComponent(
+      cleanAddress
+    );
+
+
+  /*
+    Apple Mapy
+
+    Používáme oficiální HTTPS
+    Maps URL.
+  */
+
+  const appleUrl =
+    'https://maps.apple.com/directions' +
+    '?destination=' +
+    destination +
+    '&mode=driving';
+
+
+  /*
+    Google Maps
+  */
+
+  const googleUrl =
+    'https://www.google.com/maps/dir/' +
+    '?api=1' +
+    '&destination=' +
+    destination +
+    '&travelmode=driving' +
+    '&dir_action=navigate';
+
+
+  const addressBox =
+    document.getElementById(
+      'navAddress'
+    );
+
+
+  const appleLink =
+    document.getElementById(
+      'appleMapLink'
+    );
+
+
+  const googleLink =
+    document.getElementById(
+      'googleMapLink'
+    );
+
+
+  const overlay =
+    document.getElementById(
+      'navOverlay'
+    );
+
+
+  if(addressBox){
+
+    addressBox.textContent =
+      cleanAddress;
+
+  }
+
+
+  if(appleLink){
+
+    appleLink.href =
+      appleUrl;
+
+  }
+
+
+  if(googleLink){
+
+    googleLink.href =
+      googleUrl;
+
+  }
+
+
+  if(overlay){
+
+    overlay.classList.add(
+      'show'
+    );
+
+  }
+
+}
+
+
+/* =========================
+   ZAVŘÍT VÝBĚR MAP
+========================= */
+
+function closeNav(event){
+
+  if(
+    event&&
+    event.target&&
+    event.target!==event.currentTarget
+  ){
+
+    return;
+
+  }
+
+
+  const overlay =
+    document.getElementById(
+      'navOverlay'
+    );
+
+
+  if(overlay){
+
+    overlay.classList.remove(
+      'show'
+    );
+
+  }
 
 }
 
@@ -1429,6 +1626,7 @@ function setLoggedOut(){
     document.getElementById(
       'login'
     );
+
 
   const nav =
     document.getElementById(
@@ -1589,129 +1787,74 @@ async function login(){
   }
 
 
+  localStorage.setItem(
+
+    C,
+
+    JSON.stringify({
+
+      url:
+        PROJECT_URL,
+
+      key:
+        k,
+
+      driver:
+        d
+
+    })
+
+  );
+
+
+  const driverId =
+    document.getElementById(
+      'driverId'
+    );
+
+
+  if(driverId)
+    driverId.value =
+      d;
+
+
   setLoginStatus(
     'Připojuji…'
   );
 
 
-  /*
-    Uložíme přihlašovací údaje
-    až po úspěšném připojení.
-  */
-
-  try{
-
-    const testClient =
-      window.supabase
-        .createClient(
-          PROJECT_URL,
-          k
-        );
+  setLoggedIn();
 
 
-    const {
-      error
-    } =
-      await testClient
-        .from('zakazky')
-        .select('id')
-        .limit(1);
+  await connect();
 
 
-    if(error)
-      throw error;
-
-
-    localStorage.setItem(
-
-      C,
-
-      JSON.stringify({
-
-        url:
-          PROJECT_URL,
-
-        key:
-          k,
-
-        driver:
-          d
-
-      })
-
-    );
-
-
-    const driverId =
-      document.getElementById(
-        'driverId'
-      );
-
-
-    if(driverId)
-      driverId.value =
-        d;
-
-
-    sb =
-      testClient;
-
-
-    setLoggedIn();
-
-
-    await connect();
-
-
-    if(tbConnected){
-
-      setLoginStatus(
-        'Připojeno',
-        true
-      );
-
-      toast(
-        'TowBrüx připojeno'
-      );
-
-    }else{
-
-      connection(
-        'Supabase: čekám na připojení'
-      );
-
-    }
-
-
-    setTimeout(
-      ()=>{
-        updatePushUI();
-      },
-      500
-    );
-
-
-  }catch(e){
-
-    console.error(
-      'Login:',
-      e
-    );
-
-
-    sb =
-      null;
-
+  if(tbConnected){
 
     setLoginStatus(
-      'Připojení se nepodařilo: '+
-      (
-        e.message||
-        'chyba'
-      )
+      'Připojeno',
+      true
+    );
+
+    toast(
+      'TowBrüx připojeno'
+    );
+
+  }else{
+
+    connection(
+      'Supabase: čekám na připojení'
     );
 
   }
+
+
+  setTimeout(
+    ()=>{
+      updatePushUI();
+    },
+    500
+  );
 
 }
 
@@ -1743,16 +1886,12 @@ async function connect(){
 
   try{
 
-    if(!sb){
-
-      sb =
-        window.supabase
-          .createClient(
-            c.url,
-            c.key
-          );
-
-    }
+    sb =
+      window.supabase
+        .createClient(
+          c.url,
+          c.key
+        );
 
 
     await loadActive();
@@ -1774,9 +1913,7 @@ async function connect(){
     channel =
       sb.channel(
         'towbrux-driver-'+
-        c.driver+
-        '-'+
-        Date.now()
+        c.driver
       );
 
 
@@ -1944,12 +2081,6 @@ async function connect(){
 
       .subscribe(
         status=>{
-
-          console.log(
-            'TowBrüx realtime:',
-            status
-          );
-
 
           if(
             status===
@@ -2276,11 +2407,6 @@ async function compressImage(
     0.78;
 
 
-  /*
-    Malý JPEG už nemusíme
-    znovu komprimovat.
-  */
-
   if(
     file.type===
     'image/jpeg'&&
@@ -2298,10 +2424,6 @@ async function compressImage(
     let bitmap =
       null;
 
-
-    /*
-      Moderní Safari.
-    */
 
     if(
       'createImageBitmap' in window
@@ -2327,10 +2449,6 @@ async function compressImage(
 
     }
 
-
-    /*
-      Záloha pro Safari.
-    */
 
     if(!bitmap){
 
@@ -3297,11 +3415,7 @@ async function setStatus(
 
 
     toast(
-      '❌ Stav se nepodařilo uložit: '+
-      (
-        error.message||
-        'chyba'
-      )
+      '❌ Stav se nepodařilo uložit'
     );
 
 
@@ -3333,10 +3447,6 @@ async function setStatus(
     {};
 
 
-  /*
-    PŘIJATO
-  */
-
   if(
     s==='accepted'
   ){
@@ -3365,10 +3475,6 @@ async function setStatus(
   }
 
 
-  /*
-    DOKONČENO
-  */
-
   if(
     s==='done'
   ){
@@ -3395,11 +3501,6 @@ async function setStatus(
       JSON.stringify(h)
     );
 
-
-    /*
-      AKTIVNÍ ZAKÁZKA
-      OKAMŽITĚ SMAZAT.
-    */
 
     localStorage.removeItem(
       K
@@ -3492,7 +3593,8 @@ function jobHtml(j){
 
       '<button '+
         'class="dark" '+
-        'onclick="navTo('+JSON.stringify(j.impact||'')+')"'+
+        'type="button" '+
+        'onclick="navTo('+JSON.stringify(j.impact||'')+'); return false;"'+
       '>'+
         '🧭 Navigovat k zásahu'+
       '</button>'+
@@ -3512,7 +3614,8 @@ function jobHtml(j){
 
       '<button '+
         'class="dark" '+
-        'onclick="navTo('+JSON.stringify(j.service||'')+')"'+
+        'type="button" '+
+        'onclick="navTo('+JSON.stringify(j.service||'')+'); return false;"'+
       '>'+
         '🧭 Navigovat do servisu'+
       '</button>'+
@@ -3536,6 +3639,7 @@ function jobHtml(j){
       actionButton+
 
     '</div>'+
+
 
     documentationHtml(j)
 
@@ -3693,166 +3797,6 @@ function renderHist(){
       '<div class="empty">'+
         'Zatím žádná dokončená zakázka.'+
       '</div>';
-
-}
-
-
-/* =========================
-   NAVIGACE
-========================= */
-
-function navTo(
-  address
-){
-
-  if(!address){
-
-    toast(
-      '❌ Adresa pro navigaci chybí'
-    );
-
-    return;
-
-  }
-
-
-  const cleanAddress =
-    String(
-      address
-    ).trim();
-
-
-  const destination =
-    encodeURIComponent(
-      cleanAddress
-    );
-
-
-  /*
-    APPLE MAPY
-  */
-
-  const appleUrl =
-    'https://maps.apple.com/directions'+
-    '?destination='+
-    destination+
-    '&mode=driving';
-
-
-  /*
-    GOOGLE MAPS
-  */
-
-  const googleUrl =
-    'https://www.google.com/maps/dir/'+
-    '?api=1'+
-    '&destination='+
-    destination+
-    '&travelmode=driving'+
-    '&dir_action=navigate';
-
-
-  const addressBox =
-    document.getElementById(
-      'navAddress'
-    );
-
-
-  const appleLink =
-    document.getElementById(
-      'appleMapLink'
-    );
-
-
-  const googleLink =
-    document.getElementById(
-      'googleMapLink'
-    );
-
-
-  if(addressBox){
-
-    addressBox.textContent =
-      cleanAddress;
-
-  }
-
-
-  if(appleLink){
-
-    appleLink.href =
-      appleUrl;
-
-    appleLink.target =
-      '_blank';
-
-    appleLink.rel =
-      'noopener noreferrer';
-
-  }
-
-
-  if(googleLink){
-
-    googleLink.href =
-      googleUrl;
-
-    googleLink.target =
-      '_blank';
-
-    googleLink.rel =
-      'noopener noreferrer';
-
-  }
-
-
-  const overlay =
-    document.getElementById(
-      'navOverlay'
-    );
-
-
-  if(overlay){
-
-    overlay.classList.add(
-      'show'
-    );
-
-  }
-
-}
-
-
-function closeNav(
-  event
-){
-
-  if(
-    event &&
-    event.target !==
-      document.getElementById(
-        'navOverlay'
-      )
-  ){
-
-    return;
-
-  }
-
-
-  const overlay =
-    document.getElementById(
-      'navOverlay'
-    );
-
-
-  if(overlay){
-
-    overlay.classList.remove(
-      'show'
-    );
-
-  }
 
 }
 
@@ -4557,45 +4501,47 @@ async function enablePush(){
     PROFIL
   */
 
+  let p =
+    {};
+
+
   try{
 
-    const p =
+    p =
       JSON.parse(
         localStorage.getItem(P)||'{}'
       );
 
-
-    const name =
-      document.getElementById(
-        'name'
-      );
-
-
-    const car =
-      document.getElementById(
-        'car'
-      );
-
-
-    if(name)
-      name.value =
-        p.name||
-        '';
-
-
-    if(car)
-      car.value =
-        p.car||
-        '';
-
   }catch(e){
 
-    console.error(
-      'Profil:',
-      e
-    );
+    p =
+      {};
 
   }
+
+
+  const name =
+    document.getElementById(
+      'name'
+    );
+
+
+  const car =
+    document.getElementById(
+      'car'
+    );
+
+
+  if(name)
+    name.value =
+      p.name||
+      '';
+
+
+  if(car)
+    car.value =
+      p.car||
+      '';
 
 
   /*
