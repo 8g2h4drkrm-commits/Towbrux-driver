@@ -1,3032 +1,4456 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#111111">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="TowBrüx Driver">
+
+<meta charset="utf-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
+
+<meta
+  name="theme-color"
+  content="#080b10"
+>
+
+<link
+  rel="manifest"
+  href="manifest.webmanifest"
+>
+
 <title>TowBrüx Driver</title>
 
 <style>
+
 :root{
-  --bg:#0b0d0f;
-  --card:#15181c;
-  --card2:#1b1f24;
-  --border:#2b3036;
-  --text:#f4f5f6;
-  --muted:#9da4ad;
-  --yellow:#f4c430;
-  --yellow2:#ffdb5c;
-  --green:#35d07f;
-  --red:#ff5d5d;
-  --blue:#4da3ff;
-  --shadow:0 12px 30px rgba(0,0,0,.28);
-  --radius:18px;
+  --p:#111720;
+  --p2:#18212c;
+  --t:#f5f7fa;
+  --m:#9ba7b6;
+  --l:#29333f;
+  --g:#f5b900;
+  --b:#2f6df6;
+  --ok:#20b26b;
+  --bad:#e5484d
 }
 
 *{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html,body{
-  margin:0;
-  padding:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  box-sizing:border-box
 }
 
 body{
-  min-height:100vh;
-  padding-bottom:env(safe-area-inset-bottom);
-}
-
-button,
-input,
-select{
-  font:inherit;
-}
-
-button{
-  border:0;
-  cursor:pointer;
-}
-
-.hidden{
-  display:none !important;
+  margin:0;
+  background:#020408;
+  color:var(--t);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif
 }
 
 .app{
-  width:100%;
-  max-width:760px;
-  margin:0 auto;
-  padding:
-    calc(12px + env(safe-area-inset-top))
-    14px
-    calc(30px + env(safe-area-inset-bottom));
+  max-width:560px;
+  margin:auto;
+  min-height:100vh;
+  background:
+    linear-gradient(
+      #080b10,
+      #0b1017
+    )
 }
 
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:14px;
+header{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:#080b10ee;
+  border-bottom:1px solid var(--l);
+  padding:14px 15px
 }
 
 .brand{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:10px
 }
 
 .logo{
-  width:44px;
-  height:44px;
-  border-radius:13px;
-  background:var(--yellow);
-  color:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:23px;
-  font-weight:900;
-  box-shadow:0 5px 18px rgba(244,196,48,.22);
+  width:46px;
+  height:46px
 }
 
-.brandText{
-  line-height:1.05;
+.brand b{
+  font-size:20px
 }
 
-.brandText strong{
-  display:block;
-  font-size:20px;
-  letter-spacing:.2px;
+.brand b span{
+  color:var(--g)
 }
 
-.brandText span{
-  display:block;
-  color:var(--muted);
+.sub,
+.small{
   font-size:12px;
-  margin-top:4px;
+  color:var(--m)
 }
 
-.headerActions{
-  display:flex;
-  gap:7px;
-}
-
-.iconBtn{
-  width:42px;
-  height:42px;
-  border-radius:13px;
-  background:var(--card);
-  color:var(--text);
-  border:1px solid var(--border);
+main{
+  padding:14px 14px 100px
 }
 
 .card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:16px;
-  margin-bottom:14px;
-  box-shadow:var(--shadow);
+  background:var(--p);
+  border:1px solid var(--l);
+  border-radius:18px;
+  padding:15px;
+  margin-bottom:12px
 }
 
-.card h2{
-  margin:0 0 12px;
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center
+}
+
+.ey{
+  font-size:11px;
+  color:var(--m);
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em
+}
+
+.job{
+  font-size:20px;
+  font-weight:900
+}
+
+.badge{
+  padding:7px 10px;
+  border-radius:99px;
+  background:#302608;
+  color:#ffd84d;
+  font-size:11px;
+  font-weight:900
+}
+
+.label{
+  font-size:12px;
+  color:var(--m);
+  font-weight:800;
+  margin-bottom:5px
+}
+
+.addr{
   font-size:18px;
+  font-weight:850;
+  line-height:1.3
 }
 
-.sectionTitle{
+.note{
+  line-height:1.45;
+  color:#dce2e9
+}
+
+button{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:14px 12px;
+  margin-top:9px;
+  font-weight:900;
+  font-size:15px
+}
+
+button:disabled{
+  opacity:.55;
+  pointer-events:none
+}
+
+.gold{
+  background:var(--g);
+  color:#111
+}
+
+.dark{
+  background:#202a36;
+  color:#fff;
+  border:1px solid #34404d
+}
+
+.blue{
+  background:var(--b);
+  color:#fff
+}
+
+.green{
+  background:var(--ok);
+  color:#fff
+}
+
+.red{
+  background:var(--bad);
+  color:#fff
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px
+}
+
+.grid button{
+  margin:0
+}
+
+.kpi{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px
+}
+
+.box{
+  background:var(--p2);
+  border:1px solid var(--l);
+  border-radius:14px;
+  padding:12px
+}
+
+.num{
+  font-size:24px;
+  font-weight:900
+}
+
+.step{
   display:flex;
-  align-items:center;
-  justify-content:space-between;
   gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid var(--l)
 }
 
-.statusBar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:15px;
-  padding:11px 13px;
-  margin-bottom:14px;
-}
-
-.statusLeft{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  min-width:0;
+.step:last-child{
+  border:0
 }
 
 .dot{
-  width:10px;
-  height:10px;
+  width:12px;
+  height:12px;
   border-radius:50%;
-  background:var(--muted);
-  flex:0 0 auto;
+  background:#3a4552;
+  margin-top:4px;
+  flex:none
 }
 
-.dot.green{
-  background:var(--green);
-  box-shadow:0 0 10px rgba(53,208,127,.5);
-}
-
-.dot.yellow{
-  background:var(--yellow);
-}
-
-.dot.red{
-  background:var(--red);
-}
-
-.statusText{
-  font-size:13px;
-  color:var(--muted);
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.availability{
-  display:flex;
-  gap:7px;
-}
-
-.availability button{
-  padding:9px 11px;
-  border-radius:11px;
-  background:var(--card2);
-  color:var(--muted);
-  border:1px solid var(--border);
-  font-weight:700;
-  font-size:12px;
-}
-
-.availability button.active{
-  background:var(--yellow);
-  color:#111;
-  border-color:var(--yellow);
-}
-
-.btn{
-  width:100%;
-  min-height:50px;
-  border-radius:14px;
-  padding:12px 15px;
-  font-weight:800;
-  margin-top:9px;
-}
-
-.primary{
-  background:var(--yellow);
-  color:#111;
-}
-
-.primary:active{
-  background:var(--yellow2);
-  transform:scale(.99);
-}
-
-.secondary{
-  background:var(--card2);
-  color:var(--text);
-  border:1px solid var(--border);
-}
-
-.danger{
-  background:#35191b;
-  color:#ff9b9b;
-  border:1px solid #642529;
-}
-
-.success{
-  background:#153423;
-  color:#7ff0ad;
-  border:1px solid #235b39;
-}
-
-.btn:disabled{
-  opacity:.45;
-  cursor:not-allowed;
-}
-
-input,
-select{
-  width:100%;
-  min-height:48px;
-  border-radius:13px;
-  border:1px solid var(--border);
-  background:#0f1215;
-  color:var(--text);
-  padding:11px 13px;
-  outline:none;
-}
-
-input:focus,
-select:focus{
-  border-color:var(--yellow);
-}
-
-label{
-  display:block;
-  color:var(--muted);
-  font-size:12px;
-  margin:12px 0 6px;
-}
-
-.loginTitle{
-  font-size:25px;
-  font-weight:900;
-  margin-bottom:5px;
-}
-
-.loginSub{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.5;
-  margin-bottom:16px;
-}
-
-.small{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.5;
-}
-
-.connection{
-  margin-top:10px;
-  padding:10px 12px;
-  border-radius:12px;
-  background:#101317;
-  border:1px solid var(--border);
-  font-size:12px;
-  color:var(--muted);
-}
-
-.connection.ok{
-  color:#83efb0;
-  border-color:#235c3b;
-  background:#102219;
-}
-
-.connection.error{
-  color:#ff9696;
-  border-color:#63262a;
-  background:#261214;
-}
-
-.jobHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-}
-
-.jobNo{
-  font-size:21px;
-  font-weight:900;
-  color:var(--yellow);
-}
-
-.jobState{
-  display:inline-flex;
-  align-items:center;
-  padding:7px 10px;
-  border-radius:10px;
-  font-size:11px;
-  font-weight:900;
-  text-transform:uppercase;
-  background:#292d32;
-  color:#ddd;
-  white-space:nowrap;
-}
-
-.jobState.new{
-  background:#332d16;
-  color:var(--yellow);
-}
-
-.jobState.accepted{
-  background:#17332a;
-  color:#7ff0ad;
-}
-
-.infoBlock{
-  margin-top:14px;
-  border-top:1px solid var(--border);
-  padding-top:13px;
-}
-
-.infoRow{
-  margin:10px 0;
-}
-
-.infoLabel{
-  color:var(--muted);
-  font-size:11px;
-  margin-bottom:4px;
-}
-
-.infoValue{
-  font-size:15px;
-  line-height:1.4;
-  word-break:break-word;
-}
-
-.routeButtons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:10px;
-}
-
-.mapLink{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:46px;
-  border-radius:13px;
-  background:#20242a;
-  border:1px solid var(--border);
-  color:var(--text);
-  text-decoration:none;
-  font-weight:800;
-  font-size:13px;
-}
-
-.mapLink:active{
-  transform:scale(.99);
-}
-
-.docsIntro{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.45;
-  margin-bottom:12px;
-}
-
-.docsGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-}
-
-.docCard{
-  background:#101317;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:10px;
-  overflow:hidden;
-}
-
-.docCard.done{
-  border-color:#235b39;
-  background:#102018;
-}
-
-.docTitle{
-  font-size:12px;
-  font-weight:800;
-  line-height:1.25;
-  min-height:31px;
-}
-
-.docStatus{
-  font-size:11px;
-  color:var(--muted);
-  margin:6px 0;
-}
-
-.docPreview{
-  width:100%;
-  aspect-ratio:1/1;
-  object-fit:cover;
-  border-radius:10px;
-  background:#090b0d;
-  display:block;
-  margin-bottom:8px;
-}
-
-.docEmpty{
-  aspect-ratio:1/1;
-  border-radius:10px;
-  background:#090b0d;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#555d66;
-  font-size:27px;
-  margin-bottom:8px;
-}
-
-.docBtn{
-  width:100%;
-  min-height:39px;
-  border-radius:10px;
-  background:var(--yellow);
-  color:#111;
-  font-weight:800;
-  font-size:12px;
-}
-
-.docBtn:disabled{
-  opacity:.45;
-}
-
-.progress{
-  height:9px;
-  background:#090b0d;
-  border-radius:99px;
-  overflow:hidden;
-  margin:10px 0 4px;
-}
-
-.progress > div{
-  height:100%;
-  width:0;
-  background:var(--yellow);
-  transition:width .2s ease;
-}
-
-.progressText{
-  color:var(--muted);
-  font-size:11px;
+.dot.on{
+  background:var(--ok)
 }
 
 .empty{
   text-align:center;
-  padding:25px 12px;
-  color:var(--muted);
+  padding:42px 18px;
+  color:var(--m)
 }
 
-.historyItem{
-  padding:12px 0;
-  border-bottom:1px solid var(--border);
+.big{
+  font-size:45px
 }
 
-.historyItem:last-child{
-  border-bottom:0;
+.view{
+  display:none
 }
 
-.historyTop{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
+.view.active{
+  display:block
 }
 
-.historyNo{
-  font-weight:800;
+nav{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(560px,100%);
+  background:#080b10f5;
+  border-top:1px solid var(--l);
+  padding:
+    7px
+    10px
+    calc(7px + env(safe-area-inset-bottom));
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  z-index:10
 }
 
-.historyDate{
-  color:var(--muted);
+nav button{
+  background:transparent;
+  color:var(--m);
+  margin:0;
   font-size:11px;
+  padding:7px
 }
 
-.historyAddress{
-  color:var(--muted);
-  font-size:12px;
-  margin-top:4px;
-  line-height:1.35;
+nav button.active{
+  color:var(--g)
 }
 
-.notificationCard{
-  border-color:#665519;
-  background:#211d0f;
-}
-
-.notificationGood{
-  border-color:#235b39;
-  background:#102219;
-}
-
-.notificationTitle{
-  font-weight:900;
-  margin-bottom:5px;
+.ico{
+  display:block;
+  font-size:20px
 }
 
 .toast{
   position:fixed;
-  z-index:9999;
-  left:14px;
-  right:14px;
-  bottom:calc(18px + env(safe-area-inset-bottom));
-  max-width:730px;
-  margin:auto;
-  padding:14px 15px;
-  border-radius:14px;
-  background:#252a30;
-  border:1px solid #3a4047;
-  color:white;
-  box-shadow:0 15px 40px rgba(0,0,0,.5);
-  font-size:13px;
-  line-height:1.4;
+  z-index:20;
+  left:50%;
+  bottom:85px;
+  transform:translate(-50%,10px);
   opacity:0;
-  transform:translateY(15px);
-  pointer-events:none;
-  transition:.2s ease;
+  background:#f5f7fa;
+  color:#10151c;
+  padding:11px 15px;
+  border-radius:99px;
+  font-size:13px;
+  font-weight:800;
+  transition:.2s;
+  max-width:90%;
+  text-align:center
 }
 
 .toast.show{
   opacity:1;
-  transform:translateY(0);
+  transform:translate(-50%,0)
 }
 
-.toast.good{
-  border-color:#2c744a;
+input{
+  width:100%;
+  background:var(--p2);
+  border:1px solid var(--l);
+  border-radius:12px;
+  padding:13px;
+  color:white;
+  margin-bottom:9px;
+  outline:none
 }
 
-.toast.bad{
-  border-color:#743036;
+.statusline{
+  font-size:12px;
+  margin-top:8px;
+  color:var(--m)
 }
 
-.footer{
+.statusline.ok{
+  color:#4bd88d
+}
+
+.statusline.bad{
+  color:#ff7777
+}
+
+.hint{
+  font-size:12px;
+  line-height:1.45;
+  color:var(--m);
+  margin-top:8px
+}
+
+.login{
+  min-height:65vh;
+  display:flex;
+  align-items:center;
+  justify-content:center
+}
+
+.login .card{
   text-align:center;
-  color:#606770;
+  width:100%
+}
+
+
+/* =========================
+   NAVIGAČNÍ ODKAZY
+========================= */
+
+.nav-links{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:10px
+}
+
+.nav-link{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:52px;
+  padding:12px 8px;
+  border-radius:14px;
+  border:1px solid #34404d;
+  background:#202a36;
+  color:#fff;
+  text-decoration:none;
+  font-weight:900;
+  font-size:14px;
+  text-align:center;
+  -webkit-tap-highlight-color:transparent
+}
+
+.nav-link:active{
+  transform:scale(.98)
+}
+
+.nav-link.apple{
+  background:#202a36;
+}
+
+.nav-link.google{
+  background:#202a36;
+}
+
+
+/* =========================
+   DOKUMENTACE
+========================= */
+
+.doc-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:12px
+}
+
+.doc-item{
+  position:relative;
+  background:var(--p2);
+  border:1px solid var(--l);
+  border-radius:14px;
+  overflow:hidden;
+  min-height:145px
+}
+
+.doc-preview{
+  width:100%;
+  height:95px;
+  object-fit:cover;
+  display:block;
+  background:#0b1017
+}
+
+.doc-empty{
+  height:95px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  background:#0b1017
+}
+
+.doc-name{
+  padding:8px;
+  font-size:11px;
+  font-weight:800;
+  color:#dce2e9
+}
+
+.doc-state{
+  padding:0 8px 8px;
   font-size:10px;
-  padding:8px 0 20px;
+  color:var(--m)
 }
 
-@media(max-width:420px){
-  .routeButtons{
-    grid-template-columns:1fr;
-  }
-
-  .docsGrid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .availability button{
-    padding-left:8px;
-    padding-right:8px;
-  }
+.doc-state.ok{
+  color:#4bd88d
 }
+
+.doc-button{
+  display:block;
+  width:100%;
+  margin:0;
+  padding:10px 6px;
+  border-radius:0;
+  font-size:11px;
+  background:#202a36;
+  color:white
+}
+
+.doc-file{
+  display:none
+}
+
+.doc-progress{
+  background:var(--p2);
+  border-radius:12px;
+  padding:11px;
+  margin-top:12px;
+  font-size:12px;
+  font-weight:800
+}
+
+.doc-progress.ok{
+  color:#4bd88d
+}
+
+.doc-progress.bad{
+  color:#ff7777
+}
+
+
+/* =========================
+   DOKONČENÍ
+========================= */
+
+.finish-box{
+  margin-top:14px;
+  padding:12px;
+  background:#18212c;
+  border:1px solid #34404d;
+  border-radius:14px
+}
+
+.finish-title{
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:4px
+}
+
+.finish-note{
+  font-size:11px;
+  color:var(--m);
+  line-height:1.4
+}
+
+.finish-button{
+  margin-top:12px
+}
+
 </style>
 </head>
+
 
 <body>
 
 <div class="app">
 
-  <header class="header">
-    <div class="brand">
-      <div class="logo">🚙</div>
-      <div class="brandText">
-        <strong>TowBrüx Driver</strong>
-        <span>Odťahová služba</span>
-      </div>
-    </div>
 
-    <div class="headerActions">
-      <button class="iconBtn" id="settingsBtn" title="Nastavení">⚙️</button>
-    </div>
-  </header>
+<header>
 
-  <!-- LOGIN / CONFIG -->
-  <section class="card" id="loginCard">
+  <div class="brand">
 
-    <div class="loginTitle">Připojení řidiče</div>
+    <img
+      src="icon.svg"
+      class="logo"
+      onerror="this.style.display='none'"
+    >
 
-    <div class="loginSub">
-      Nastav ID řidiče a Supabase Publishable key.
-      Údaje se uloží v tomto zařízení.
-    </div>
+    <div>
 
-    <label for="driverId">ID řidiče</label>
-    <input id="driverId"
-           value="driver1"
-           autocomplete="off"
-           placeholder="např. driver1">
+      <b>
+        Tow<span>Brüx</span> Driver
+      </b>
 
-    <label for="supabaseKey">Supabase Publishable key</label>
-    <input id="supabaseKey"
-           type="password"
-           autocomplete="off"
-           placeholder="sb_publishable_...">
-
-    <button class="btn primary" id="connectBtn">
-      🔐 PŘIPOJIT ŘIDIČE
-    </button>
-
-    <div id="connectionStatus" class="connection">
-      Supabase není připojeno.
-    </div>
-
-  </section>
-
-  <!-- MAIN APP -->
-  <main id="mainApp" class="hidden">
-
-    <div class="statusBar">
-
-      <div class="statusLeft">
-        <span class="dot" id="connectionDot"></span>
-        <span class="statusText" id="connectionText">
-          Nepřipojeno
-        </span>
-      </div>
-
-      <div class="availability">
-        <button id="availableBtn">Dostupný</button>
-        <button id="busyBtn">Zaneprázdněn</button>
+      <div class="sub">
+        Aplikace pro řidiče
       </div>
 
     </div>
 
-    <!-- PUSH -->
-    <section class="card notificationCard" id="notificationCard">
-
-      <div class="notificationTitle">
-        🔔 Oznámení zakázek
-      </div>
-
-      <div class="small" id="notificationText">
-        Pro příjem zakázek i při zavřené aplikaci povol notifikace.
-      </div>
-
-      <button class="btn primary" id="notificationBtn">
-        🔔 POVOLIT NOTIFIKACE
-      </button>
-
-    </section>
-
-    <!-- ACTIVE JOB -->
-    <section class="card" id="jobCard">
-
-      <div class="sectionTitle">
-        <h2>🚨 Aktivní zakázka</h2>
-      </div>
-
-      <div id="jobContent"></div>
-
-    </section>
-
-    <!-- DOCUMENTATION -->
-    <section class="card hidden" id="docsCard">
-
-      <div class="sectionTitle">
-        <h2>📸 Dokumentace zásahu</h2>
-      </div>
-
-      <div class="docsIntro">
-        Pro dokončení zakázky musí být nahráno všech 6 dokumentů.
-        Fotografie se před odesláním automaticky zmenší.
-      </div>
-
-      <div class="progress">
-        <div id="docsProgress"></div>
-      </div>
-
-      <div class="progressText" id="docsProgressText">
-        0 / 6
-      </div>
-
-      <div class="docsGrid" id="docsGrid"></div>
-
-    </section>
-
-    <!-- HISTORY -->
-    <section class="card">
-
-      <div class="sectionTitle">
-        <h2>📚 Historie zakázek</h2>
-        <button class="iconBtn"
-                style="width:38px;height:38px"
-                id="refreshHistoryBtn">
-          🔄
-        </button>
-      </div>
-
-      <div id="historyContent">
-        <div class="empty">
-          Načítám historii…
-        </div>
-      </div>
-
-    </section>
-
-    <!-- SETTINGS -->
-    <section class="card hidden" id="settingsCard">
-
-      <h2>⚙️ Nastavení</h2>
-
-      <label for="settingsDriverId">ID řidiče</label>
-      <input id="settingsDriverId">
-
-      <label for="settingsSupabaseKey">Supabase Publishable key</label>
-      <input id="settingsSupabaseKey" type="password">
-
-      <button class="btn primary" id="saveSettingsBtn">
-        💾 ULOŽIT A PŘIPOJIT
-      </button>
-
-      <button class="btn danger" id="logoutBtn">
-        🚪 ODHLÁSIT / VYMAZAT PŘIPOJENÍ
-      </button>
-
-      <div class="connection">
-        Projekt Supabase:
-        <br>
-        <strong>qoqxmmmijnqrkhmdhibg.supabase.co</strong>
-      </div>
-
-    </section>
-
-  </main>
-
-  <div class="footer">
-    TowBrüx Driver • PWA
   </div>
 
-</div>
+</header>
 
-<div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<main>
 
-<script>
-"use strict";
 
-/* =========================================================
-   KONFIGURACE
-========================================================= */
+<!-- =========================
+     LOGIN
+========================= -->
 
-const TB_PROJECT_URL =
-  "https://qoqxmmmijnqrkhmdhibg.supabase.co";
+<section
+  id="login"
+  class="view active login"
+>
 
-const DOCS_BUCKET =
-  "zakazky-dokumentace";
+  <div class="card">
 
-const VAPID_PUBLIC_KEY =
-  "BCR_7DAzc2W3nmStr9FSUPRbjUvXlXOv_pz2yvOTXKowDweKlT10XOCEqJLQQoD2GHsizojwmOxIo72UDE5D5LY";
+    <div class="big">
+      🚛
+    </div>
 
-const STORAGE_KEY =
-  "tb_driver_config";
+    <h1>
+      Přihlášení řidiče
+    </h1>
 
-const JOB_STORAGE_KEY =
-  "tb_job";
+    <p>
+      Propoj aplikaci s TowBrüx a přijímej
+      zakázky přímo od dispečera.
+    </p>
 
-const AVAILABILITY_KEY =
-  "tb_driver_availability";
+    <input
+      id="loginDriver"
+      placeholder="ID řidiče"
+      value="driver1"
+    >
 
-/* =========================================================
-   STAV
-========================================================= */
+    <input
+      id="loginKey"
+      type="password"
+      placeholder="Supabase Publishable key"
+    >
 
-let tbSupabase = null;
-let realtimeChannel = null;
-let activeJob = null;
-let docsState = {};
-let isSavingAvailability = false;
-let toastTimer = null;
+    <button
+      class="gold"
+      onclick="login()"
+    >
+      🔗 Připojit TowBrüx
+    </button>
 
-/* =========================================================
-   ELEMENTY
-========================================================= */
+    <div class="hint">
+      Project URL je přednastavený.
+      Používej pouze Publishable key.
+    </div>
 
-const $ = id => document.getElementById(id);
+    <div
+      id="loginStatus"
+      class="statusline"
+    ></div>
 
-/* =========================================================
-   POMOCNÉ FUNKCE
-========================================================= */
+  </div>
 
-function escapeHtml(value){
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
+</section>
 
-function showToast(message,type=""){
-  const el = $("toast");
 
-  if(!el) return;
+<!-- =========================
+     HOME
+========================= -->
 
-  el.textContent = message;
-  el.className = "toast show " + type;
+<section
+  id="home"
+  class="view"
+>
 
-  clearTimeout(toastTimer);
+  <div id="jobArea"></div>
 
-  toastTimer = setTimeout(()=>{
-    el.className = "toast";
-  },4000);
-}
 
-function safeStoragePart(value){
-  return String(value ?? "")
-    .trim()
-    .replace(/[^a-zA-Z0-9._-]/g,"_");
-}
+  <div class="card">
 
-function getConfig(){
-  try{
-    return JSON.parse(
-      localStorage.getItem(STORAGE_KEY) || "{}"
-    );
-  }catch(e){
-    return {};
-  }
-}
-
-function saveConfig(){
-  const cfg = {
-    driver: $("driverId").value.trim(),
-    key: $("supabaseKey").value.trim()
-  };
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(cfg)
-  );
-
-  return cfg;
-}
-
-function loadConfig(){
-
-  const cfg = getConfig();
-
-  if(cfg.driver){
-    $("driverId").value = cfg.driver;
-  }
-
-  if(cfg.key){
-    $("supabaseKey").value = cfg.key;
-  }
-
-  $("settingsDriverId").value =
-    cfg.driver || $("driverId").value || "driver1";
-
-  $("settingsSupabaseKey").value =
-    cfg.key || $("supabaseKey").value || "";
-}
-
-function currentDriver(){
-  return (
-    $("driverId").value.trim()
-    || getConfig().driver
-    || "driver1"
-  );
-}
-
-function currentKey(){
-  return (
-    $("supabaseKey").value.trim()
-    || getConfig().key
-    || ""
-  );
-}
-
-function isActiveStatus(status){
-  const s = String(status || "").toLowerCase();
-
-  return [
-    "nova",
-    "nová",
-    "prijata",
-    "přijata",
-    "prijato",
-    "přijato",
-    "aktivni",
-    "aktivní"
-  ].includes(s);
-}
-
-function isCompletedStatus(status){
-  const s = String(status || "").toLowerCase();
-
-  return [
-    "dokoncena",
-    "dokončena",
-    "dokonceno",
-    "dokončeno",
-    "hotovo",
-    "completed",
-    "complete"
-  ].includes(s);
-}
-
-function formatDate(value){
-
-  if(!value) return "";
-
-  const d = new Date(value);
-
-  if(Number.isNaN(d.getTime())){
-    return String(value);
-  }
-
-  return d.toLocaleString(
-    "cs-CZ",
-    {
-      dateStyle:"short",
-      timeStyle:"short"
-    }
-  );
-}
-
-/* =========================================================
-   SUPABASE
-========================================================= */
-
-function setConnectionStatus(
-  message,
-  type=""
-){
-  const el = $("connectionStatus");
-
-  if(!el) return;
-
-  el.textContent = message;
-  el.className =
-    "connection" +
-    (type ? " " + type : "");
-}
-
-function setOnlineStatus(
-  connected,
-  message
-){
-  $("connectionDot").className =
-    "dot " + (connected ? "green" : "red");
-
-  $("connectionText").textContent =
-    message || (
-      connected
-      ? "Supabase připojeno"
-      : "Supabase nepřipojeno"
-    );
-}
-
-async function initSupabase(){
-
-  const key = currentKey();
-
-  if(!key){
-    setConnectionStatus(
-      "Chybí Supabase Publishable key.",
-      "error"
-    );
-    return false;
-  }
-
-  try{
-
-    if(realtimeChannel){
-      try{
-        await tbSupabase.removeChannel(
-          realtimeChannel
-        );
-      }catch(e){}
-      realtimeChannel = null;
-    }
-
-    tbSupabase =
-      window.supabase.createClient(
-        TB_PROJECT_URL,
-        key,
-        {
-          auth:{
-            persistSession:false,
-            autoRefreshToken:false,
-            detectSessionInUrl:false
-          }
-        }
-      );
-
-    const {
-      error
-    } = await tbSupabase
-      .from("zakazky")
-      .select("id")
-      .limit(1);
-
-    if(error){
-      console.error(error);
-
-      tbSupabase = null;
-
-      setConnectionStatus(
-        "Supabase chyba: " +
-        (error.message || "neznámá chyba"),
-        "error"
-      );
-
-      return false;
-    }
-
-    setConnectionStatus(
-      "Supabase: připojeno ✓ • Publishable key ✓",
-      "ok"
-    );
-
-    setOnlineStatus(
-      true,
-      "Supabase připojeno ✓"
-    );
-
-    $("loginCard").classList.add("hidden");
-    $("mainApp").classList.remove("hidden");
-
-    $("settingsDriverId").value =
-      currentDriver();
-
-    $("settingsSupabaseKey").value =
-      key;
-
-    subscribeRealtime();
-
-    await loadActiveJob();
-
-    await loadHistory();
-
-    updateAvailabilityUI();
-
-    await preparePushState();
-
-    return true;
-
-  }catch(error){
-
-    console.error(error);
-
-    setConnectionStatus(
-      "Nepodařilo se připojit: " +
-      error.message,
-      "error"
-    );
-
-    return false;
-  }
-}
-
-/* =========================================================
-   REALTIME
-========================================================= */
-
-function subscribeRealtime(){
-
-  if(!tbSupabase) return;
-
-  if(realtimeChannel){
-    try{
-      tbSupabase.removeChannel(
-        realtimeChannel
-      );
-    }catch(e){}
-  }
-
-  const driver = currentDriver();
-
-  realtimeChannel =
-    tbSupabase
-      .channel(
-        "tb-driver-" +
-        safeStoragePart(driver) +
-        "-" +
-        Date.now()
-      )
-      .on(
-        "postgres_changes",
-        {
-          event:"*",
-          schema:"public",
-          table:"zakazky"
-        },
-        payload => {
-
-          console.log(
-            "Supabase Realtime:",
-            payload
-          );
-
-          handleRealtimeJob(payload);
-        }
-      )
-      .subscribe(status => {
-
-        console.log(
-          "Realtime status:",
-          status
-        );
-
-        if(status === "SUBSCRIBED"){
-          setOnlineStatus(
-            true,
-            "Online • Realtime připojeno ✓"
-          );
-        }
-      });
-}
-
-async function handleRealtimeJob(payload){
-
-  const row =
-    payload.new || payload.old;
-
-  if(!row) return;
-
-  if(
-    String(row.ridic_id || "") !==
-    String(currentDriver())
-  ){
-    return;
-  }
-
-  if(payload.eventType === "DELETE"){
-
-    if(
-      activeJob &&
-      String(activeJob.id) ===
-      String(row.id)
-    ){
-      clearActiveJob();
-      showToast(
-        "Zakázka byla odstraněna.",
-        "good"
-      );
-    }
-
-    await loadHistory();
-
-    return;
-  }
-
-  if(isCompletedStatus(row.stav)){
-
-    if(
-      activeJob &&
-      String(activeJob.id) ===
-      String(row.id)
-    ){
-      clearActiveJob();
-
-      showToast(
-        "Zakázka byla dokončena.",
-        "good"
-      );
-    }
-
-    await loadHistory();
-
-    return;
-  }
-
-  if(isActiveStatus(row.stav)){
-
-    activeJob = normalizeJob(row);
-
-    saveLocalJob();
-
-    renderJob();
-
-    showToast(
-      payload.eventType === "INSERT"
-        ? "🚨 NOVÁ ZAKÁZKA"
-        : "Zakázka byla aktualizována.",
-      "good"
-    );
-
-    await loadHistory();
-  }
-}
-
-/* =========================================================
-   ZAKÁZKA
-========================================================= */
-
-function normalizeJob(job){
-
-  return {
-    ...job,
-
-    docs:
-      job.docs ||
-      activeJob?.docs ||
-      {}
-  };
-}
-
-async function loadActiveJob(){
-
-  if(!tbSupabase) return;
-
-  const driver =
-    currentDriver();
-
-  try{
-
-    const {
-      data,
-      error
-    } = await tbSupabase
-      .from("zakazky")
-      .select("*")
-      .eq("ridic_id",driver)
-      .order("created_at",{ascending:false})
-      .limit(20);
-
-    if(error){
-      console.error(error);
-      return;
-    }
-
-    const active =
-      (data || [])
-        .find(job =>
-          isActiveStatus(job.stav)
-        );
-
-    if(active){
-
-      const local =
-        getLocalJob();
-
-      activeJob =
-        normalizeJob({
-          ...active,
-          docs:
-            active.docs ||
-            local?.docs ||
-            {}
-        });
-
-      saveLocalJob();
-
-    }else{
-
-      /*
-       * DŮLEŽITÉ:
-       * Pokud Supabase nemá aktivní zakázku,
-       * lokální starou zakázku odstraníme.
-       */
-      clearActiveJob();
-    }
-
-    renderJob();
-
-  }catch(error){
-    console.error(error);
-  }
-}
-
-function getLocalJob(){
-
-  try{
-    return JSON.parse(
-      localStorage.getItem(
-        JOB_STORAGE_KEY
-      ) || "null"
-    );
-  }catch(e){
-    return null;
-  }
-}
-
-function saveLocalJob(){
-
-  if(!activeJob) return;
-
-  localStorage.setItem(
-    JOB_STORAGE_KEY,
-    JSON.stringify(activeJob)
-  );
-}
-
-function clearActiveJob(){
-
-  activeJob = null;
-
-  docsState = {};
-
-  localStorage.removeItem(
-    JOB_STORAGE_KEY
-  );
-
-  renderJob();
-
-  $("docsCard").classList.add(
-    "hidden"
-  );
-}
-
-function renderJob(){
-
-  const box =
-    $("jobContent");
-
-  if(!activeJob){
-
-    box.innerHTML = `
-      <div class="empty">
-        <div style="font-size:35px;margin-bottom:8px">
-          💤
-        </div>
-        <div style="font-weight:800;color:#ddd">
-          Žádná aktivní zakázka
-        </div>
-        <div style="margin-top:5px">
-          Jakmile dispečink odešle zakázku,
-          objeví se zde.
-        </div>
-      </div>
-    `;
-
-    $("docsCard").classList.add(
-      "hidden"
-    );
-
-    return;
-  }
-
-  const accepted =
-    !isActiveStatus(activeJob.stav) ||
-    [
-      "prijata",
-      "přijata",
-      "prijato",
-      "přijato",
-      "aktivni",
-      "aktivní"
-    ].includes(
-      String(activeJob.stav || "")
-        .toLowerCase()
-    );
-
-  const jobNo =
-    activeJob.cislo_zakazky ||
-    activeJob.id ||
-    "—";
-
-  const impact =
-    activeJob.zasah ||
-    "—";
-
-  const service =
-    activeJob.servis ||
-    "—";
-
-  const note =
-    activeJob.poznamka ||
-    "";
-
-  const stateClass =
-    accepted
-      ? "accepted"
-      : "new";
-
-  const stateText =
-    accepted
-      ? "PŘIJATO"
-      : "NOVÁ";
-
-  const impactEncoded =
-    encodeURIComponent(
-      impact
-    );
-
-  const serviceEncoded =
-    encodeURIComponent(
-      service
-    );
-
-  const appleImpact =
-    "https://maps.apple.com/directions?destination=" +
-    impactEncoded +
-    "&mode=driving";
-
-  const googleImpact =
-    "https://www.google.com/maps/dir/?api=1&destination=" +
-    impactEncoded +
-    "&travelmode=driving";
-
-  const appleService =
-    "https://maps.apple.com/directions?destination=" +
-    serviceEncoded +
-    "&mode=driving";
-
-  const googleService =
-    "https://www.google.com/maps/dir/?api=1&destination=" +
-    serviceEncoded +
-    "&travelmode=driving";
-
-  box.innerHTML = `
-    <div class="jobHeader">
+    <div class="row">
 
       <div>
-        <div class="jobNo">
-          ${escapeHtml(jobNo)}
+
+        <div class="ey">
+          Dnešní přehled
+        </div>
+
+        <div class="job">
+          Moje směna
+        </div>
+
+      </div>
+
+      <span
+        id="shift"
+        class="badge"
+      >
+        PŘIPRAVEN
+      </span>
+
+    </div>
+
+
+    <div
+      class="kpi"
+      style="margin-top:12px"
+    >
+
+      <div class="box">
+
+        <div
+          id="active"
+          class="num"
+        >
+          0
         </div>
 
         <div class="small">
-          ${formatDate(activeJob.created_at)}
+          Aktivní zakázky
         </div>
+
       </div>
 
-      <div class="jobState ${stateClass}">
-        ${stateText}
+
+      <div class="box">
+
+        <div
+          id="done"
+          class="num"
+        >
+          0
+        </div>
+
+        <div class="small">
+          Dokončeno
+        </div>
+
       </div>
 
     </div>
 
-    <div class="infoBlock">
 
-      <div class="infoRow">
-        <div class="infoLabel">
-          📍 MÍSTO ZÁSAHU
-        </div>
+    <div
+      id="connection"
+      class="statusline"
+    >
+      Supabase: odpojeno
+    </div>
 
-        <div class="infoValue">
-          ${escapeHtml(impact)}
-        </div>
-      </div>
+  </div>
 
-      <div class="routeButtons">
 
-        <a class="mapLink"
-           href="${appleImpact}"
-           target="_blank"
-           rel="noopener">
-          🍎 Apple Mapy
-        </a>
+  <div class="card">
 
-        <a class="mapLink"
-           href="${googleImpact}"
-           target="_blank"
-           rel="noopener">
-          🗺️ Google Maps
-        </a>
+    <div class="label">
+      🔔 Stav řidiče
+    </div>
 
-      </div>
+    <div class="grid">
 
-      <div class="infoRow">
-        <div class="infoLabel">
-          🏁 SERVIS KLIENTA
-        </div>
+      <button
+        class="dark"
+        onclick="state('DOSTUPNÝ')"
+      >
+        🟢 Dostupný
+      </button>
 
-        <div class="infoValue">
-          ${escapeHtml(service)}
-        </div>
-      </div>
-
-      <div class="routeButtons">
-
-        <a class="mapLink"
-           href="${appleService}"
-           target="_blank"
-           rel="noopener">
-          🍎 Apple Mapy
-        </a>
-
-        <a class="mapLink"
-           href="${googleService}"
-           target="_blank"
-           rel="noopener">
-          🗺️ Google Maps
-        </a>
-
-      </div>
-
-      ${
-        note
-        ? `
-          <div class="infoRow">
-            <div class="infoLabel">
-              📝 POZNÁMKA
-            </div>
-
-            <div class="infoValue">
-              ${escapeHtml(note)}
-            </div>
-          </div>
-        `
-        : ""
-      }
+      <button
+        class="dark"
+        onclick="state('ZANEPRÁZDNĚN')"
+      >
+        🟠 Zaneprázdněn
+      </button>
 
     </div>
 
-    ${
-      !accepted
-      ? `
-        <button
-          class="btn primary"
-          id="acceptJobBtn">
-          ✅ PŘIJMOUT ZAKÁZKU
-        </button>
-      `
-      : `
-        <button
-          class="btn danger"
-          id="finishJobBtn">
-          🏁 DOKONČIT ZAKÁZKU
-        </button>
-      `
-    }
-  `;
+  </div>
 
-  $("acceptJobBtn")?.addEventListener(
-    "click",
-    acceptJob
-  );
+</section>
 
-  $("finishJobBtn")?.addEventListener(
-    "click",
-    finishJob
-  );
 
-  if(accepted){
+<!-- =========================
+     HISTORY
+========================= -->
 
-    $("docsCard")
-      .classList
-      .remove("hidden");
+<section
+  id="history"
+  class="view"
+>
 
-    renderDocs();
+  <div class="card">
 
-  }else{
+    <h2>
+      📋 Historie zakázek
+    </h2>
 
-    $("docsCard")
-      .classList
-      .add("hidden");
-  }
-}
+    <div id="hist"></div>
 
-/* =========================================================
-   PŘIJETÍ ZAKÁZKY
-========================================================= */
+  </div>
 
-async function acceptJob(){
+</section>
 
-  if(!tbSupabase || !activeJob){
-    return;
-  }
 
-  const btn =
-    $("acceptJobBtn");
+<!-- =========================
+     PROFILE
+========================= -->
 
-  if(btn){
-    btn.disabled = true;
-    btn.textContent =
-      "⏳ PŘIJÍMÁM…";
-  }
+<section
+  id="profile"
+  class="view"
+>
+
+  <div class="card">
+
+    <h2>
+      👤 Profil řidiče
+    </h2>
+
+    <input
+      id="name"
+      placeholder="Jméno řidiče"
+    >
+
+    <input
+      id="car"
+      placeholder="Vozidlo / SPZ"
+    >
+
+    <button
+      class="gold"
+      onclick="saveProfile()"
+    >
+      Uložit profil
+    </button>
+
+  </div>
+
+
+  <!-- PUSH -->
+
+  <div
+    id="notifyCard"
+    class="card"
+  >
+
+    <h2>
+      🔔 Oznámení
+    </h2>
+
+    <div
+      id="notifyStatus"
+      class="statusline"
+    >
+      Oznámení nejsou nastavená.
+    </div>
+
+    <button
+      class="gold"
+      onclick="enablePush()"
+    >
+      🔔 Povolit oznámení
+    </button>
+
+    <div class="hint">
+      Na iPhonu musí být aplikace přidaná
+      na plochu jako webová aplikace,
+      aby Web Push fungoval i na pozadí.
+    </div>
+
+  </div>
+
+
+  <!-- CONNECTION -->
+
+  <div class="card">
+
+    <h2>
+      ⚙️ Připojení
+    </h2>
+
+    <div class="label">
+      ID řidiče
+    </div>
+
+    <input
+      id="driverId"
+      placeholder="driver1"
+    >
+
+    <button
+      class="dark"
+      onclick="logout()"
+    >
+      Odpojit TowBrüx
+    </button>
+
+  </div>
+
+
+  <!-- TEST -->
+
+  <div class="card">
+
+    <h2>
+      🧪 Test
+    </h2>
+
+    <button
+      class="dark"
+      onclick="demo()"
+    >
+      ➕ Načíst lokální testovací zakázku
+    </button>
+
+    <button
+      class="dark"
+      onclick="clearData()"
+    >
+      🗑️ Vymazat lokální data
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     NAV
+========================= -->
+
+<nav
+  id="nav"
+  style="display:none"
+>
+
+  <button
+    class="active"
+    onclick="show('home',this)"
+  >
+
+    <span class="ico">
+      🏠
+    </span>
+
+    Zakázka
+
+  </button>
+
+
+  <button
+    onclick="show('history',this)"
+  >
+
+    <span class="ico">
+      📋
+    </span>
+
+    Historie
+
+  </button>
+
+
+  <button
+    onclick="show('profile',this)"
+  >
+
+    <span class="ico">
+      👤
+    </span>
+
+    Profil
+
+  </button>
+
+</nav>
+
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+/* =========================
+   ZÁKLADNÍ NASTAVENÍ
+========================= */
+
+const PROJECT_URL =
+'https://qoqxmmmijnqrkhmdhibg.supabase.co';
+
+
+const STORAGE_BUCKET =
+'zakazky-dokumentace';
+
+
+const K =
+'tb_job';
+
+
+const H =
+'tb_hist';
+
+
+const P =
+'tb_profile';
+
+
+const C =
+'tb_connection';
+
+
+const SUB =
+'tb_push_v3';
+
+
+/* =========================
+   STAVY
+========================= */
+
+const DB = {
+
+  nova:'new',
+  prijata:'accepted',
+  vyrazil:'enroute',
+  na_miste:'onsite',
+  v_servisu:'service',
+  dokoncena:'done'
+
+};
+
+
+const UI = {
+
+  new:'nova',
+  accepted:'prijata',
+  enroute:'vyrazil',
+  onsite:'na_miste',
+  service:'v_servisu',
+  done:'dokoncena'
+
+};
+
+
+/* =========================
+   GLOBÁLNÍ PROMĚNNÉ
+========================= */
+
+let sb = null;
+
+let channel = null;
+
+let tbConnected = false;
+
+
+/* =========================
+   LOCAL STORAGE
+========================= */
+
+function job(){
 
   try{
 
-    const {
-      data,
-      error
-    } = await tbSupabase
-      .from("zakazky")
-      .update({
-        stav:"prijata"
-      })
-      .eq("id",activeJob.id)
-      .eq("ridic_id",currentDriver())
-      .select()
-      .single();
-
-    if(error){
-      throw error;
-    }
-
-    activeJob =
-      normalizeJob(data || {
-        ...activeJob,
-        stav:"prijata"
-      });
-
-    saveLocalJob();
-
-    renderJob();
-
-    showToast(
-      "Zakázka přijata.",
-      "good"
+    return JSON.parse(
+      localStorage.getItem(K)||'null'
     );
 
-    await loadHistory();
+  }catch(e){
 
-  }catch(error){
+    return null;
 
-    console.error(error);
-
-    showToast(
-      "Zakázku se nepodařilo přijmout: " +
-      error.message,
-      "bad"
-    );
-
-    if(btn){
-      btn.disabled = false;
-      btn.textContent =
-        "✅ PŘIJMOUT ZAKÁZKU";
-    }
   }
+
 }
 
-/* =========================================================
-   DOKUMENTACE
-========================================================= */
 
-const DOC_DEFINITIONS = [
-  {
-    key:"foto1",
-    title:"Celé vozidlo"
-  },
-  {
-    key:"foto2",
-    title:"Přední část"
-  },
-  {
-    key:"foto3",
-    title:"Zadní část"
-  },
-  {
-    key:"foto4",
-    title:"Poškození"
-  },
-  {
-    key:"foto5",
-    title:"Další detail"
-  },
-  {
-    key:"list",
-    title:"Zakázkový list"
+function hist(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem(H)||'[]'
+    );
+
+  }catch(e){
+
+    return [];
+
   }
+
+}
+
+
+function cfg(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem(C)||'{}'
+    );
+
+  }catch(e){
+
+    return {};
+
+  }
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function esc(x){
+
+  return String(x??'')
+    .replace(
+      /[&<>"']/g,
+      c=>({
+
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
+
+      }[c])
+    );
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+function toast(x){
+
+  const t =
+    document.getElementById(
+      'toast'
+    );
+
+  if(!t)
+    return;
+
+  t.textContent =
+    x;
+
+  t.classList.add(
+    'show'
+  );
+
+  clearTimeout(
+    window.__tbToast
+  );
+
+  window.__tbToast =
+    setTimeout(
+      ()=>{
+
+        t.classList.remove(
+          'show'
+        );
+
+      },
+      2400
+    );
+
+}
+
+
+/* =========================
+   CONNECTION
+========================= */
+
+function connection(
+  x,
+  ok=false
+){
+
+  const e =
+    document.getElementById(
+      'connection'
+    );
+
+  if(!e)
+    return;
+
+  e.textContent =
+    x;
+
+  e.className =
+    'statusline'+
+    (
+      ok
+        ?' ok'
+        :''
+    );
+
+}
+
+
+function setLoginStatus(
+  x,
+  ok=false
+){
+
+  const e =
+    document.getElementById(
+      'loginStatus'
+    );
+
+  if(!e)
+    return;
+
+  e.textContent =
+    x;
+
+  e.className =
+    'statusline'+
+    (
+      ok
+        ?' ok'
+        :''
+    );
+
+}
+
+
+/* =========================
+   NAVIGACE APLIKACE
+========================= */
+
+function show(
+  id,
+  b
+){
+
+  document
+    .querySelectorAll(
+      '.view'
+    )
+    .forEach(
+      x=>{
+
+        x.classList.remove(
+          'active'
+        );
+
+        x.style.display =
+          'none';
+
+      }
+    );
+
+
+  const target =
+    document.getElementById(
+      id
+    );
+
+
+  if(target){
+
+    target.classList.add(
+      'active'
+    );
+
+
+    target.style.display =
+      id==='login'
+        ?'flex'
+        :'block';
+
+  }
+
+
+  document
+    .querySelectorAll(
+      'nav button'
+    )
+    .forEach(
+      x=>
+        x.classList.remove(
+          'active'
+        )
+    );
+
+
+  if(b)
+    b.classList.add(
+      'active'
+    );
+
+
+  if(id==='history')
+    renderHist();
+
+
+  if(id==='profile')
+    updatePushUI();
+
+}
+
+
+/* =========================
+   LOGIN UI
+========================= */
+
+function setLoggedIn(){
+
+  const loginView =
+    document.getElementById(
+      'login'
+    );
+
+  const homeView =
+    document.getElementById(
+      'home'
+    );
+
+  const nav =
+    document.getElementById(
+      'nav'
+    );
+
+
+  if(loginView){
+
+    loginView.classList.remove(
+      'active'
+    );
+
+    loginView.style.display =
+      'none';
+
+  }
+
+
+  if(homeView){
+
+    homeView.classList.add(
+      'active'
+    );
+
+    homeView.style.display =
+      'block';
+
+  }
+
+
+  if(nav){
+
+    nav.style.display =
+      'grid';
+
+  }
+
+}
+
+
+function setLoggedOut(){
+
+  document
+    .querySelectorAll(
+      '.view'
+    )
+    .forEach(
+      x=>{
+
+        x.classList.remove(
+          'active'
+        );
+
+        x.style.display =
+          'none';
+
+      }
+    );
+
+
+  const loginView =
+    document.getElementById(
+      'login'
+    );
+
+  const nav =
+    document.getElementById(
+      'nav'
+    );
+
+
+  if(loginView){
+
+    loginView.classList.add(
+      'active'
+    );
+
+    loginView.style.display =
+      'flex';
+
+  }
+
+
+  if(nav){
+
+    nav.style.display =
+      'none';
+
+  }
+
+}
+
+
+/* =========================
+   DB → JOB
+========================= */
+
+function dbToJob(r){
+
+  const old =
+    job();
+
+
+  return {
+
+    dbId:
+      r.id,
+
+    id:
+      r.cislo_zakazky||
+      (
+        'TB-'+
+        r.id
+      ),
+
+    client:
+      r.klient||
+      '',
+
+    impact:
+      r.zasah||
+      '',
+
+    service:
+      r.servis||
+      '',
+
+    note:
+      r.poznamka||
+      '',
+
+    status:
+      DB[r.stav]||
+      'new',
+
+    times:
+      old&&
+      old.dbId===r.id
+        ?old.times||{}
+        :{},
+
+    docs:
+      old&&
+      old.dbId===r.id
+        ?old.docs||{}
+        :{}
+
+  };
+
+}
+
+
+/* =========================
+   SERVICE WORKER
+========================= */
+
+async function registerSW(){
+
+  if(
+    !('serviceWorker' in navigator)
+  )
+    return null;
+
+
+  try{
+
+    return await navigator
+      .serviceWorker
+      .register(
+        './sw.js?v=20260827-push',
+        {
+          scope:'./'
+        }
+      );
+
+  }catch(e){
+
+    console.error(
+      'Service Worker:',
+      e
+    );
+
+    return null;
+
+  }
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+async function login(){
+
+  const d =
+    document
+      .getElementById(
+        'loginDriver'
+      )
+      .value
+      .trim();
+
+
+  const k =
+    document
+      .getElementById(
+        'loginKey'
+      )
+      .value
+      .trim();
+
+
+  if(!d||!k){
+
+    setLoginStatus(
+      'Vyplň ID řidiče a Publishable key.'
+    );
+
+    return;
+
+  }
+
+
+  localStorage.setItem(
+
+    C,
+
+    JSON.stringify({
+
+      url:
+        PROJECT_URL,
+
+      key:
+        k,
+
+      driver:
+        d
+
+    })
+
+  );
+
+
+  const driverId =
+    document.getElementById(
+      'driverId'
+    );
+
+
+  if(driverId)
+    driverId.value =
+      d;
+
+
+  setLoginStatus(
+    'Připojuji…'
+  );
+
+
+  setLoggedIn();
+
+
+  await connect();
+
+
+  if(tbConnected){
+
+    setLoginStatus(
+      'Připojeno',
+      true
+    );
+
+    toast(
+      'TowBrüx připojeno'
+    );
+
+  }else{
+
+    connection(
+      'Supabase: čekám na připojení'
+    );
+
+  }
+
+
+  setTimeout(
+    ()=>{
+      updatePushUI();
+    },
+    500
+  );
+
+}
+
+
+/* =========================
+   SUPABASE CONNECT
+========================= */
+
+async function connect(){
+
+  const c =
+    cfg();
+
+
+  if(
+    !c.url||
+    !c.key||
+    !c.driver
+  ){
+
+    connection(
+      'Supabase: není nastaven'
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    sb =
+      window.supabase
+        .createClient(
+          c.url,
+          c.key
+        );
+
+
+    await loadActive();
+
+
+    if(channel){
+
+      try{
+
+        await sb.removeChannel(
+          channel
+        );
+
+      }catch(e){}
+
+    }
+
+
+    channel =
+      sb.channel(
+        'towbrux-driver-'+
+        c.driver
+      );
+
+
+    channel
+
+      .on(
+
+        'postgres_changes',
+
+        {
+
+          event:'*',
+
+          schema:'public',
+
+          table:'zakazky',
+
+          filter:
+            'ridic_id=eq.'+
+            c.driver
+
+        },
+
+        async payload=>{
+
+          const r =
+            payload.new||
+            payload.old||
+            {};
+
+
+          if(
+            payload.eventType===
+            'DELETE'
+          ){
+
+            localStorage.removeItem(
+              K
+            );
+
+            render();
+
+            toast(
+              'Zakázka odstraněna'
+            );
+
+            return;
+
+          }
+
+
+          if(!r)
+            return;
+
+
+          /*
+            Dokončená zakázka
+            se nikdy nesmí vrátit
+            do aktivních.
+          */
+
+          if(
+            r.stav===
+            'dokoncena'
+          ){
+
+            const old =
+              job();
+
+
+            if(
+              old&&
+              old.dbId===
+              r.id
+            ){
+
+              let h =
+                hist();
+
+
+              h =
+                h.filter(
+                  x=>
+                    x.dbId!==
+                    old.dbId
+                );
+
+
+              h.unshift(
+                old
+              );
+
+
+              localStorage.setItem(
+                H,
+                JSON.stringify(h)
+              );
+
+            }
+
+
+            localStorage.removeItem(
+              K
+            );
+
+
+            render();
+
+
+            toast(
+              '✅ Zakázka dokončena'
+            );
+
+
+            return;
+
+          }
+
+
+          const current =
+            job();
+
+
+          if(
+            current&&
+            current.dbId&&
+            current.dbId!==r.id
+          ){
+
+            await loadActive();
+
+          }else{
+
+            localStorage.setItem(
+
+              K,
+
+              JSON.stringify(
+                dbToJob(r)
+              )
+
+            );
+
+
+            render();
+
+          }
+
+
+          if(
+            payload.eventType===
+            'INSERT'
+          ){
+
+            toast(
+              '📨 Nová zakázka od dispečera'
+            );
+
+          }
+
+        }
+
+      )
+
+
+      .subscribe(
+        status=>{
+
+          if(
+            status===
+            'SUBSCRIBED'
+          ){
+
+            tbConnected =
+              true;
+
+
+            connection(
+              'Supabase: realtime aktivní',
+              true
+            );
+
+          }
+
+
+          else if(
+
+            status===
+            'CHANNEL_ERROR'||
+            status===
+            'TIMED_OUT'
+
+          ){
+
+            tbConnected =
+              false;
+
+
+            connection(
+              'Supabase: chyba realtime'
+            );
+
+          }
+
+        }
+      );
+
+
+  }catch(e){
+
+    console.error(
+      e
+    );
+
+
+    tbConnected =
+      false;
+
+
+    connection(
+      'Supabase: chyba připojení'
+    );
+
+
+    setLoginStatus(
+      'Připojení se nepodařilo: '+
+      (
+        e.message||
+        'chyba'
+      )
+    );
+
+  }
+
+}
+
+
+/* =========================
+   AKTIVNÍ ZAKÁZKA
+========================= */
+
+async function loadActive(){
+
+  const c =
+    cfg();
+
+
+  if(!sb)
+    return;
+
+
+  const {
+    data,
+    error
+  } =
+    await sb
+
+      .from(
+        'zakazky'
+      )
+
+      .select(
+        '*'
+      )
+
+      .eq(
+        'ridic_id',
+        c.driver
+      )
+
+      .neq(
+        'stav',
+        'dokoncena'
+      )
+
+      .order(
+        'vytvoreno',
+        {
+          ascending:false
+        }
+      )
+
+      .limit(
+        1
+      );
+
+
+  if(error){
+
+    console.error(
+      error
+    );
+
+
+    connection(
+      'Supabase: chyba načtení'
+    );
+
+
+    return;
+
+  }
+
+
+  tbConnected =
+    true;
+
+
+  connection(
+    'Supabase: připojeno',
+    true
+  );
+
+
+  if(
+    data&&
+    data[0]
+  ){
+
+    if(
+      data[0].stav===
+      'dokoncena'
+    ){
+
+      localStorage.removeItem(
+        K
+      );
+
+    }else{
+
+      localStorage.setItem(
+
+        K,
+
+        JSON.stringify(
+          dbToJob(
+            data[0]
+          )
+        )
+
+      );
+
+    }
+
+  }else{
+
+    localStorage.removeItem(
+      K
+    );
+
+  }
+
+
+  render();
+
+}
+
+
+/* =========================
+   DOKUMENTACE
+========================= */
+
+const DOCS = [
+
+  {
+    key:'foto1',
+    title:'Foto 1',
+    desc:'Celé vozidlo'
+  },
+
+  {
+    key:'foto2',
+    title:'Foto 2',
+    desc:'Přední část'
+  },
+
+  {
+    key:'foto3',
+    title:'Foto 3',
+    desc:'Zadní část'
+  },
+
+  {
+    key:'foto4',
+    title:'Foto 4',
+    desc:'Poškození'
+  },
+
+  {
+    key:'foto5',
+    title:'Foto 5',
+    desc:'Další detail'
+  },
+
+  {
+    key:'list',
+    title:'Zakázkový list',
+    desc:'Dokument'
+  }
+
 ];
 
-function docsForJob(){
 
-  if(!activeJob){
+function getDocs(){
+
+  const j =
+    job();
+
+
+  if(
+    !j||
+    !j.dbId
+  )
     return {};
-  }
 
-  return (
-    activeJob.docs ||
-    {}
-  );
+
+  return j.docs||{};
+
 }
+
 
 function docsCount(){
 
-  const docs =
-    docsForJob();
+  const d =
+    getDocs();
 
-  return DOC_DEFINITIONS
-    .filter(d =>
-      docs[d.key]?.url
-    )
-    .length;
+
+  return DOCS.filter(
+    x=>
+      d[x.key]
+  ).length;
+
 }
 
-function allDocsUploaded(){
-  return docsCount() === 6;
+
+function docsComplete(){
+
+  return (
+    docsCount()===
+    DOCS.length
+  );
+
 }
 
-function renderDocs(){
 
-  if(!activeJob) return;
+function docFileId(
+  key
+){
 
-  const grid =
-    $("docsGrid");
+  return (
+    'docfile-'+
+    key
+  );
 
-  const docs =
-    docsForJob();
-
-  const count =
-    docsCount();
-
-  $("docsProgress").style.width =
-    ((count / 6) * 100) + "%";
-
-  $("docsProgressText").textContent =
-    count + " / 6";
-
-  grid.innerHTML =
-    DOC_DEFINITIONS.map(doc => {
-
-      const item =
-        docs[doc.key];
-
-      const uploaded =
-        !!item?.url;
-
-      return `
-        <div class="docCard ${uploaded ? "done" : ""}">
-
-          <div class="docTitle">
-            ${escapeHtml(doc.title)}
-          </div>
-
-          ${
-            uploaded
-            ? `
-              <div class="docStatus">
-                ✓ Nahráno
-              </div>
-
-              <img
-                class="docPreview"
-                src="${escapeHtml(item.url)}"
-                alt="${escapeHtml(doc.title)}"
-                loading="lazy"
-                onclick="window.open(this.src,'_blank')"
-              >
-            `
-            : `
-              <div class="docStatus">
-                Čeká na nahrání
-              </div>
-
-              <div class="docEmpty">
-                ${
-                  doc.key === "list"
-                  ? "📄"
-                  : "📷"
-                }
-              </div>
-            `
-          }
-
-          ${
-            uploaded
-            ? `
-              <button
-                class="docBtn"
-                onclick="openDocument('${doc.key}')">
-                👁️ ZOBRAZIT
-              </button>
-            `
-            : `
-              <button
-                class="docBtn"
-                onclick="takeDocument('${doc.key}')">
-                ${
-                  doc.key === "list"
-                  ? "📄 VYFOTIT LIST"
-                  : "📸 VYFOTIT"
-                }
-              </button>
-            `
-          }
-
-        </div>
-      `;
-
-    }).join("");
 }
 
-function takeDocument(key){
 
-  const existing =
-    document.getElementById(
-      "cameraInput"
-    );
+/* =========================
+   FOTO PICKER
+========================= */
 
-  if(existing){
-    existing.remove();
-  }
+function openDocPicker(
+  key
+){
 
   const input =
-    document.createElement("input");
+    document.getElementById(
+      docFileId(key)
+    );
 
-  input.type = "file";
-  input.id = "cameraInput";
-  input.accept = "image/*";
-  input.capture = "environment";
-  input.style.display = "none";
 
-  input.addEventListener(
-    "change",
-    async event => {
+  if(input)
+    input.click();
 
-      const file =
-        event.target.files?.[0];
-
-      if(!file) return;
-
-      await uploadDocument(
-        key,
-        file
-      );
-
-      input.remove();
-    }
-  );
-
-  document.body.appendChild(input);
-
-  input.click();
 }
 
-function openDocument(key){
 
-  const item =
-    docsForJob()[key];
+/* =========================
+   KOMPRESSE FOTKY
+========================= */
 
-  if(!item?.url){
-    return;
-  }
+async function compressImage(
+  file
+){
 
-  window.open(
-    item.url,
-    "_blank"
-  );
-}
+  const MAX_SIZE =
+    1800;
 
-/* =========================================================
-   KOMPRESOR FOTEK
-========================================================= */
 
-async function compressImage(file){
+  const QUALITY =
+    0.78;
 
-  const MAX_DIMENSION = 1800;
-  const MAX_SIZE = 900 * 1024;
-  const QUALITY = 0.78;
 
   if(
-    file.type === "image/jpeg" &&
-    file.size <= MAX_SIZE
+    file.type===
+    'image/jpeg'&&
+    file.size<=
+    900*1024
   ){
+
     return file;
+
   }
+
 
   try{
 
+    let bitmap =
+      null;
+
+
     if(
-      "createImageBitmap" in window
+      'createImageBitmap' in window
     ){
 
-      const bitmap =
-        await createImageBitmap(
-          file,
-          {
-            imageOrientation:"from-image"
-          }
-        );
+      try{
 
-      let width =
-        bitmap.width;
-
-      let height =
-        bitmap.height;
-
-      if(
-        width > MAX_DIMENSION ||
-        height > MAX_DIMENSION
-      ){
-
-        const scale =
-          Math.min(
-            MAX_DIMENSION / width,
-            MAX_DIMENSION / height
+        bitmap =
+          await createImageBitmap(
+            file,
+            {
+              imageOrientation:
+                'from-image'
+            }
           );
 
-        width =
-          Math.round(width * scale);
+      }catch(e){
 
-        height =
-          Math.round(height * scale);
+        bitmap =
+          null;
+
       }
 
-      const canvas =
-        document.createElement("canvas");
-
-      canvas.width = width;
-      canvas.height = height;
-
-      const ctx =
-        canvas.getContext("2d");
-
-      ctx.drawImage(
-        bitmap,
-        0,
-        0,
-        width,
-        height
-      );
-
-      bitmap.close?.();
-
-      const blob =
-        await new Promise(resolve =>
-          canvas.toBlob(
-            resolve,
-            "image/jpeg",
-            QUALITY
-          )
-        );
-
-      if(!blob){
-        return file;
-      }
-
-      return new File(
-        [blob],
-        "photo.jpg",
-        {
-          type:"image/jpeg",
-          lastModified:Date.now()
-        }
-      );
     }
 
-    return await compressWithImage(file);
 
-  }catch(error){
+    if(!bitmap){
 
-    console.warn(
-      "Komprese přes ImageBitmap selhala:",
-      error
+      bitmap =
+        await new Promise(
+          (resolve,reject)=>{
+
+            const img =
+              new Image();
+
+
+            const url =
+              URL.createObjectURL(
+                file
+              );
+
+
+            img.onload =
+              ()=>{
+
+                URL.revokeObjectURL(
+                  url
+                );
+
+
+                resolve(
+                  img
+                );
+
+              };
+
+
+            img.onerror =
+              ()=>{
+
+                URL.revokeObjectURL(
+                  url
+                );
+
+
+                reject(
+                  new Error(
+                    'Fotografii se nepodařilo načíst'
+                  )
+                );
+
+              };
+
+
+            img.src =
+              url;
+
+          }
+        );
+
+    }
+
+
+    const width =
+      bitmap.width;
+
+
+    const height =
+      bitmap.height;
+
+
+    const scale =
+      Math.min(
+        1,
+        MAX_SIZE/
+        Math.max(
+          width,
+          height
+        )
+      );
+
+
+    const newWidth =
+      Math.round(
+        width*
+        scale
+      );
+
+
+    const newHeight =
+      Math.round(
+        height*
+        scale
+      );
+
+
+    const canvas =
+      document.createElement(
+        'canvas'
+      );
+
+
+    canvas.width =
+      newWidth;
+
+
+    canvas.height =
+      newHeight;
+
+
+    const ctx =
+      canvas.getContext(
+        '2d',
+        {
+          alpha:false
+        }
+      );
+
+
+    if(!ctx){
+
+      throw new Error(
+        'Canvas není dostupný'
+      );
+
+    }
+
+
+    ctx.drawImage(
+      bitmap,
+      0,
+      0,
+      newWidth,
+      newHeight
     );
 
-    return file;
-  }
-}
 
-function compressWithImage(file){
+    const blob =
+      await new Promise(
+        resolve=>
+          canvas.toBlob(
+            resolve,
+            'image/jpeg',
+            QUALITY
+          )
+      );
 
-  return new Promise(resolve => {
 
-    const img =
-      new Image();
+    if(!blob){
 
-    const url =
-      URL.createObjectURL(file);
+      throw new Error(
+        'Komprese fotografie selhala'
+      );
 
-    img.onload = () => {
+    }
 
-      let width =
-        img.naturalWidth;
 
-      let height =
-        img.naturalHeight;
+    return new File(
 
-      if(
-        width > 1800 ||
-        height > 1800
-      ){
+      [blob],
 
-        const scale =
-          Math.min(
-            1800 / width,
-            1800 / height
-          );
+      'towbrux-foto.jpg',
 
-        width =
-          Math.round(width * scale);
+      {
 
-        height =
-          Math.round(height * scale);
+        type:
+          'image/jpeg',
+
+        lastModified:
+          Date.now()
+
       }
 
-      const canvas =
-        document.createElement("canvas");
+    );
 
-      canvas.width = width;
-      canvas.height = height;
 
-      const ctx =
-        canvas.getContext("2d");
+  }catch(e){
 
-      ctx.drawImage(
-        img,
-        0,
-        0,
-        width,
-        height
-      );
+    console.error(
+      'Komprese fotografie:',
+      e
+    );
 
-      canvas.toBlob(
-        blob => {
 
-          URL.revokeObjectURL(url);
+    return file;
 
-          if(!blob){
-            resolve(file);
-            return;
-          }
+  }
 
-          resolve(
-            new File(
-              [blob],
-              "photo.jpg",
-              {
-                type:"image/jpeg",
-                lastModified:Date.now()
-              }
-            )
-          );
-
-        },
-        "image/jpeg",
-        .78
-      );
-    };
-
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      resolve(file);
-    };
-
-    img.src = url;
-
-  });
 }
 
-/* =========================================================
-   UPLOAD DOKUMENTU
-========================================================= */
+
+/* =========================
+   UPLOAD FOTO
+========================= */
 
 async function uploadDocument(
   key,
-  originalFile
+  file
 ){
 
+  const j =
+    job();
+
+
+  const c =
+    cfg();
+
+
   if(
-    !tbSupabase ||
-    !activeJob
+    !j||
+    !j.dbId||
+    !c.driver||
+    !sb
   ){
-    showToast(
-      "Nejdříve připoj řidiče.",
-      "bad"
+
+    toast(
+      '❌ Zakázka není připojena'
     );
+
     return;
+
   }
+
+
+  if(!file)
+    return;
+
+
+  if(
+    !file.type||
+    !file.type.startsWith(
+      'image/'
+    )
+  ){
+
+    toast(
+      '❌ Vyber fotografii'
+    );
+
+    return;
+
+  }
+
 
   try{
 
-    showToast(
-      "📤 Připravuji fotografii…"
+    toast(
+      '⚙️ Připravuji fotografii…'
     );
 
-    const file =
+
+    const originalSize =
+      file.size;
+
+
+    const compressed =
       await compressImage(
-        originalFile
+        file
       );
 
-    const driver =
-      safeStoragePart(
-        currentDriver()
+
+    const compressedSize =
+      compressed.size;
+
+
+    console.log(
+      'TowBrüx foto:',
+      Math.round(
+        originalSize/
+        1024
+      )+
+      ' KB → '+
+      Math.round(
+        compressedSize/
+        1024
+      )+
+      ' KB'
+    );
+
+
+    toast(
+      '📤 Nahrávám fotografii…'
+    );
+
+
+    const safeDriver =
+      String(
+        c.driver
+      )
+      .replace(
+        /[^a-zA-Z0-9_-]/g,
+        ''
       );
 
-    const jobFolder =
-      safeStoragePart(
-        activeJob.id
+
+    const safeJob =
+      String(
+        j.dbId
+      )
+      .replace(
+        /[^a-zA-Z0-9_-]/g,
+        ''
       );
+
 
     const path =
-      `${driver}/${jobFolder}/${key}.jpg`;
+      safeDriver+
+      '/'+
+      safeJob+
+      '/'+
+      key+
+      '.jpg';
 
-    showToast(
-      "📤 Nahrávám dokument…"
-    );
 
     const {
       error
-    } = await tbSupabase
-      .storage
-      .from(DOCS_BUCKET)
-      .upload(
-        path,
-        file,
-        {
-          contentType:"image/jpeg",
-          upsert:true
-        }
-      );
-
-    if(error){
-      throw error;
-    }
-
-    const {
-      data:publicData
     } =
-      tbSupabase
-        .storage
-        .from(DOCS_BUCKET)
-        .getPublicUrl(path);
+      await sb.storage
 
-    const publicUrl =
-      publicData?.publicUrl || "";
+        .from(
+          STORAGE_BUCKET
+        )
 
-    if(!publicUrl){
-      throw new Error(
-        "Nepodařilo se získat URL dokumentu."
+        .upload(
+
+          path,
+
+          compressed,
+
+          {
+
+            contentType:
+              'image/jpeg',
+
+            upsert:
+              true
+
+          }
+
+        );
+
+
+    if(error)
+      throw error;
+
+
+    const current =
+      job();
+
+
+    if(!current){
+
+      toast(
+        '⚠️ Zakázka už není aktivní'
       );
+
+      return;
+
     }
 
-    if(!activeJob.docs){
-      activeJob.docs = {};
-    }
 
-    activeJob.docs[key] = {
-      path,
-      url:publicUrl,
-      uploadedAt:new Date().toISOString()
+    current.docs =
+      current.docs||
+      {};
+
+
+    current.docs[key] = {
+
+      path:
+        path,
+
+      name:
+        file.name,
+
+      type:
+        'image/jpeg',
+
+      originalSize:
+        originalSize,
+
+      compressedSize:
+        compressedSize,
+
+      uploadedAt:
+        new Date()
+          .toISOString()
+
     };
 
-    saveLocalJob();
 
-    /*
-     * Dokumenty držíme lokálně v Driveru.
-     * Supabase zakázka zůstává jednoduchá.
-     */
+    localStorage.setItem(
 
-    renderDocs();
-    renderJob();
+      K,
 
-    showToast(
-      "✓ Dokument nahrán.",
-      "good"
+      JSON.stringify(
+        current
+      )
+
     );
 
-  }catch(error){
+
+    render();
+
+
+    toast(
+      '✅ '+
+      (
+        DOCS.find(
+          x=>
+            x.key===
+            key
+        )?.title||
+        'Fotka'
+      )+
+      ' nahrána'
+    );
+
+
+  }catch(e){
 
     console.error(
-      "Upload dokumentu:",
-      error
+      'Upload document:',
+      e
     );
 
-    showToast(
-      "Upload selhal: " +
-      error.message,
-      "bad"
+
+    toast(
+      '❌ Fotku se nepodařilo nahrát: '+
+      (
+        e.message||
+        'chyba'
+      )
     );
+
   }
+
 }
 
-/* =========================================================
-   DOKONČENÍ
-========================================================= */
+
+/* =========================
+   PUBLIC URL
+========================= */
+
+function publicDocUrl(
+  path
+){
+
+  if(
+    !sb||
+    !path
+  )
+    return '';
+
+
+  const {
+    data
+  } =
+    sb.storage
+
+      .from(
+        STORAGE_BUCKET
+      )
+
+      .getPublicUrl(
+        path
+      );
+
+
+  return (
+    data?.publicUrl||
+    ''
+  );
+
+}
+
+
+/* =========================
+   DOKUMENTACE HTML
+========================= */
+
+function documentationHtml(j){
+
+  if(
+    j.status===
+    'new'
+  ){
+
+    return '';
+
+  }
+
+
+  const d =
+    j.docs||
+    {};
+
+
+  const count =
+    DOCS.filter(
+      x=>
+        d[x.key]
+    ).length;
+
+
+  const complete =
+    count===
+    DOCS.length;
+
+
+  let html =
+
+    '<div class="card">'+
+
+      '<div class="label">'+
+        '📸 Dokumentace zásahu'+
+      '</div>'+
+
+      '<div class="note">'+
+        'Nahraj 5 fotografií vozidla a fotografii zakázkového listu.'+
+      '</div>'+
+
+      '<div class="doc-progress '+
+        (
+          complete
+            ?'ok'
+            :'bad'
+        )+
+      '">'+
+
+        (
+          complete
+
+            ?
+
+            '✅ Dokumentace kompletní'
+
+            :
+
+            '📷 Nahráno '+
+            count+
+            ' / '+
+            DOCS.length
+
+        )+
+
+      '</div>'+
+
+      '<div class="doc-grid">';
+
+
+  DOCS.forEach(
+    item=>{
+
+      const doc =
+        d[item.key];
+
+
+      const url =
+        doc&&
+        doc.path
+
+          ?
+
+          publicDocUrl(
+            doc.path
+          )
+
+          :
+
+          '';
+
+
+      html +=
+
+        '<div class="doc-item">'+
+
+          (
+
+            url
+
+              ?
+
+              '<img '+
+                'class="doc-preview" '+
+                'src="'+
+                  esc(url)+
+                '" '+
+                'alt="'+
+                  esc(item.title)+
+                '">'
+
+              :
+
+              '<div class="doc-empty">'+
+                '📷'+
+              '</div>'
+
+          )+
+
+          '<div class="doc-name">'+
+            esc(
+              item.title
+            )+
+          '</div>'+
+
+          '<div class="doc-state '+
+            (
+              doc
+                ?'ok'
+                :''
+            )+
+          '">'+
+
+            (
+              doc
+
+                ?
+
+                '✅ Nahráno'
+
+                :
+
+                esc(
+                  item.desc
+                )
+
+            )+
+
+          '</div>'+
+
+          '<input '+
+            'id="'+
+              docFileId(
+                item.key
+              )+
+            '" '+
+            'class="doc-file" '+
+            'type="file" '+
+            'accept="image/*" '+
+            'capture="environment" '+
+            'onchange="uploadDocument(\''+
+              item.key+
+              '\',this.files[0])"'+
+          '>'+
+
+          '<button '+
+            'class="doc-button" '+
+            'onclick="openDocPicker(\''+
+              item.key+
+              '\')"'+
+          '>'+
+
+            (
+              doc
+
+                ?
+
+                '📷 Vyfotit znovu'
+
+                :
+
+                '📷 Vyfotit'
+
+            )+
+
+          '</button>'+
+
+        '</div>';
+
+    }
+  );
+
+
+  html +=
+
+      '</div>'+
+
+      '<div class="finish-box">'+
+
+        '<div class="finish-title">'+
+
+          (
+            complete
+
+              ?
+
+              '✅ Vše připraveno k dokončení'
+
+              :
+
+              '📸 Nejprve dokonči dokumentaci'
+
+          )+
+
+        '</div>'+
+
+        '<div class="finish-note">'+
+
+          (
+            complete
+
+              ?
+
+              'Dokumentace je kompletní. Zakázku můžeš dokončit.'
+
+              :
+
+              'Požadováno je všech 6 souborů.'
+
+          )+
+
+        '</div>'+
+
+        '<button '+
+          'class="green finish-button" '+
+          (
+            complete
+              ?''
+              :'disabled'
+          )+
+          ' onclick="finishJob()"'+
+        '>'+
+          '✅ DOKONČIT ZAKÁZKU'+
+        '</button>'+
+
+      '</div>'+
+
+    '</div>';
+
+
+  return html;
+
+}
+
+
+/* =========================
+   DOKONČIT ZAKÁZKU
+========================= */
 
 async function finishJob(){
 
+  const j =
+    job();
+
+
+  if(!j){
+
+    toast(
+      '❌ Žádná aktivní zakázka'
+    );
+
+    return;
+
+  }
+
+
   if(
-    !tbSupabase ||
-    !activeJob
+    j.status===
+    'new'
   ){
-    return;
-  }
 
-  if(!allDocsUploaded()){
-
-    showToast(
-      "Nejdříve nahraj všech 6 dokumentů.",
-      "bad"
+    toast(
+      'Nejdřív přijmi zakázku.'
     );
-
-    $("docsCard").scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
 
     return;
+
   }
 
-  const confirmed =
-    confirm(
-      "Opravdu chceš dokončit tuto zakázku?"
-    );
 
-  if(!confirmed){
-    return;
-  }
+  if(
+    !docsComplete()
+  ){
 
-  const btn =
-    $("finishJobBtn");
+    const missing =
+      DOCS
 
-  if(btn){
-    btn.disabled = true;
-    btn.textContent =
-      "⏳ DOKONČUJI…";
-  }
+        .filter(
+          x=>
+            !(j.docs||{})[
+              x.key
+            ]
+        )
 
-  try{
-
-    const {
-      data,
-      error
-    } = await tbSupabase
-      .from("zakazky")
-      .update({
-        stav:"dokoncena"
-      })
-      .eq("id",activeJob.id)
-      .eq("ridic_id",currentDriver())
-      .select()
-      .single();
-
-    if(error){
-      throw error;
-    }
-
-    const completedJob =
-      data || activeJob;
-
-    /*
-     * Zakázka už není aktivní.
-     * Dokumenty zůstávají v Storage pro Dispatch.
-     */
-    activeJob = null;
-
-    docsState = {};
-
-    localStorage.removeItem(
-      JOB_STORAGE_KEY
-    );
-
-    $("docsCard")
-      .classList
-      .add("hidden");
-
-    renderJob();
-
-    await loadHistory();
-
-    showToast(
-      "✓ Zakázka dokončena.",
-      "good"
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    showToast(
-      "Zakázku se nepodařilo dokončit: " +
-      error.message,
-      "bad"
-    );
-
-    if(btn){
-      btn.disabled = false;
-      btn.textContent =
-        "🏁 DOKONČIT ZAKÁZKU";
-    }
-  }
-}
-
-/* =========================================================
-   HISTORIE
-========================================================= */
-
-async function loadHistory(){
-
-  if(!tbSupabase) return;
-
-  const box =
-    $("historyContent");
-
-  try{
-
-    const {
-      data,
-      error
-    } = await tbSupabase
-      .from("zakazky")
-      .select(
-        "id,cislo_zakazky,stav,zasah,servis,created_at"
-      )
-      .eq(
-        "ridic_id",
-        currentDriver()
-      )
-      .order(
-        "created_at",
-        {ascending:false}
-      )
-      .limit(30);
-
-    if(error){
-      throw error;
-    }
-
-    const completed =
-      (data || [])
-        .filter(job =>
-          isCompletedStatus(job.stav)
+        .map(
+          x=>
+            x.title
         );
 
-    if(!completed.length){
 
-      box.innerHTML = `
-        <div class="empty">
-          Zatím žádná dokončená zakázka.
-        </div>
-      `;
-
-      return;
-    }
-
-    box.innerHTML =
-      completed.map(job => `
-        <div class="historyItem">
-
-          <div class="historyTop">
-
-            <div class="historyNo">
-              ${escapeHtml(
-                job.cislo_zakazky ||
-                job.id
-              )}
-            </div>
-
-            <div class="historyDate">
-              ${escapeHtml(
-                formatDate(job.created_at)
-              )}
-            </div>
-
-          </div>
-
-          <div class="historyAddress">
-            📍 ${escapeHtml(job.zasah || "—")}
-          </div>
-
-          <div class="historyAddress">
-            🏁 ${escapeHtml(job.servis || "—")}
-          </div>
-
-        </div>
-      `).join("");
-
-  }catch(error){
-
-    console.error(error);
-
-    box.innerHTML = `
-      <div class="empty">
-        Historii se nepodařilo načíst.
-      </div>
-    `;
-  }
-}
-
-/* =========================================================
-   DOSTUPNOST ŘIDIČE
-========================================================= */
-
-function getAvailability(){
-
-  return (
-    localStorage.getItem(
-      AVAILABILITY_KEY
-    ) || "dostupny"
-  );
-}
-
-function updateAvailabilityUI(){
-
-  const state =
-    getAvailability();
-
-  $("availableBtn")
-    .classList
-    .toggle(
-      "active",
-      state === "dostupny"
+    toast(
+      '⚠️ Chybí: '+
+      missing.join(
+        ', '
+      )
     );
 
-  $("busyBtn")
-    .classList
-    .toggle(
-      "active",
-      state === "zanepriazdeny"
-      || state === "zaneprázdněn"
-      || state === "zaneprázdněný"
-    );
-}
 
-async function setAvailability(state){
+    render();
 
-  if(
-    isSavingAvailability ||
-    !tbSupabase
-  ){
-    return;
-  }
-
-  isSavingAvailability = true;
-
-  try{
-
-    /*
-     * Lokální stav je záměrně uložen okamžitě.
-     * Pokud tabulka/profil dostupnosti v databázi
-     * není součástí projektu, aplikace se nerozbije.
-     */
-
-    localStorage.setItem(
-      AVAILABILITY_KEY,
-      state
-    );
-
-    updateAvailabilityUI();
-
-    /*
-     * Pokusíme se aktualizovat běžné pole
-     * dostupnost v tabulce zakázky? Ne.
-     *
-     * Dostupnost není nutná pro příjem zakázek,
-     * proto ji držíme lokálně.
-     */
-
-    showToast(
-      state === "dostupny"
-        ? "🟢 Jsi dostupný."
-        : "🔴 Jsi zaneprázdněný.",
-      "good"
-    );
-
-  }finally{
-
-    isSavingAvailability = false;
-  }
-}
-
-/* =========================================================
-   PUSH NOTIFIKACE
-========================================================= */
-
-function urlBase64ToUint8Array(base64String){
-
-  const padding =
-    "=".repeat(
-      (4 - base64String.length % 4) % 4
-    );
-
-  const base64 =
-    (
-      base64String
-      + padding
-    )
-      .replace(/-/g,"+")
-      .replace(/_/g,"/");
-
-  const rawData =
-    window.atob(base64);
-
-  return Uint8Array.from(
-    [...rawData].map(
-      char => char.charCodeAt(0)
-    )
-  );
-}
-
-async function getServiceWorkerRegistration(){
-
-  if(!("serviceWorker" in navigator)){
-    throw new Error(
-      "Tento prohlížeč nepodporuje Service Worker."
-    );
-  }
-
-  /*
-   * SW soubor musí být v rootu stejné PWA.
-   */
-  return await navigator.serviceWorker.register(
-    "./sw.js?v=20260827-push",
-    {
-      scope:"./"
-    }
-  );
-}
-
-async function preparePushState(){
-
-  const card =
-    $("notificationCard");
-
-  const btn =
-    $("notificationBtn");
-
-  const text =
-    $("notificationText");
-
-  if(
-    !("Notification" in window) ||
-    !("serviceWorker" in navigator) ||
-    !("PushManager" in window)
-  ){
-
-    card.classList.remove(
-      "notificationGood"
-    );
-
-    text.textContent =
-      "Push notifikace nejsou v tomto prohlížeči dostupné.";
-
-    btn.classList.add(
-      "hidden"
-    );
 
     return;
+
   }
 
-  try{
-
-    const registration =
-      await getServiceWorkerRegistration();
-
-    const permission =
-      Notification.permission;
-
-    if(permission === "denied"){
-
-      card.classList.remove(
-        "notificationGood"
-      );
-
-      text.textContent =
-        "Notifikace jsou zablokované. Povol je v nastavení prohlížeče.";
-
-      btn.textContent =
-        "⚙️ POVOLIT V NASTAVENÍ";
-
-      btn.onclick = () => {
-        showToast(
-          "Otevři nastavení webu a povol Oznámení."
-        );
-      };
-
-      return;
-    }
-
-    const subscription =
-      await registration.pushManager
-        .getSubscription();
-
-    if(
-      permission === "granted" &&
-      subscription
-    ){
-
-      await savePushSubscription(
-        subscription
-      );
-
-      card.classList.add(
-        "notificationGood"
-      );
-
-      text.textContent =
-        "Notifikace jsou aktivní. Zakázky můžeš dostat i při zavřené aplikaci.";
-
-      btn.classList.add(
-        "hidden"
-      );
-
-      return;
-    }
-
-    text.textContent =
-      "Povol notifikace, aby ti nová zakázka přišla i mimo otevřenou aplikaci.";
-
-    btn.classList.remove(
-      "hidden"
-    );
-
-    btn.textContent =
-      "🔔 POVOLIT NOTIFIKACE";
-
-    btn.onclick =
-      enablePush;
-
-  }catch(error){
-
-    console.error(
-      "Push state:",
-      error
-    );
-
-    text.textContent =
-      "Push notifikace zatím nejsou připravené.";
-
-    btn.textContent =
-      "🔔 NASTAVIT NOTIFIKACE";
-
-    btn.onclick =
-      enablePush;
-  }
-}
-
-async function enablePush(){
-
-  try{
-
-    if(
-      !("Notification" in window)
-    ){
-      throw new Error(
-        "Prohlížeč nepodporuje notifikace."
-      );
-    }
-
-    const permission =
-      await Notification.requestPermission();
-
-    if(permission !== "granted"){
-
-      showToast(
-        "Notifikace nebyly povoleny.",
-        "bad"
-      );
-
-      await preparePushState();
-
-      return;
-    }
-
-    const registration =
-      await getServiceWorkerRegistration();
-
-    let subscription =
-      await registration.pushManager
-        .getSubscription();
-
-    if(!subscription){
-
-      subscription =
-        await registration.pushManager.subscribe({
-          userVisibleOnly:true,
-          applicationServerKey:
-            urlBase64ToUint8Array(
-              VAPID_PUBLIC_KEY
-            )
-        });
-    }
-
-    await savePushSubscription(
-      subscription
-    );
-
-    await preparePushState();
-
-    showToast(
-      "✓ Notifikace jsou aktivní.",
-      "good"
-    );
-
-  }catch(error){
-
-    console.error(
-      "Enable push:",
-      error
-    );
-
-    showToast(
-      "Notifikace se nepodařilo nastavit: " +
-      error.message,
-      "bad"
-    );
-  }
-}
-
-async function savePushSubscription(
-  subscription
-){
-
-  if(!tbSupabase) return;
-
-  const json =
-    subscription.toJSON();
-
-  const endpoint =
-    subscription.endpoint;
-
-  const p256dh =
-    json.keys?.p256dh || "";
-
-  const auth =
-    json.keys?.auth || "";
-
-  if(!endpoint){
-    throw new Error(
-      "Push subscription nemá endpoint."
-    );
-  }
-
-  /*
-   * Tabulka push_subscriptions
-   *
-   * Používáme běžné sloupce:
-   * ridic_id, endpoint, p256dh, auth
-   *
-   * Pokud už záznam existuje, upsert ho obnoví.
-   */
-  const payload = {
-    ridic_id:currentDriver(),
-    endpoint,
-    p256dh,
-    auth
-  };
-
-  const {
-    error
-  } = await tbSupabase
-    .from("push_subscriptions")
-    .upsert(
-      payload,
-      {
-        onConflict:"endpoint"
-      }
-    );
-
-  if(error){
-    throw error;
-  }
-}
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-function toggleSettings(){
-
-  $("settingsCard")
-    .classList
-    .toggle("hidden");
-}
-
-async function saveSettings(){
-
-  const driver =
-    $("settingsDriverId")
-      .value
-      .trim();
-
-  const key =
-    $("settingsSupabaseKey")
-      .value
-      .trim();
-
-  if(!driver){
-    showToast(
-      "Zadej ID řidiče.",
-      "bad"
-    );
-    return;
-  }
-
-  if(!key){
-    showToast(
-      "Zadej Supabase Publishable key.",
-      "bad"
-    );
-    return;
-  }
-
-  $("driverId").value =
-    driver;
-
-  $("supabaseKey").value =
-    key;
-
-  saveConfig();
-
-  activeJob = null;
-
-  localStorage.removeItem(
-    JOB_STORAGE_KEY
-  );
-
-  $("settingsCard")
-    .classList
-    .add("hidden");
-
-  await initSupabase();
-}
-
-function logout(){
 
   const ok =
     confirm(
-      "Opravdu chceš vymazat připojení tohoto zařízení?"
+      'Dokumentace je kompletní 6/6.\n\nOpravdu dokončit zakázku '+j.id+'?'
     );
 
-  if(!ok) return;
+
+  if(!ok)
+    return;
+
+
+  await setStatus(
+    'done'
+  );
+
+}
+
+
+/* =========================
+   ZMĚNA STAVU
+========================= */
+
+async function setStatus(
+  s
+){
+
+  const j =
+    job();
+
+
+  const c =
+    cfg();
+
+
+  if(
+    !sb||
+    !j||
+    !j.dbId
+  ){
+
+    toast(
+      '❌ Zakázka není připojena'
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Povolené změny:
+
+    NOVÁ → PŘIJATA
+    PŘIJATA → DOKONČENA
+  */
+
+  if(
+    s!=='accepted'&&
+    s!=='done'
+  ){
+
+    return;
+
+  }
+
+
+  if(
+    s==='done'&&
+    !docsComplete()
+  ){
+
+    const missing =
+      DOCS
+
+        .filter(
+          x=>
+            !(j.docs||{})[
+              x.key
+            ]
+        )
+
+        .map(
+          x=>
+            x.title
+        );
+
+
+    toast(
+      '⚠️ Chybí: '+
+      missing.join(
+        ', '
+      )
+    );
+
+
+    render();
+
+
+    return;
+
+  }
+
+
+  if(
+    s==='accepted'&&
+    j.status!=='new'
+  ){
+
+    return;
+
+  }
+
+
+  if(
+    s==='done'&&
+    j.status!=='accepted'
+  ){
+
+    toast(
+      'Zakázku lze dokončit až po přijetí.'
+    );
+
+    return;
+
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await sb
+
+      .from(
+        'zakazky'
+      )
+
+      .update({
+
+        stav:
+          UI[s]
+
+      })
+
+      .eq(
+        'id',
+        j.dbId
+      )
+
+      .eq(
+        'ridic_id',
+        c.driver
+      )
+
+      .select()
+      .single();
+
+
+  if(error){
+
+    console.error(
+      error
+    );
+
+
+    toast(
+      '❌ Stav se nepodařilo uložit'
+    );
+
+
+    return;
+
+  }
+
+
+  const u =
+    dbToJob(
+      data
+    );
+
+
+  u.times =
+    j.times||
+    {};
+
+
+  u.times[s] =
+    new Date()
+      .toLocaleString(
+        'cs-CZ'
+      );
+
+
+  u.docs =
+    j.docs||
+    {};
+
+
+  /*
+    PŘIJATO
+  */
+
+  if(
+    s==='accepted'
+  ){
+
+    localStorage.setItem(
+
+      K,
+
+      JSON.stringify(
+        u
+      )
+
+    );
+
+
+    toast(
+      '✅ Zakázka přijata'
+    );
+
+
+    render();
+
+
+    return;
+
+  }
+
+
+  /*
+    DOKONČENO
+  */
+
+  if(
+    s==='done'
+  ){
+
+    let h =
+      hist();
+
+
+    h =
+      h.filter(
+        x=>
+          x.dbId!==
+          u.dbId
+      );
+
+
+    h.unshift(
+      u
+    );
+
+
+    localStorage.setItem(
+      H,
+      JSON.stringify(h)
+    );
+
+
+    localStorage.removeItem(
+      K
+    );
+
+
+    render();
+
+
+    toast(
+      '✅ Zakázka dokončena'
+    );
+
+  }
+
+}
+
+
+/* =========================
+   NAVIGAČNÍ URL
+========================= */
+
+/*
+  DŮLEŽITÉ:
+
+  Navigace už není spouštěná
+  přes window.location ani
+  window.open.
+
+  Vytváříme normální HTTPS
+  odkazy, na které řidič
+  přímo klepne.
+*/
+
+
+function appleMapsUrl(
+  address
+){
+
+  return (
+    'https://maps.apple.com/directions?destination='+
+    encodeURIComponent(
+      address
+    )+
+    '&mode=driving'
+  );
+
+}
+
+
+function googleMapsUrl(
+  address
+){
+
+  return (
+    'https://www.google.com/maps/dir/?api=1&destination='+
+    encodeURIComponent(
+      address
+    )+
+    '&travelmode=driving'
+  );
+
+}
+
+
+/* =========================
+   JOB HTML
+========================= */
+
+function jobHtml(j){
+
+  const isNew =
+    j.status===
+    'new';
+
+
+  const actionButton =
+
+    isNew
+
+      ?
+
+      '<button '+
+        'class="gold" '+
+        'onclick="setStatus(\'accepted\')"'+
+      '>'+
+        '✅ PŘIJMOUT ZAKÁZKU'+
+      '</button>'
+
+      :
+
+      '';
+
+
+  const impactApple =
+    appleMapsUrl(
+      j.impact
+    );
+
+
+  const impactGoogle =
+    googleMapsUrl(
+      j.impact
+    );
+
+
+  const serviceApple =
+    appleMapsUrl(
+      j.service
+    );
+
+
+  const serviceGoogle =
+    googleMapsUrl(
+      j.service
+    );
+
+
+  return (
+
+    '<div class="card">'+
+
+      '<div class="row">'+
+
+        '<div>'+
+
+          '<div class="ey">'+
+            'Zakázka'+
+          '</div>'+
+
+          '<div class="job">'+
+            esc(j.id)+
+          '</div>'+
+
+        '</div>'+
+
+        '<span class="badge">'+
+
+          (
+            isNew
+              ?'NOVÁ'
+              :'AKTIVNÍ'
+          )+
+
+        '</span>'+
+
+      '</div>'+
+
+    '</div>'+
+
+
+    '<div class="card">'+
+
+      '<div class="label">'+
+        '📍 Zásah klienta'+
+      '</div>'+
+
+      '<div class="addr">'+
+        esc(j.impact)+
+      '</div>'+
+
+      '<div class="nav-links">'+
+
+        '<a '+
+          'class="nav-link apple" '+
+          'href="'+
+            esc(impactApple)+
+          '" '+
+          'target="_blank" '+
+          'rel="noopener noreferrer"'+
+        '>'+
+          '🍎 Apple Mapy'+
+        '</a>'+
+
+        '<a '+
+          'class="nav-link google" '+
+          'href="'+
+            esc(impactGoogle)+
+          '" '+
+          'target="_blank" '+
+          'rel="noopener noreferrer"'+
+        '>'+
+          '🗺️ Google Maps'+
+        '</a>'+
+
+      '</div>'+
+
+    '</div>'+
+
+
+    '<div class="card">'+
+
+      '<div class="label">'+
+        '🔧 Servis klienta'+
+      '</div>'+
+
+      '<div class="addr">'+
+        esc(j.service)+
+      '</div>'+
+
+      '<div class="nav-links">'+
+
+        '<a '+
+          'class="nav-link apple" '+
+          'href="'+
+            esc(serviceApple)+
+          '" '+
+          'target="_blank" '+
+          'rel="noopener noreferrer"'+
+        '>'+
+          '🍎 Apple Mapy'+
+        '</a>'+
+
+        '<a '+
+          'class="nav-link google" '+
+          'href="'+
+            esc(serviceGoogle)+
+          '" '+
+          'target="_blank" '+
+          'rel="noopener noreferrer"'+
+        '>'+
+          '🗺️ Google Maps'+
+        '</a>'+
+
+      '</div>'+
+
+    '</div>'+
+
+
+    '<div class="card">'+
+
+      '<div class="label">'+
+        '📝 Poznámka dispečera'+
+      '</div>'+
+
+      '<div class="note">'+
+        esc(
+          j.note||
+          'Bez poznámky'
+        )+
+      '</div>'+
+
+      actionButton+
+
+    '</div>'+
+
+
+    documentationHtml(j)
+
+  );
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function render(){
+
+  const j =
+    job();
+
+
+  const area =
+    document.getElementById(
+      'jobArea'
+    );
+
+
+  if(!area)
+    return;
+
+
+  area.innerHTML =
+
+    j
+
+      ?
+
+      jobHtml(
+        j
+      )
+
+      :
+
+      '<div class="card empty">'+
+
+        '<div class="big">'+
+          '📭'+
+        '</div>'+
+
+        '<h2>'+
+          'Žádná aktivní zakázka'+
+        '</h2>'+
+
+        '<div>'+
+          'Jakmile dispečer odešle zakázku,'+
+          ' zobrazí se zde.'+
+        '</div>'+
+
+      '</div>';
+
+
+  const active =
+    document.getElementById(
+      'active'
+    );
+
+
+  if(active){
+
+    active.textContent =
+
+      j&&
+      j.status!=='done'
+
+        ?
+
+        1
+
+        :
+
+        0;
+
+  }
+
+
+  const done =
+    document.getElementById(
+      'done'
+    );
+
+
+  if(done){
+
+    done.textContent =
+      hist().length;
+
+  }
+
+}
+
+
+/* =========================
+   HISTORIE
+========================= */
+
+function renderHist(){
+
+  const h =
+    hist();
+
+
+  const el =
+    document.getElementById(
+      'hist'
+    );
+
+
+  if(!el)
+    return;
+
+
+  el.innerHTML =
+
+    h.length
+
+      ?
+
+      h.map(
+        j =>
+
+          '<div class="step">'+
+
+            '<div class="dot on"></div>'+
+
+            '<div>'+
+
+              '<b>'+
+                esc(j.id)+
+              '</b>'+
+
+              '<div>'+
+                esc(j.impact)+
+              '</div>'+
+
+              '<div class="small">'+
+                'Servis: '+
+                esc(j.service)+
+              '</div>'+
+
+            '</div>'+
+
+          '</div>'
+
+      ).join('')
+
+      :
+
+      '<div class="empty">'+
+        'Zatím žádná dokončená zakázka.'+
+      '</div>';
+
+}
+
+
+/* =========================
+   STAV ŘIDIČE
+========================= */
+
+function state(
+  x
+){
+
+  const shift =
+    document.getElementById(
+      'shift'
+    );
+
+
+  if(shift)
+    shift.textContent =
+      x;
+
+
+  toast(
+    'Stav: '+
+    x
+  );
+
+}
+
+
+/* =========================
+   PROFIL
+========================= */
+
+function saveProfile(){
+
+  localStorage.setItem(
+
+    P,
+
+    JSON.stringify({
+
+      name:
+        document
+          .getElementById(
+            'name'
+          )
+          .value,
+
+      car:
+        document
+          .getElementById(
+            'car'
+          )
+          .value
+
+    })
+
+  );
+
+
+  toast(
+    'Profil uložen'
+  );
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout(){
+
+  if(
+    channel&&
+    sb
+  ){
+
+    try{
+
+      sb.removeChannel(
+        channel
+      );
+
+    }catch(e){}
+
+  }
+
+
+  channel =
+    null;
+
+
+  sb =
+    null;
+
+
+  tbConnected =
+    false;
+
+
+  localStorage.removeItem(
+    C
+  );
+
+
+  setLoggedOut();
+
+
+  toast(
+    'Odpojeno'
+  );
+
+}
+
+
+/* =========================
+   CLEAR DATA
+========================= */
+
+function clearData(){
+
+  if(
+    confirm(
+      'Vymazat lokální data?'
+    )
+  ){
+
+    localStorage.removeItem(
+      K
+    );
+
+    localStorage.removeItem(
+      H
+    );
+
+    localStorage.removeItem(
+      P
+    );
+
+
+    render();
+
+
+    toast(
+      'Data vymazána'
+    );
+
+  }
+
+}
+
+
+/* =========================
+   DEMO
+========================= */
+
+function demo(){
+
+  localStorage.setItem(
+
+    K,
+
+    JSON.stringify({
+
+      dbId:
+        'DEMO-001',
+
+      id:
+        'TB-2026-001',
+
+      impact:
+        'Most, ulice J. Palacha',
+
+      service:
+        'Hlavní 88, Větrušice',
+
+      note:
+        'Zákazník čeká na místě. Po naložení pokračovat do servisu.',
+
+      status:
+        'new',
+
+      times:
+        {},
+
+      docs:
+        {}
+
+    })
+
+  );
+
+
+  toast(
+    'Lokální testovací zakázka'
+  );
+
+
+  render();
+
+
+  show(
+    'home',
+    document.querySelector(
+      'nav button'
+    )
+  );
+
+}
+
+
+/* =========================
+   PUSH
+========================= */
+
+function urlBase64ToUint8Array(
+  base64String
+){
+
+  const padding =
+    '='.repeat(
+      (
+        4-
+        base64String.length%4
+      )%4
+    );
+
+
+  const base64 =
+    (
+      base64String+
+      padding
+    )
+    .replace(
+      /-/g,
+      '+'
+    )
+    .replace(
+      /_/g,
+      '/'
+    );
+
+
+  const raw =
+    atob(
+      base64
+    );
+
+
+  const out =
+    new Uint8Array(
+      raw.length
+    );
+
+
+  for(
+    let i=0;
+    i<raw.length;
+    i++
+  ){
+
+    out[i] =
+      raw.charCodeAt(i);
+
+  }
+
+
+  return out;
+
+}
+
+
+/*
+  VAPID PUBLIC KEY
+  PRIVATE KEY NIKDY NEDÁVEJ
+  DO TOHOTO SOUBORU.
+*/
+
+const VAPID_PUBLIC_KEY =
+'BCR_7DAzc2W3nmStr9FSUPRbjUvXlXOv_pz2yvOTXKowDweKlT10XOCEqJLQQoD2GHsizojwmOxIo72UDE5D5LY';
+
+
+/* =========================
+   PUSH UI
+========================= */
+
+async function updatePushUI(){
+
+  const card =
+    document.getElementById(
+      'notifyCard'
+    );
+
+
+  const status =
+    document.getElementById(
+      'notifyStatus'
+    );
+
+
+  if(
+    !card||
+    !status
+  )
+    return;
+
+
+  if(
+    !('Notification' in window)||
+    !('serviceWorker' in navigator)||
+    !('PushManager' in window)
+  ){
+
+    card.style.display =
+      'block';
+
+
+    status.textContent =
+      'Tento prohlížeč Web Push nepodporuje.';
+
+
+    status.className =
+      'statusline bad';
+
+
+    return;
+
+  }
+
+
+  const permission =
+    Notification.permission;
+
 
   try{
 
+    const reg =
+      await navigator
+        .serviceWorker
+        .getRegistration();
+
+
+    const sub =
+      reg
+
+        ?
+
+        await reg.pushManager
+          .getSubscription()
+
+        :
+
+        null;
+
+
     if(
-      realtimeChannel &&
-      tbSupabase
+      permission==='granted'&&
+      sub
     ){
-      tbSupabase.removeChannel(
-        realtimeChannel
-      );
+
+      card.style.display =
+        'none';
+
+
+      return;
+
     }
 
-  }catch(e){}
 
-  realtimeChannel = null;
-  tbSupabase = null;
-  activeJob = null;
+    if(
+      permission==='granted'&&
+      !sub
+    ){
 
-  localStorage.removeItem(
-    STORAGE_KEY
-  );
+      card.style.display =
+        'block';
 
-  localStorage.removeItem(
-    JOB_STORAGE_KEY
-  );
 
-  localStorage.removeItem(
-    AVAILABILITY_KEY
-  );
+      status.textContent =
+        'Oznámení jsou povolena, ale je potřeba obnovit registraci.';
 
-  $("mainApp")
-    .classList
-    .add("hidden");
 
-  $("loginCard")
-    .classList
-    .remove("hidden");
+      status.className =
+        'statusline bad';
 
-  $("supabaseKey").value = "";
 
-  setConnectionStatus(
-    "Supabase není připojeno."
-  );
+      return;
 
-  showToast(
-    "Připojení bylo vymazáno.",
-    "good"
-  );
+    }
+
+
+    if(
+      permission==='default'
+    ){
+
+      card.style.display =
+        'block';
+
+
+      status.textContent =
+        'Oznámení nejsou nastavená.';
+
+
+      status.className =
+        'statusline';
+
+
+      return;
+
+    }
+
+
+    if(
+      permission==='denied'
+    ){
+
+      card.style.display =
+        'block';
+
+
+      status.textContent =
+        '🔕 Oznámení jsou zablokovaná. Povol je v nastavení iPhonu.';
+
+
+      status.className =
+        'statusline bad';
+
+    }
+
+
+  }catch(e){
+
+    console.error(
+      'Push UI:',
+      e
+    );
+
+
+    card.style.display =
+      'block';
+
+  }
+
 }
 
-/* =========================================================
-   EVENT LISTENERY
-========================================================= */
 
-$("connectBtn").addEventListener(
-  "click",
-  async () => {
+/* =========================
+   ENABLE PUSH
+========================= */
 
-    saveConfig();
-
-    const btn =
-      $("connectBtn");
-
-    btn.disabled = true;
-    btn.textContent =
-      "⏳ PŘIPOJUJI…";
-
-    const ok =
-      await initSupabase();
-
-    btn.disabled = false;
-    btn.textContent =
-      "🔐 PŘIPOJIT ŘIDIČE";
-
-    if(ok){
-      showToast(
-        "✓ Řidič je připojen.",
-        "good"
-      );
-    }
-  }
-);
-
-$("settingsBtn").addEventListener(
-  "click",
-  toggleSettings
-);
-
-$("saveSettingsBtn").addEventListener(
-  "click",
-  saveSettings
-);
-
-$("logoutBtn").addEventListener(
-  "click",
-  logout
-);
-
-$("availableBtn").addEventListener(
-  "click",
-  () => setAvailability("dostupny")
-);
-
-$("busyBtn").addEventListener(
-  "click",
-  () => setAvailability("zaneprázdněný")
-);
-
-$("refreshHistoryBtn").addEventListener(
-  "click",
-  async () => {
-
-    if(!tbSupabase){
-      return;
-    }
-
-    await loadHistory();
-
-    showToast(
-      "Historie obnovena.",
-      "good"
-    );
-  }
-);
-
-/* =========================================================
-   START
-========================================================= */
-
-async function boot(){
-
-  loadConfig();
-
-  updateAvailabilityUI();
-
-  /*
-   * Pokud už máme uložené připojení,
-   * uživatele znovu neobtěžujeme loginem.
-   */
-  const cfg =
-    getConfig();
+async function enablePush(){
 
   if(
-    cfg.driver &&
-    cfg.key
+    !('serviceWorker' in navigator)||
+    !('PushManager' in window)||
+    !('Notification' in window)
   ){
 
-    $("driverId").value =
-      cfg.driver;
+    toast(
+      'Tento prohlížeč Web Push nepodporuje'
+    );
 
-    $("supabaseKey").value =
-      cfg.key;
+    return;
 
-    await initSupabase();
+  }
+
+
+  const c =
+    cfg();
+
+
+  if(
+    !c.driver||
+    !sb
+  ){
+
+    toast(
+      'Nejdřív připoj TowBrüx'
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    let permission =
+      Notification.permission;
+
+
+    if(
+      permission!=='granted'
+    ){
+
+      permission =
+        await Notification
+          .requestPermission();
+
+    }
+
+
+    if(
+      permission!=='granted'
+    ){
+
+      toast(
+        'Oznámení nebyla povolena'
+      );
+
+
+      await updatePushUI();
+
+
+      return;
+
+    }
+
+
+    const reg =
+      await registerSW();
+
+
+    if(!reg)
+      throw new Error(
+        'Service Worker se nepodařilo registrovat'
+      );
+
+
+    let sub =
+      await reg
+        .pushManager
+        .getSubscription();
+
+
+    if(
+      sub&&
+      localStorage.getItem(SUB)!=='v3'
+    ){
+
+      try{
+
+        await sub.unsubscribe();
+
+      }catch(e){}
+
+
+      sub =
+        null;
+
+    }
+
+
+    if(!sub){
+
+      sub =
+        await reg
+          .pushManager
+          .subscribe({
+
+            userVisibleOnly:
+              true,
+
+            applicationServerKey:
+              urlBase64ToUint8Array(
+                VAPID_PUBLIC_KEY
+              )
+
+          });
+
+    }
+
+
+    const json =
+      sub.toJSON();
+
+
+    const {
+      error
+    } =
+      await sb
+
+        .from(
+          'push_subscriptions'
+        )
+
+        .upsert(
+
+          {
+
+            driver_id:
+              c.driver,
+
+            endpoint:
+              json.endpoint,
+
+            p256dh:
+              json.keys?.p256dh||
+              '',
+
+            auth:
+              json.keys?.auth||
+              '',
+
+            updated_at:
+              new Date()
+                .toISOString()
+
+          },
+
+          {
+
+            onConflict:
+              'endpoint'
+
+          }
+
+        );
+
+
+    if(error)
+      throw error;
+
+
+    localStorage.setItem(
+      SUB,
+      'v3'
+    );
+
+
+    const status =
+      document.getElementById(
+        'notifyStatus'
+      );
+
+
+    if(status){
+
+      status.textContent =
+        '🔔 Oznámení jsou povolena';
+
+
+      status.className =
+        'statusline ok';
+
+    }
+
+
+    const card =
+      document.getElementById(
+        'notifyCard'
+      );
+
+
+    if(card)
+      card.style.display =
+        'none';
+
+
+    toast(
+      '🔔 Oznámení povolena'
+    );
+
+
+  }catch(e){
+
+    console.error(
+      'Enable Push:',
+      e
+    );
+
+
+    toast(
+      'Oznámení se nepodařilo nastavit: '+
+      (
+        e.message||
+        'chyba'
+      )
+    );
+
+
+    await updatePushUI();
+
+  }
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+(async function(){
+
+  await registerSW();
+
+
+  /*
+    PROFIL
+  */
+
+  const p =
+    JSON.parse(
+      localStorage.getItem(P)||'{}'
+    );
+
+
+  const name =
+    document.getElementById(
+      'name'
+    );
+
+
+  const car =
+    document.getElementById(
+      'car'
+    );
+
+
+  if(name)
+    name.value =
+      p.name||
+      '';
+
+
+  if(car)
+    car.value =
+      p.car||
+      '';
+
+
+  /*
+    KONFIGURACE
+  */
+
+  const c =
+    cfg();
+
+
+  const driverId =
+    document.getElementById(
+      'driverId'
+    );
+
+
+  const loginDriver =
+    document.getElementById(
+      'loginDriver'
+    );
+
+
+  const loginKey =
+    document.getElementById(
+      'loginKey'
+    );
+
+
+  if(driverId)
+    driverId.value =
+      c.driver||
+      'driver1';
+
+
+  if(loginDriver)
+    loginDriver.value =
+      c.driver||
+      'driver1';
+
+
+  /*
+    PRVNÍ RENDER
+  */
+
+  render();
+
+
+  /*
+    AUTOMATICKÉ PŘIHLÁŠENÍ
+  */
+
+  if(
+    c.url===
+    PROJECT_URL&&
+    c.key&&
+    c.driver
+  ){
+
+    if(loginKey)
+      loginKey.value =
+        c.key;
+
+
+    setLoggedIn();
+
+
+    await connect();
+
+
+    setTimeout(
+      ()=>{
+        updatePushUI();
+      },
+      800
+    );
 
   }else{
 
-    $("loginCard")
-      .classList
-      .remove("hidden");
+    setLoggedOut();
 
-    $("mainApp")
-      .classList
-      .add("hidden");
   }
-}
 
-boot();
+})();
 
 </script>
 
